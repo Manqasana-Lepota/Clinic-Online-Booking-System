@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="side-menu">
+        <div class="img-case">
+            <img src="/static/images/user-profile.png" alt="">  
+        </div>
+        <br>
+        <p>Logged in:<b>{{session.username}}</b></p>
+        <br>
+        <ul>
+            <li class="active"><i class='bx bx-calendar'></i>&nbsp;Dashboard</li>
+            <li><i class='bx bx-plus-medical'></i><a href="{{ url_for('add_doctors')}}">&nbsp;Doctors</a></li>
+            <li><i class='bx bx-alarm'></i>&nbsp;Schedule</li>
+            <li><i class='bx bx-calendar-edit'></i>&nbsp;Appointment</li>
+            <li><i class='bx bx-message'></i>&nbsp;Feedback</li>
+            <li><i class='bx bx-accessibility'></i>&nbsp;Patients</li>
+            <li><i class='bx bx-log-out'></i>&nbsp;Logout</li>
+        </ul>
+    </div>
+    <div class="a-container">
+        <div class="a-header">
+            <div class="a-nav">
+                <div class="a-search">
+                    <input type="text" placeholder="Search...">
+                    <button type="submit"><img src="/static/images/search.jpg" alt=""></button>
+                </div>
+                <div id="date-time">
+                    <p id="date"></p>
+                    <p id="time"></p>
+                </div>&nbsp;&nbsp;&nbsp;
+                <img src="/static/images/notification.png" alt="">
+               
+            </div>
+        </div>
+        <div class="a-content">
+            <div class="cards">
+                <div class="card">
+                    <div class="box">
+                        <h1>0</h1>
+                        <h3>Patients</h3>
+                    </div>
+                    <div class="icon-case">
+                        <img src="/static/images/patients.jpeg" alt="" width="100" height="80">
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="box">
+                        <h1>0</h1>
+                        <h3>Appointments</h3>
+                    </div>
+                    <div class="icon-case">
+                        <img src="/static/images/appointment.png" alt="" width="60" height="60">
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="box">
+                        <h1>0</h1>
+                        <h3>Doctors</h3>
+                    </div>
+                    <div class="icon-case">
+                        <img src="/static/images/doctors.jpeg" alt="" width="100" height="80">
+                    </div>
+                </div>
+                <d class="card">
+                    <div class="box">
+                        <h1>0</h1>
+                        <h3>Feedback</h3></h3>
+                    </div>
+                    <div class="icon-case">
+                        <img src="/static/images/feedbacks.png" alt="" width="80" height="60">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+   
+    <script src="/static/js/script.js"></script>
+
+
+    
+</body>
+</html>

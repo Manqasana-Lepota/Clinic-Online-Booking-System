@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Doctor</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="/static/css/style.css">
+   
+</head>
+<body>
+    <div class="side-menu">
+        <div class="img-case">
+            <img src="/static/images/user-profile.png" alt="">  
+        </div>
+        <br>
+        <p>Logged in:<b>{{session.username}}</b></p>
+        <br>
+        <ul>
+            <li><i class='bx bx-calendar'></i><a href="{{url_for('admin_dashboard')}}">&nbsp;Dashboard</a></li>
+            <li class="active"><i class='bx bx-plus-medical'></i>&nbsp;Doctors</li>
+            <li><i class='bx bx-alarm'></i>&nbsp;Schedule</li>
+            <li><i class='bx bx-calendar-edit'></i>&nbsp;Appointment</li>
+            <li><i class='bx bx-message'></i>&nbsp;Feedback</li>
+            <li><i class='bx bx-accessibility'></i>&nbsp;Patients</li>
+            <li><i class='bx bx-log-out'></i>&nbsp;Logout</li>
+        </ul>
+    </div>
+    <div class="a-container">
+        <div class="a-header">
+            <div class="a-nav">
+                <div class="a-search">
+                    <input type="text" placeholder="Search...">
+                    <button type="submit"><img src="/static/images/search.jpg" alt=""></button>
+                </div>
+                <div id="date-time">
+                    <p id="date"></p>
+                    <p id="time"></p>
+                </div>&nbsp;&nbsp;&nbsp;
+                <img src="/static/images/notification.png" alt="">
+                
+            </div>
+            
+        </div>
+        <br><br><br>
+        <form action="{{ url_for('addNew_doctor')}}" method="post" id="addNewDoctor">
+            <h1>Add New Doctor</h1><br><br>
+            {% if message is defined and message %}
+            <div class="arlet alert-warning" style="color: green;">{{ message }}</div>
+            {% endif %}
+            <label for="name">Name:</label><br>
+            <input type="text" name="name">
+            <br><br>
+    
+            <label for="email">Email:</label><br>
+            <input type="email" name="email">
+            <br><br>
+    
+            <label for="contact">Contact No:</label><br>
+            <input type="text" name="contact">
+            <br><br>
+    
+            <label for="specialities">Choose a Specialities:</label><br>
+            <select name="specialities" id="specialities">
+                <option value="volvo">Choose One</option>
+                <option value="volvo">Family medicine</option>
+                <option value="saab">Pediatrics</option>
+                <option value="opel">Radiology</option>
+                <option value="audi">Internal medicine</option>
+                <option value="audi">Emergency medicine</option>
+                <option value="audi">Surgery</option>
+                <option value="audi">Obstetrics and gynaecology</option>
+                <option value="audi">Gastroenterology</option>
+            </select>
+            <br><br>
+    
+            <label for="password">Password:</label><br>
+            <input type="password" name="password">
+            <br><br>
+    
+            <button type="submit"><a href="#">Add Doctor</a></button>
+    
+        </form>
+        </div>
+
+    
+    <script src="/static/js/script.js"></script>
+    
+</input>
+</html>

@@ -1,0 +1,490 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Montserrat&family=Poppins:wght@100;300;400;600;700;800;900&family=Waiting+for+the+Sunrise&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+
+}
+
+
+
+.header-text {
+    text-align: center;
+    margin-top: 140px;    
+    
+}
+
+.header-text h1 {
+    font-size: 50px;
+    color: #068fbc;
+}
+
+.header-text h2 {
+    font-size: 35px;
+    color: #db89c9;
+}
+
+.header-text p {
+    color: #068fbc;
+   
+}
+
+.header-text button {
+    width: 150px;
+    height: 45px;
+    font-size: 20px;
+    font-weight: 600;
+    background: #0f98e1;
+    border-radius: 5px;
+    border: none;
+    text-align: center;
+   
+}
+button a {
+   text-decoration: none;
+   color: #fff;
+}
+
+button a:hover {
+    text-decoration: underline;
+    color: #db89c9;
+}
+
+
+
+/*################################## LOGIN FORM #############################################*/
+.body-background-image {
+    display:flex;
+    justify-content: center;
+    min-height: 100vh;
+    align-items: center;
+    background: url('/static/images/background.avif')no-repeat;
+    background-size: cover;
+    background-size: cover;
+}
+.wrapper {
+    width: 420px;
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, .2);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+    color: #fff;
+    border-radius: 10px;
+    padding: 30px 40px;
+}
+
+.wrapper h1 {
+    font-size: 32px;
+    text-align: center;
+}
+
+.wrapper .input-box {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    margin: 30px 0;
+}
+
+.input-box input {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    border: 2px solid rgba(255, 255, 255, .2);
+    border-radius: 40px;
+    font-size: 16px;
+    color: #fff;
+    padding: 20px 45px 20px 20px;
+}
+
+.input-box input::placeholder {
+    color: #fff;
+}
+
+.input-box i {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+}
+
+.wrapper .remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14.5px;
+    margin: -15px 0 15px;
+}
+
+.remember-forgot label input {
+    accent-color: #fff;
+    margin-right: 3px;
+}
+
+.remember-forgot a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.remember-forgot a:hover {
+    text-decoration: underline;
+}
+
+.wrapper .btn {
+    width: 100%;
+    height: 45px;
+    background: #fff;
+    border: none;
+    outline: none;
+    border-radius: 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+    font-weight: 600;
+}
+
+.wrapper .register-link {
+    font-size: 14.5px;
+    text-align: center;
+    margin: 20px 0 15px;
+}
+
+.register-link p a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.register-link p a:hover {
+    text-decoration: underline;
+    color: #0b94ea;
+}
+
+/*######################################### PATIENT DASHBOARD ################################*/
+.row {
+    float: right;
+    margin-top: 40px;
+    color: #095fb0;
+    display: block;
+}
+
+.navbar-patientdashboard {
+    background: url('/static/images/background.avif');
+    width: 100%;
+    overflow: auto;
+    
+}
+
+.navbar-patientdashboard a {
+    float: left;
+    padding: 12px;
+    color: white;
+    text-decoration: none;
+    font-size: 17px;
+    width: 16,6%;
+    text-align: center;
+    font-weight: 600;
+}
+
+.navbar-patientdashboard a:hover {
+    color: #095fb0; ;
+}
+
+
+.navbar-patientdashboard a.active {
+    color: #095fb0; ;
+}
+
+@media screen and (max-width: 500px) {
+    .navbar-patientdashboard a {
+      float: none;
+      display: block;
+      width: 100%;
+      text-align: left;
+    }
+}
+
+.container .patient-info {
+   text-align: center;
+   padding-top: 40px;
+}
+
+.container .btn-group {
+    padding-left: 250px;
+
+}
+
+.btn-group button {
+    background-color: #095fb0; 
+    border: 1px solid navy; 
+    color: white;
+    padding: 10px 24px; 
+    cursor: pointer;
+    font-weight: 600; 
+}
+
+/*############################# LOGIN ROLES ############################*/
+.loginroles-background {
+    background: url('/static/images/background1.avif')no-repeat;
+    background-size: cover;
+}
+.loginroles-table {
+    padding: 150px 260px;
+}
+
+.loginroles-table a {
+    font-size: 16px;
+    text-decoration: none;
+    color: #068fbc;
+    font-weight: 600;
+}
+
+.loginroles-table a:hover {
+    text-decoration: underline;
+    color: #db89c9;
+}
+
+
+.loginroles-table img {
+    border-radius: 50%;
+}
+
+/*################################################### ADMIN DASHBOARD ##########################*/
+.side-menu {
+    position: fixed;
+    background: url('/static/images/background.avif') no-repeat;
+    background-size: cover;
+    width: 250px;
+    height: 100vh;
+    display: flex;
+    top: 0;
+    left: 0;
+    flex-direction: column;
+   
+}
+
+.side-menu .img-case {
+    height: 10vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+   
+}
+
+.side-menu .img-case img {
+    width: 90px;
+    height: 90px;
+    margin-top: 10vh;
+   
+}
+
+.side-menu p {
+    padding: 20px 30px;
+    font-size: 16px;
+    color: #fff;
+}
+
+.side-menu li {
+    font-size: 18px;
+    padding: 10px 40px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    list-style: none;
+    font-weight: 600;
+   
+}
+
+.side-menu li:hover {
+    color: #095fb0; border-radius: 40px;
+    transition: 0.3s;
+}
+
+.side-menu li.active {
+    color: #095fb0;
+}
+
+.side-menu li a {
+    text-decoration: none;
+    color: #fff;
+
+}
+
+.side-menu li a:hover {
+    color: #095fb0;
+    transition: 0.3s;
+}
+
+.a-container {
+    position: absolute;
+    right: 0;
+    width: 80vw;
+    height: 100vh;
+    background: #f1f1f1;
+}
+
+.a-container .a-header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 80vw;
+    height: 10vh;
+    background: white;
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        
+}
+.a-container .a-header .a-nav {
+    width: 90%;
+    display: flex;
+    align-items: center;
+}
+   
+
+.a-container .a-header .a-nav .a-search {
+    flex: 3;
+    display: flex;
+    justify-content: center;
+}
+
+.a-container .a-header .a-nav .a-search input[type=text] {
+    border: none;
+    background: #f1f1f1;
+    padding: 10px;
+    width: 50%;
+}
+
+.a-container .a-header .a-nav .a-search button {
+    width: 40px;
+    height: 40px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.a-container .a-header .a-nav .a-search button img {
+    width: 30px;
+    height: 30px;
+}
+
+.a-container .a-header .a-nav p {
+    font-size: 12px;
+    color: #095fb0;
+   
+}
+
+.a-container .a-header .a-nav img {
+    width: 30px;
+    height: 30px;
+    
+   
+}
+
+.a-container .a-content {
+    position: relative;
+    margin-top: 10vh;
+    min-height: 90vh;
+}
+
+.a-container .a-content .cards {
+    padding: 20px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.a-container .a-content .cards .card {
+    width: 190px;
+    height: 120px;
+    background: white;
+    margin: 20px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0;
+}
+
+.a-container .a-content .cards .card .box {
+    padding: 20px 13px;
+}
+
+
+
+.a-container .a-content .cards .card .box h3 {
+    font-size: 14px;
+    color: #999;
+}
+/*############################  DOCTORS PAGE  ##########################*/
+.a-content .listofdoctors .button-space {
+    padding-left: 250px;
+}
+
+.a-content .listofdoctors h1 {
+    text-align: center;
+    color: #095fb0;
+    font-size: 30px;
+}
+
+.a-content .listofdoctors button {
+    height: 30px; 
+    width: 100px; 
+    background: url('/static/images/background.avif');
+   
+}
+
+.a-content .listofdoctors button a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: 600;
+}
+
+
+
+/*############################  ADD NEW DOCTOR  ##########################*/
+
+#addNewDoctor {
+    width: 600px;
+    height: 400px;
+    color: #161515;
+    border-radius: 10px;
+    padding: 30px 40px;
+    padding-left: 300px;
+    
+
+}
+
+#addNewDoctor h1 {
+    font-size: 25px;
+    text-align: center;
+    color: #095fb0;
+
+}
+
+#addNewDoctor button{
+    width: 100%;
+    height: 45px;
+    background: #095fb0;
+    border: none;
+    outline: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    cursor: pointer;
+    font-size: 16px;
+    color: #fff;
+    font-weight: 600;
+}
+
+
+
+
+
+
+
+
+

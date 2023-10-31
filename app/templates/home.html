@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinic Online Booking</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}">
+    <style>
+        body {
+            background-image: url("{{url_for('static', filename='images/backgroundclinic.avif')}}");
+        }
+    </style>
+</head>
+   
+<body>
+    <div class="header-text">
+        <h1>Welcome to Jeppe Clinic</h1><br>
+        <h2>Online Booking System</h2><br>
+        <p>Conveniently schedule your visit with us online.</p><br>
+        <button><a href="{{ url_for('loginroles')}}">Now</a></button>
+
+    </div>
+</body>
+</html>

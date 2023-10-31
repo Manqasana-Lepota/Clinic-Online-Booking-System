@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Roles</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="loginroles-background">
+    <table cellpadding="50" cellspacing="90" class="loginroles-table">
+        <tr>
+            <td>
+                <a href="{{ url_for('admin_login')}}">
+                    <img src="/static/images/admin.jpeg" alt="admin" width="100" height="100">
+                    <p style="padding-left: 30px;color: #068fbc;">Admin</p>
+                </a>
+               
+            </td>
+
+            <td>
+                <a href="/patientlogin">
+                    <img src="/static/images/patient.jpeg" alt="patient" width="100" height="100">
+                    <p style="padding-left: 20px;color: #068fbc;">Patient</p>
+                </a>
+               
+            </td>
+
+            <td>
+                <a href="/doctorlogin">
+                    <img src="/static/images/doctor.jpeg" alt="doctor" width="100" height="100">
+                    <p style="padding-left: 20px;color: #068fbc;">Doctor</p>
+                </a>
+               
+            </td>
+        </tr>
+    </table>
+    
+</body>
+</html>
