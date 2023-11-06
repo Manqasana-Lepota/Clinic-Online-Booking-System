@@ -7,6 +7,177 @@
 
 }
 
+/*Admin Dashboard*/
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 100%;
+    background: #068fbc;
+    background-size: cover;
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+}
+
+.sidebar .sidebar-profile {
+    align-items: center;
+    margin-bottom: 10px;
+    padding-left: 20px;
+    font-size: 10px;
+}
+
+.sidebar .sidebar-profile .profile-avatar img{
+    width: 100px;
+    height: 100px;
+    margin-top: 10vh;
+}
+
+
+.nav-link {
+    color: #fff;
+}
+
+.nav-link:hover {
+    color: #db89c9;
+}
+
+.nav-link .actve {
+    color: #db89c9;
+}
+
+.navbar {
+    position: fixed;
+    right: 0;
+    background: #f1f1f1;
+    width: 80vw;
+    height: 100vh;
+}
+
+.navbar .container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 80vw;
+    height: 15vh;
+    background: white;
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0);
+}
+
+.navbar .container .collapse {
+    width: 90%;
+    display: flex;
+    align-items: center;
+}
+
+.navbar .container .collapse .search-bar {
+    border-radius: 3px;
+    flex: 3;
+    display: flex;
+    justify-content: center;
+}
+
+.navbar .container .collapse .search-bar input[type=search] {
+    border: none;
+    background: #f1f1f1;
+    padding: 10px;
+    width: 70%;
+    
+}
+
+.navbar .container .collapse .d-flex .btn-primary {
+    border: none;
+    display: flex;
+    justify-content: center;
+    background:#068fbc ;
+}
+
+.navbar .container .collapse .navbar-text {
+    font-size: 14px;
+    color: #011a1b;
+    padding-right: 100px;
+    font-weight: 600;
+}
+
+.navbar .container .collapse img {
+    width: 50px;
+    height: 50px;
+}
+
+.container .row {
+    position: fixed;
+    margin-top: 90px;
+    min-height: 90vh;
+}
+
+.container .row .col-md-3 {
+    padding: 20px 15px;
+    display: inline-block;
+    justify-content: space-between;
+    padding-left: 150px;
+   
+}
+
+.custom-card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 190px; 
+    background: white;
+    height: 120px;
+
+}
+
+/*Admin Add Doctors Page*/
+
+.container .text-center h1 {
+    text-align: center;
+    justify-content: center;
+    padding-left: 250px;
+    color: black;
+}
+
+.container .row .md-12 h1 {
+    text-align: center;
+    font-size: 25px;
+    font-weight: 600;
+}
+
+.container .row .md-12 h2 {
+    font-size: 20px;
+}
+
+.container .row .md-12 {
+    padding-left: 190px;
+}
+
+.container .row .md-12 .btn-primary {
+    float: right;
+    background: #068fbc;
+    font-weight: 600;
+}
+
+.container .row .md-12 .btn-primary:hover {
+    color: #db89c9;
+}
+
+    
+
+
+
+
+
+
+
+
 
 
 .header-text {
@@ -300,7 +471,8 @@ button a:hover {
 }
 
 .side-menu li:hover {
-    color: #095fb0; border-radius: 40px;
+    color: #095fb0; 
+    border-radius: 40px;
     transition: 0.3s;
 }
 
@@ -332,7 +504,7 @@ button a:hover {
     top: 0;
     right: 0;
     width: 80vw;
-    height: 10vh;
+    height: 9vh;
     background: white;
     display: flex;
     justify-content: center;
@@ -422,63 +594,13 @@ button a:hover {
     color: #999;
 }
 /*############################  DOCTORS PAGE  ##########################*/
-.a-content .listofdoctors .button-space {
-    padding-left: 250px;
-}
 
-.a-content .listofdoctors h1 {
-    text-align: center;
-    color: #095fb0;
-    font-size: 30px;
-}
-
-.a-content .listofdoctors button {
-    height: 30px; 
-    width: 100px; 
-    background: url('/static/images/background.avif');
-   
-}
-
-.a-content .listofdoctors button a {
-    text-decoration: none;
-    color: #fff;
-    font-weight: 600;
-}
 
 
 
 /*############################  ADD NEW DOCTOR  ##########################*/
 
-#addNewDoctor {
-    width: 600px;
-    height: 400px;
-    color: #161515;
-    border-radius: 10px;
-    padding: 30px 40px;
-    padding-left: 300px;
-    
 
-}
-
-#addNewDoctor h1 {
-    font-size: 25px;
-    text-align: center;
-    color: #095fb0;
-
-}
-
-#addNewDoctor button{
-    width: 100%;
-    height: 45px;
-    background: #095fb0;
-    border: none;
-    outline: none;
-    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
-    cursor: pointer;
-    font-size: 16px;
-    color: #fff;
-    font-weight: 600;
-}
 
 
 

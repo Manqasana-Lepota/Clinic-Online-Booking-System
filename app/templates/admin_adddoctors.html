@@ -29,25 +29,25 @@
     </div>
     <br>
     <ul class="nav flex-column">
-        <li class="nav-item active">
+        <li>
             <a class="nav-link" href="#"><i class='bx bx-calendar'></i>&nbsp;Dashboard</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{url_for('admin_adddoctors')}}"><i class='bx bx-plus-medical'></i>&nbsp;Doctors</a>
+        <li class="active">
+            <a class="nav-link" href="#"><i class='bx bx-plus-medical'></i>&nbsp;Doctors</a>
         </li>
-        <li class="nav-item">
+        <li>
             <a class="nav-link" href="#"><i class='bx bx-alarm'></i>&nbsp;Schedule</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="#"><i class='bx bx-calendar-edit'></i>&nbsp;Appointments</a>
         </li>
-        <li class="nav-item">
+        <li>
             <a class="nav-link" href="#"><i class='bx bx-message'></i>&nbsp;Feedback</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="#"><i class='bx bx-accessibility'></i>&nbsp;Patients</a>
         </li>
-        <li class="nav-item">
+        <li>
             <a class="nav-link" href="#"><i class='bx bx-log-out'></i>&nbsp;Logout</a>
         </li>
     </ul>
@@ -71,16 +71,63 @@
         </div>
     </div>   
 </nav>
+<br><br>
+
 
 
 
 <!-- Main Content Section -->
+
+<div class="container">
+    <div class="row">
+        <div class="col md-12">
+         <h1>Add New Doctor</h1>
+         <br><br><br> 
+            <h2>All Doctors 
+            <button type="button" class="btn btn-primary">
+                    Add Student Data</button>
+            </h2><br><br>
+            <table class="table table-striped" style="padding-right: 450px;">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Contact</th>
+                    <th>Specialities</th>
+                    <th>Password</th>
+                    <th>Events</th>
+                </tr>
+                <tr>
+                    <td>01</td>
+                    <td>Parwiz</td>
+                    <td>par@gmail.com</td>
+                    <td>0438492345</td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <a href="" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit">Edit</a>
+                        <a href="" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure To Delete?')">Delete</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
 
 
 
 <!-- Add Bootstrap JavaScript and Popper.js (if needed) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{{url_for('static', filename='js/script.js')}}"></script>
-</body>
+</div>
 </html>
 
+
+            
+     
+   
+    
+  
+
+   

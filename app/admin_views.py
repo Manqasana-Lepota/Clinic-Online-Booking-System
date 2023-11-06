@@ -40,9 +40,9 @@ def admin_dashboard():
 
 
 
-@app.route('/add_doctors')
-def add_doctors():
-    return render_template("add_doctors.html")
+@app.route('/admin_adddoctors')
+def admin_adddoctors():
+    return render_template("admin_adddoctors.html")
 
 
 @app.route('/addNew_doctor', methods = ['GET', 'POST'])
