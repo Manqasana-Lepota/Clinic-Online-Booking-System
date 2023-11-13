@@ -14,7 +14,7 @@
     left: 0;
     width: 300px;
     height: 100%;
-    background: #068fbc;
+    background: url('/static/images/background.jpeg')no-repeat;
     background-size: cover;
     color: #fff;
     padding: 20px;
@@ -36,17 +36,14 @@
     margin-top: 10vh;
 }
 
-
-.nav-link {
-    color: #fff;
-}
-
-.nav-link:hover {
+.flex-column .nav-item .nav-link a:hover {
     color: #db89c9;
 }
 
-.nav-link .actve {
+
+.nav-item.active a {
     color: #db89c9;
+    font-weight: 600;
 }
 
 .navbar {
@@ -109,64 +106,28 @@
     height: 50px;
 }
 
-.container .row {
-    position: fixed;
-    margin-top: 90px;
-    min-height: 90vh;
-}
 
-.container .row .col-md-3 {
-    padding: 20px 15px;
-    display: inline-block;
-    justify-content: space-between;
-    padding-left: 150px;
+/*Admin Patient List Page*/
+
+.container .container-fluid .row .col-sm-8 {
+    position: relative;
+   padding-left: 300px;
    
+    font-size: 14px;
+    
 }
-
-.custom-card {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin: 10px;
-    padding: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.container .container-fluid .row .col-sm-8 .alert-info {
+    align-items: center;
     width: 100%;
-    max-width: 190px; 
-    background: white;
-    height: 120px;
-
 }
 
-/*Admin Add Doctors Page*/
 
-.container .text-center h1 {
-    text-align: center;
-    justify-content: center;
-    padding-left: 250px;
-    color: black;
-}
-
-.container .row .md-12 h1 {
-    text-align: center;
-    font-size: 25px;
-    font-weight: 600;
-}
-
-.container .row .md-12 h2 {
-    font-size: 20px;
-}
-
-.container .row .md-12 {
-    padding-left: 190px;
-}
-
-.container .row .md-12 .btn-primary {
-    float: right;
-    background: #068fbc;
-    font-weight: 600;
-}
-
-.container .row .md-12 .btn-primary:hover {
-    color: #db89c9;
+.container-fluid .row .col-sm-8 {
+    position: relative;
+    float: left;
+   
+    font-size: 14px;
+  
 }
 
     
@@ -230,7 +191,7 @@ button a:hover {
     justify-content: center;
     min-height: 100vh;
     align-items: center;
-    background: url('/static/images/background.avif')no-repeat;
+    background: url('/static/images/background.jpeg')no-repeat;
     background-size: cover;
     background-size: cover;
 }
@@ -315,6 +276,11 @@ button a:hover {
     font-size: 16px;
     color: #333;
     font-weight: 600;
+}
+
+.wrapper .btn:hover{
+    color: #db89c9;
+    background: #068fbc;
 }
 
 .wrapper .register-link {
@@ -415,13 +381,25 @@ button a:hover {
 
 .loginroles-table a:hover {
     text-decoration: underline;
+    background: #db89c9;
     color: #db89c9;
+  
 }
 
 
 .loginroles-table img {
     border-radius: 50%;
 }
+
+.mt-5 .btn-primary {
+    text-decoration: none;
+    color: #068fbc;
+}
+.mt-5 .btn-primary:hover {
+    text-decoration: underline;
+    color: #db89c9;
+}
+
 
 /*################################################### ADMIN DASHBOARD ##########################*/
 .side-menu {

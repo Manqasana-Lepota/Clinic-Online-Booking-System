@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Montserrat&family=Poppins:wght@100;300;400;600;700;800;900&family=Waiting+for+the+Sunrise&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+
+}
+.container-fluid .alert-info {
+    font-size: 35px;
+}
+
+.col-sm-8 .table {
+    padding-left: 10px;
+    
+}
+
+.col-sm-8 h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #136171;
+}
+
+.col-sm-8 button {
+    float: right;
+    background: #068fbc;
+    border: none;
+    font-weight: 600;
+}
+
+.col-sm-8 button:hover {
+    background: #068fbc;
+    color: #db89c9 ;
+}
+
+.container-fluid .table-hover {
+   padding-left: 800px;
+   float: left;
+}
+
+.table th {
+    color: #db89c9;
+}
+
+.table td {
+    font-size: 12px;
+}
+
+.modal-header .modal-title {
+    font-weight: 600;
+}

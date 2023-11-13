@@ -6,121 +6,146 @@
     <title>Admin Dashboard</title>
 
     <!-- Add Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
     <link rel="shortcut icon" href="{{url_for('static', filename='images/clinic-logo.png')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.css')}}">
+
+   
     
 
 </head>
 <body>
+    <div class="container-fluid">
+        <h1 class="text-center alert alert-info"><b>Add New Doctor</b></h1><br>
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <!--Content goes here-->
+            <div class="col-sm-8">
+                <h2>All Doctors <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#myModal">Add Doctor</button></h2>
+                <br><br><br>
 
-<!-- Sidebar -->
-<div class="sidebar">
-     <!-- User Profile Section -->
-     <div class="sidebar-profile">
-        <div class="profile-avatar">
-            <img src="{{url_for('static', filename='images/user-profile.png')}}" alt="User Profile Image">
-        </div>
-        <div class="profile-details">
-            <h5>John Doe</h5>
-            <p>Email: john.doe@example.com</p>
-        </div>
-    </div>
-    <br>
-    <ul class="nav flex-column">
-        <li>
-            <a class="nav-link" href="#"><i class='bx bx-calendar'></i>&nbsp;Dashboard</a>
-        </li>
-        <li class="active">
-            <a class="nav-link" href="#"><i class='bx bx-plus-medical'></i>&nbsp;Doctors</a>
-        </li>
-        <li>
-            <a class="nav-link" href="#"><i class='bx bx-alarm'></i>&nbsp;Schedule</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#"><i class='bx bx-calendar-edit'></i>&nbsp;Appointments</a>
-        </li>
-        <li>
-            <a class="nav-link" href="#"><i class='bx bx-message'></i>&nbsp;Feedback</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#"><i class='bx bx-accessibility'></i>&nbsp;Patients</a>
-        </li>
-        <li>
-            <a class="nav-link" href="#"><i class='bx bx-log-out'></i>&nbsp;Logout</a>
-        </li>
-    </ul>
-</div> 
+                {%with messages = get_flashed_messages()%}
+                {%if messages%}
+                {% for message in messages %}
+                <div class="arlet alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    {{message}}
+                </div>
+                {%endfor%}
+                {%endif%}
+                {%endwith%}
 
-<!-- Navigation Bar -->
-<nav class="navbar navbar-expand-lg navbar-light">
-    <div class="container">
-        <!-- Search Bar -->
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <form class="d-flex ms-auto">
-                <input class="form-control search-bar" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-primary" type="submit">Search</button>
-            </form>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <div class="navbar-text ms-auto">
-                <span id="date-time">Loading...</span>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Full Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Contact</th>
+                            <th scope="col">Specialities</th>
+                            <th scope="col">Password</th>
+                            <th scope="col">Events</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in doctors %}
+                        <tr>
+                        <td>{{row.0}}</td>
+                        <td>{{row.1}}</td>
+                        <td>{{row.2}}</td>
+                        <td>{{row.3}}</td>
+                        <td>{{row.4}}</td>
+                        <td>{{row.5}}</td>
+
+                        <td>
+                            <a href="" class="btn btn-warning btn-sm" data-toggle="modal" data-target="">Edit</a><br>
+                            <a href="" class="btn btn-danger btn-sm" data-toggle="modal" data-target="">Delete</a>
+                        </td>
+                        </tr>
+
+                        <!--  Enter New Student Modal  -->
+                        <div id="myModal" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-info">Add New Doctor</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                      </div>
+                                    <div class="modal-body">
+                                        <form action="{{url_for('insertDoctorData')}}" method="POST">
+
+                                            <div class="form-group">
+                                                <label>Full Name</label>
+                                                <input type="text" class="form-control" id="" name="name" placeholder="Full Name ">
+                                              </div>
+
+                                            <div class="form-group">
+                                              <label>Email</label>
+                                              <input type="email" class="form-control" id="exampleFormControlInput1" name="email" placeholder="Email">
+                                            </div>
+
+                                             
+                                            <div class="form-group">
+                                                <label>Contact Number</label>
+                                                <input type="text" class="form-control" id="" name="contact" placeholder="Contact No">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="specialities">Specialities:</label><br>
+                                                <select name="specialities" id="specialities">
+                                                  <option value="#">Choose One</option>
+                                                  <option value="Family medicine">Family medicine</option>
+                                                  <option value="Pediatrics">Pediatrics</option>
+                                                  <option value="opel">Radiology</option>
+                                                  <option value="audi">Internal medicine</option>
+                                                  <option value="audi">Emergency medicine</option>
+                                                  <option value="audi">Surgery</option>
+                                                  <option value="audi">Obstetrics and gynaecology</option>
+                                                  <option value="audi">Gastroenterology</option>
+                                              </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Password</label>
+                                                <input type="password" class="form-control" id="" name="password" placeholder="Password">
+                                            </div>
+                                              
+
+
+                                              <button type="submit" class="btn btn-primary mb-2">Save</button>
+                                    
+                                          </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <!--  EndEnter New Student Modal  -->
+
+                        {% endfor %}
+                    </tbody>
+                    
+                </table>
+
+
             </div>
+            <!--Content ends here-->
+            <div class="col-sm-2"></div>
 
-            <!-- Alert Trigger Button -->
-            <img src="{{url_for('static', filename='images/notifications.jpg')}}" alt="">
-        </div>
-    </div>   
-</nav>
-<br><br>
-
-
-
-
-<!-- Main Content Section -->
-
-<div class="container">
-    <div class="row">
-        <div class="col md-12">
-         <h1>Add New Doctor</h1>
-         <br><br><br> 
-            <h2>All Doctors 
-            <button type="button" class="btn btn-primary">
-                    Add Student Data</button>
-            </h2><br><br>
-            <table class="table table-striped" style="padding-right: 450px;">
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Contact</th>
-                    <th>Specialities</th>
-                    <th>Password</th>
-                    <th>Events</th>
-                </tr>
-                <tr>
-                    <td>01</td>
-                    <td>Parwiz</td>
-                    <td>par@gmail.com</td>
-                    <td>0438492345</td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <a href="" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit">Edit</a>
-                        <a href="" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure To Delete?')">Delete</a>
-                    </td>
-                </tr>
-            </table>
-        </div>
     </div>
-</div>
-
-
-
-
+</table>
 <!-- Add Bootstrap JavaScript and Popper.js (if needed) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{{url_for('static', filename='js/script.js')}}"></script>
-</div>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
+
+</body>
 </html>
 
 

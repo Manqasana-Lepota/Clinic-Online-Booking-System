@@ -1,5 +1,5 @@
 from app import app
-from flask import Flask, render_template, redirect, request, url_for, session
+from flask import Flask, render_template, redirect, request, url_for, session, flash
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
@@ -39,10 +39,39 @@ def admin_dashboard():
     return render_template("admin_dashboard.html")
 
 
-
+# Fetching all doctors information from database
 @app.route('/admin_adddoctors')
 def admin_adddoctors():
-    return render_template("admin_adddoctors.html")
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM doctors")
+    data = cur.fetchall()
+    cur.close()
+    return render_template("admin_adddoctors.html", doctors = data)
+
+
+# Inserting Doctor Data to the database
+@app.route('/insertDoctorData', methods = ['POST'])
+def insertDoctorData():
+    if request.method == "POST":
+        flash("Doctor Successfully Added")
+        name = request.form['name']
+        email = request.form['email']
+        contact = request.form['contact']
+        specialities = request.form['specialities']
+        password = request.form['password']
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO doctors (name, email, contact, specialities, password) VALUES (%s, %s, %s, %s, %s)", (name, email, contact, specialities, password))
+        mysql.connection.commit()
+        return redirect(url_for('admin_adddoctors'))
+
+
+
+
+
+
+
+
+
 
 
 @app.route('/addNew_doctor', methods = ['GET', 'POST'])
@@ -68,6 +97,16 @@ def addNew_doctor():
     elif request.method == 'POST':
          message = 'Please fill out the form !'   
     return render_template("addNew_doctor.html", message=message)
+
+@app.route('/admin_patientslist')
+def admin_patientslist():
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM patient")
+    data = cur.fetchall()
+    cur.close()
+    return render_template("admin_patientslist.html", patient = data)
+
+
 
 
 
