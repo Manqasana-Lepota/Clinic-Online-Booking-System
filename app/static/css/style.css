@@ -14,7 +14,7 @@
     left: 0;
     width: 300px;
     height: 100%;
-    background: url('/static/images/background.jpeg')no-repeat;
+    background: #068fbc;
     background-size: cover;
     color: #fff;
     padding: 20px;
@@ -36,12 +36,17 @@
     margin-top: 10vh;
 }
 
-.flex-column .nav-item .nav-link a:hover {
+.nav .nav-item .nav-link {
+    color: #fff;
+
+}
+
+.nav .nav-item .nav-link:hover {
     color: #db89c9;
 }
 
 
-.nav-item.active a {
+.nav-item.active .nav-link {
     color: #db89c9;
     font-weight: 600;
 }
@@ -104,6 +109,52 @@
 .navbar .container .collapse img {
     width: 50px;
     height: 50px;
+}
+
+.card-deck {
+    position: fixed;
+    display: flex;
+    margin-top: 120px;
+    padding-left: 200px;
+  
+}
+
+.card {
+    width: 190px;
+    height: 120px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+
+.card-img-top {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+   
+    
+
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-body p {
+    font-size: 12px;
+
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.card-text {
+    color: #555;
 }
 
 
@@ -199,9 +250,9 @@ button a:hover {
     width: 420px;
     background: transparent;
     border: 2px solid rgba(255, 255, 255, .2);
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(50px);
     box-shadow: 0 0 10px rgba(0, 0, 0, .2);
-    color: #fff;
+    color: #db89c9;
     border-radius: 10px;
     padding: 30px 40px;
 }
@@ -262,19 +313,21 @@ button a:hover {
 
 .remember-forgot a:hover {
     text-decoration: underline;
+    color: #0b94ea;
+    font-weight: 600;
 }
 
 .wrapper .btn {
     width: 100%;
     height: 45px;
-    background: #fff;
+    background: #068fbc;
     border: none;
     outline: none;
     border-radius: 40px;
     box-shadow: 0 0 10px rgba(0, 0, 0, .1);
     cursor: pointer;
     font-size: 16px;
-    color: #333;
+    color: #db89c9;
     font-weight: 600;
 }
 
@@ -287,6 +340,11 @@ button a:hover {
     font-size: 14.5px;
     text-align: center;
     margin: 20px 0 15px;
+}
+
+.register-link p {
+    font-weight: 600;
+
 }
 
 .register-link p a {
@@ -367,9 +425,10 @@ button a:hover {
 .loginroles-background {
     background: url('/static/images/background1.avif')no-repeat;
     background-size: cover;
+    padding-left: 20px;
 }
 .loginroles-table {
-    padding: 150px 260px;
+    padding: 100px 260px;
 }
 
 .loginroles-table a {
@@ -389,6 +448,7 @@ button a:hover {
 
 .loginroles-table img {
     border-radius: 50%;
+  
 }
 
 .mt-5 .btn-primary {

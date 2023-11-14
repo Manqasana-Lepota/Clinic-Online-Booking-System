@@ -10,7 +10,7 @@
 </head>
 <body class="body-background-image">
     <div class="wrapper" style="width: 500px;height: 100%;">
-        <form action="{{ url_for('patientregistration_form')}}" method="post">
+        <form action="{{ url_for('patient_registration')}}" method="post">
             <h1>Patient Registration</h1>
             {% if message is defined and message %}
             <div class="arlet alert-warning" style="color: green;">{{ message }}</div>
@@ -51,7 +51,7 @@
             <button type="submit" class="btn">Register</button><br><br>
 
             <div class="register-link">
-                <p>Already have an account? <a href="{{url_for('patientlogin_page')}}">Login here</a></p>
+                <p>Already have an account? <a href="{{url_for('patient_login')}}">Login here</a></p>
             </div>
 
         </form>

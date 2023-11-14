@@ -6,12 +6,17 @@
     <title>Login Roles</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.css')}}">
+
 </head>
 <body class="loginroles-background">
     <div class="container mt-5">
-        <a href="{{url_for('home')}}" id="backButton" class="btn btn-primary"><i class='bx bx-arrow-back'></i>Back</a>
+        <a href="#" onclick="goBack()">
+            <img class="back-button" src="/static/images/back.png" alt="Back">
+           
+        </a>
       </div>
-    <table cellpadding="50" cellspacing="90" class="loginroles-table">
+    <table  cellspacing="80" class="loginroles-table">
         <tr>
             <td>
                 <a href="{{ url_for('admin_login')}}">
@@ -22,7 +27,7 @@
             </td>
 
             <td>
-                <a href="/patientlogin">
+                <a href="/patient_login">
                     <img src="/static/images/patient.jpeg" alt="patient" width="100" height="100">
                     <p style="padding-left: 20px;color: #068fbc;">Patient</p>
                 </a>
@@ -38,6 +43,7 @@
             </td>
         </tr>
     </table>
+    <script src="{{url_for('static', filename='js/script.js')}}"></script>
     
 </body>
 </html>

@@ -49,3 +49,30 @@
 .modal-header .modal-title {
     font-weight: 600;
 }
+
+.back-button {
+    cursor: pointer;
+    width: 40px;
+  
+}
+.back-button:hover{
+    background: #f2efef;
+    border-radius: 100%;
+}
+/*Patient Dashboard*/
+
+.navbar {
+    max-width: 850px; 
+    margin: 0 auto;
+}
+
+.navbar-nav {
+    font-weight: 600;
+  
+}
+
+.navbar-nav .nav-item .nav-link:hover {
+    color: #db89c9;
+
+}
+

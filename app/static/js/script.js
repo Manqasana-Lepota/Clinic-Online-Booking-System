@@ -11,6 +11,10 @@ setInterval(updateDateTime, 1000); // Update every 1 second
 // Call the function to update the date and time immediately and set it to update every second.
 updateDateTime();
 
+function goBack() {
+    window.history.back();
+}
+
 
 
 

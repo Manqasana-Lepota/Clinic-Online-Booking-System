@@ -14,6 +14,7 @@
 
 </head>
 <body>
+   
 
 <!-- Sidebar -->
 <div class="sidebar">
@@ -48,7 +49,7 @@
             <a class="nav-link" href="{{url_for('admin_patientslist')}}"><i class='bx bx-accessibility'></i>&nbsp;Patients</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#"><i class='bx bx-log-out'></i>&nbsp;Logout</a>
+            <a class="nav-link" href="{{url_for('logout')}}"><i class='bx bx-log-out'></i>&nbsp;Logout</a>
         </li>
     </ul>
 </div> 
@@ -58,10 +59,14 @@
     <div class="container">
         <!-- Search Bar -->
         <div class="collapse navbar-collapse" id="navbarNav">
+            <a href="#" onclick="goBack()">
+                <img class="back-button" src="/static/images/back.png" alt="Back">
+               
+            </a>&nbsp;&nbsp;&nbsp;
             <form class="d-flex ms-auto">
                 <input class="form-control search-bar" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-primary" type="submit">Search</button>
-            </form>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </form>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <div class="navbar-text ms-auto">
                 <span id="date-time">Loading...</span>
             </div>
@@ -72,9 +77,87 @@
     </div>   
 </nav>
 
-
-
 <!-- Main Content Section -->
+<!-- Main Content -->
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+    <!-- Bootstrap Cards -->
+    <div class="card-deck">
+        <!-- Card 1 -->
+        <div class="card">
+            <table>
+                <tr>
+                    <td>
+                        <div class="card-body">
+                            <h5 class="card-title">0</h5>
+                            <p>Patients</p>
+                        </div>
+                    </td>
+                    <td>
+                        <img src="/static/images/patients.jpeg" class="card-img-top" alt="Card Image 1" width="80px">
+                    </td>
+                </tr>
+            </table>
+        </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
+
+        <!-- Card 2 -->
+        <div class="card">
+            <table>
+                <tr>
+                    <td>
+                        <div class="card-body">
+                            <h5 class="card-title">0</h5>
+                            <p>Appointments</p>
+                        </div>
+                    </td>
+                    <td>
+                        <img src="/static/images/appointment.png" class="card-img-top" alt="Card Image 2" width="60px">
+                    </td>
+                </tr>
+            </table> 
+        </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
+
+        <!-- Card 3 -->
+        <div class="card">
+            <table>
+                <tr>
+                   <td>
+                    <div class="card-body">
+                        <h5 class="card-title">0</h5>
+                        <p>Doctors</p>
+                    </div>
+                   </td>
+                   <td>
+                    <img src="/static/images/doctors.jpeg" class="card-img-top" alt="Card Image 2" width="80px">
+                   </td>
+                </tr>
+            </table>
+        </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
+
+        <!-- Card 2 -->
+        <div class="card">
+            <table>
+                <tr>
+                    <td>
+                        <div class="card-body">
+                            <h5 class="card-title">0</h5>
+                            <p>Feedback</p>
+                            
+                        </div>
+                    </td>
+                    <td>
+                        <img src="/static/images/feedbacks.png" class="card-img-top" alt="Card Image 2" width="30px">
+
+                    </td>
+                </tr>
+            </table> 
+        </div>
+
+        <!-- Add more cards as needed -->
+
+    </div>
+</main>
+        
+    
 
 
 
