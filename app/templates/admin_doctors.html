@@ -9,10 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
     <link rel="shortcut icon" href="{{url_for('static', filename='images/clinic-logo.png')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.css')}}">
-
-   
-    
-
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
 </head>
 <body>
     <div class="container-fluid">
@@ -54,7 +51,7 @@
                     </thead>
                     <tbody>
                         {% for row in doctors %}
-                        <tr>
+                        <d>
                         <td>{{row.0}}</td>
                         <td>{{row.1}}</td>
                         <td>{{row.2}}</td>
@@ -142,7 +139,9 @@
             <div class="col-sm-2"></div>
 
     </div>
-</table>
+    </div>
+
+
 <!-- Add Bootstrap JavaScript and Popper.js (if needed) -->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Admin Dashboard</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+        <link rel="shortcut icon" href="{{url_for('static', filename='images/clinic-logo.png')}}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    </head>
+    <body>
+     
+        <div id="content">
+            <i class="fas fa-arrow-left" style="color: #068fbc;" onclick="goBack()"></i>
+            <table class="heading-table1" cellspacing="60">
+                <thead>
+                  <tr>
+                    <th>
+                        <h1>All Doctors</h1>
+                    </th>
+                    <th>
+                      <button onclick="togglePopup()">Add Doctor</button>
+                    </th>
+                    <!-- Add more headers if needed -->
+                  </tr>
+                </thead>
+            </table>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              <ul class="flashed-messages">
+                {% for category, message in messages %}
+                  <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          {% endwith %}
+
+            <table cellspacing="30" class="heading-table2">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Contact</th>
+                    <th>Specialities</th>
+                    <th>Password</th>
+                    <th>Events</th>
+                    <!-- Add more headers if needed -->
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for row in doctors %}
+                  <tr>
+                    <td>{{row.0}}</td>
+                    <td>{{row.1}}</td>
+                    <td>{{row.2}}</td>
+                    <td>{{row.3}}</td>
+                    <td>{{row.4}}</td>
+                    <td>{{row.5}}</td>
+                    <td>
+                      <a href="" class="btn btn-warning btn-sm" data-toggle="modal" data-target="">Edit</a><br>
+                      <a href="" class="btn btn-danger btn-sm" data-toggle="modal" data-target="">Delete</a>
+                  </td>
+                  </tr>
+                  <!-- Add more rows if needed -->
+                  {% endfor %}
+                </tbody>
+              </table>
+        </div>
+        <div class="overlay" id="overlay">
+          <div class="popup">
+            <span class="close-btn" onclick="togglePopup()">&times;</span>
+            <h2>Add New Doctor</h2><br>
+            <form action="{{url_for('Admin_Insert_Doctor')}}" method="post">
+
+              <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" class="form-control" id="" name="name" placeholder="Full Name " required>
+              </div>
+
+              <div class="form-group">
+                <label>Email</label>
+                <input type="email" class="form-control" id="exampleFormControlInput1" name="email" placeholder="Email" required>
+              </div>
+
+              <div class="form-group">
+                <label>Contact Number</label>
+                <input type="text" class="form-control" id="" name="contact" placeholder="Contact No" required>
+              </div>
+
+              <div class="form-group">
+                <label for="specialities">Specialities:</label>
+                <select name="specialities" id="specialities" required>
+                  <option value="None" disabled selected>Choose One</option>
+                  <option value="Family medicine">Family medicine</option>
+                  <option value="Pediatrics">Pediatrics</option>
+                  <option value="opel">Radiology</option>
+                  <option value="audi">Internal medicine</option>
+                  <option value="audi">Emergency medicine</option>
+                  <option value="audi">Surgery</option>
+                  <option value="audi">Obstetrics and gynaecology</option>
+                  <option value="audi">Gastroenterology</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Password</label>
+                <input type="password" class="form-control" id="" name="password" placeholder="Password" required>
+              </div>
+              <button type="submit" class="btn-primary">Save</button>
+          </form>
+          </div>
+
+        </div>
+       
+       
+        <script src="{{url_for('static', filename='js/script.js')}}"></script>
+
+    </body>
+</html>

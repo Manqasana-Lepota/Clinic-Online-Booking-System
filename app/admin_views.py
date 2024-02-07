@@ -3,6 +3,7 @@ from flask import Flask, render_template, redirect, request, url_for, session, f
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
+import logging
 
 
 
@@ -12,6 +13,8 @@ app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'password'
 app.config['MYSQL_DB'] = 'OnlineBookings_DB'
+app.config['MYSQL_AUTOCOMMIT'] = True
+app.config['MYSQL_DATABASE_POOL_SIZE'] = 10  # Adjust as neede
 mysql = MySQL(app)
 
 
@@ -28,78 +31,91 @@ def admin_login():
         if user:
             session['username'] = username
             message = 'Login successful!', 'success'
-            return redirect(url_for('admin_dashboard'))
+            return redirect(url_for('Admin_Dashboard_Page'))
         else:
             message ='Login failed. Please check your credentials.', 'danger'
     return render_template("admin_login.html")
 
 
-@app.route('/admin_dashboard')
-def admin_dashboard():
-    return render_template("admin_dashboard.html")
+@app.route('/Admin_Dashboard_Page')
+def Admin_Dashboard_Page():
+    return render_template("Admin_Dashboard_Page.html")
 
 
-# Fetching all doctors information from database
-@app.route('/admin_adddoctors')
-def admin_adddoctors():
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM doctors")
-    data = cur.fetchall()
-    cur.close()
-    return render_template("admin_adddoctors.html", doctors = data)
-
+# Fetching all doctors information from database    
+@app.route('/Admin_Doctors_Page')
+def Admin_Doctors_Page():
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM doctors")
+        data = cur.fetchall()
+        return render_template("Admin_Doctors_Page.html", data=data)
+    except Exception as e:
+        print(f"Error: {e}")
+        flash("An error occurred while fetching data from the database.", 'error')
+        return render_template("Admin_Doctors_Page.html", data=None)
+    finally:
+        # Ensure that the database connection is closed in all cases
+        if cur:
+            cur.close()
+    
 
 # Inserting Doctor Data to the database
-@app.route('/insertDoctorData', methods = ['POST'])
-def insertDoctorData():
-    if request.method == "POST":
-        flash("Doctor Successfully Added")
+@app.route('/Admin_Insert_Doctor', methods = ['POST'])
+def Admin_Insert_Doctor():
+     if request.method == 'POST' and 'name' in request.form and 'email' in request.form and 'contact' in request.form and 'specialities' in request.form and 'password' in request.form:
         name = request.form['name']
         email = request.form['email']
         contact = request.form['contact']
         specialities = request.form['specialities']
         password = request.form['password']
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute('SELECT * FROM doctors WHERE email = % s', (email,))
+        account = cur.fetchone()
+        if account:
+              flash('Doctor already exists !', 'warning')
+        elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+             flash('Invalid email address !', 'error')
+        elif not name or not email or not contact or not specialities or not password:
+             flash('Please fill out the form !', 'warning')
+        else:
+             cur.execute("INSERT INTO doctors (name, email, contact, specialities, password) VALUES (%s, %s, %s, %s, %s)", (name, email, contact, specialities, password))
+             mysql.connection.commit()
+             flash('New Doctor Successfully Added !', 'success')
+        return redirect(url_for('Admin_Doctors_Page'))
+     return 'Invalid request method'
+     
+
+
+
+@app.route('/Admin_Patients_Page')
+def Admin_Patients_Page():
+    try:
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO doctors (name, email, contact, specialities, password) VALUES (%s, %s, %s, %s, %s)", (name, email, contact, specialities, password))
-        mysql.connection.commit()
-        return redirect(url_for('admin_adddoctors'))
-
-
-
-@app.route('/logout')
-def logout():
-    session.pop('username', None)
-    return redirect(url_for('home'))
-
-
-
+        cur.execute("SELECT * FROM patient")
+        data = cur.fetchall()
+        return render_template("Admin_Patients_Page.html", patient=data)
+    except Exception as e:
+        print(f"Error: {e}")
+        return "An error occurred."
+    finally:
+        if cur:
+            cur.close()
 
 
 
 
-@app.route('/addNew_doctor', methods = ['GET', 'POST'])
-def addNew_doctor():
-    message = ''
-    if request.method == 'POST' and 'name' in request.form and 'email' in request.form and 'contact' in request.form and 'specialities' in request.form and 'password' in request.form:
-         name = request.form['name']
-         email = request.form['email']
-         contact = request.form['contact']
-         specialities = request.form['specialities']
-         password = request.form['password']
-         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-         cur.execute('SELECT * FROM doctor WHERE email = % s', (email,))
-         account = cur.fetchone()
-         if account:
-              message = 'Doctor already exists !'
-         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-              message = 'Invalid email address !'
-         else:
-            cur.execute('INSERT INTO doctor (name, email, contact, specialities, password) VALUES (% s, % s, % s, % s, % s)', (name, email, contact, specialities, password))
-            mysql.connection.commit()
-            message = 'Doctor Successful Added !'
-    elif request.method == 'POST':
-         message = 'Please fill out the form !'   
-    return render_template("addNew_doctor.html", message=message)
+
+
+
+
+
+
+
+
+
+
+
 
 @app.route('/admin_patientslist')
 def admin_patientslist():

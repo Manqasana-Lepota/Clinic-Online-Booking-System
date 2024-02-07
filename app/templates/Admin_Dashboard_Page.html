@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Admin Dashboard</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+        <link rel="shortcut icon" href="{{url_for('static', filename='images/clinic-logo.png')}}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+        <style>
+            body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+       
+        
+       
+       
+        
+ 
+        </style>
+      
+    </head>
+    <body>
+        <div class="sidebar">
+            <!-- User Profile Section -->
+            <div class="sidebar-profile">
+                <div class="profile-avatar">
+                    <img src="{{url_for('static', filename='images/user-profile.png')}}" alt="User Profile Image">
+                </div><br>
+                <div class="profile-details">
+                    <h5>John Doe</h5>
+                </div>
+            </div>
+
+            <a href="#dashboard" class="nav-link active"><i class='bx bx-calendar'></i>&nbsp;Dashboard</a>
+            <a href="{{url_for('Admin_Doctors_Page')}}"><i class='bx bx-plus-medical'></i>&nbsp;Doctors</a>
+            <a href="#settings"><i class='bx bx-alarm'></i>&nbsp;Schedule</a>
+            <a href="#settings"><i class='bx bx-calendar-edit'></i>&nbsp;Appointments</a>
+            <a href="#settings"><i class='bx bx-message'></i>&nbsp;Feedback</a>
+            <a href="{{url_for('Admin_Patients_Page')}}"><i class='bx bx-accessibility'></i>&nbsp;Patients</a>
+            <a href="#settings"><i class='bx bx-log-out'></i>&nbsp;Logout</a>
+        </div>
+        <nav class="navbar">
+            <div class="container">
+                <a&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; class="collapse">
+                <i class="fas fa-arrow-left" style="color: #068fbc;" onclick="goBack()"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Search...">
+                        <button class="search-button">Search</button>
+                    </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                    <div class="navbar-text ms-auto">
+                        <span id="date-time">Loading...</span>
+                    </div>
+                
+                    
+                    <div id="message-alerts">
+                        <img src="{{url_for('static', filename='images/notifications.jpg')}}" alt="">
+                        <span id="message-count">3</span>
+                    </div>
+
+                </div>
+               
+
+            </div>
+            
+        </nav><br>
+        <div id="content">
+            <div class="card-deck">
+                <!-- Card 1 -->
+                <div class="card">
+                    <table>
+                        <tr>
+                            <td>
+                                <div class="card-body">
+                                    <h5 class="card-title">0</h5>
+                                    <p>Patients</p>
+                                </div>
+                            </td>
+                            <td>
+                                <img src="/static/images/patients.jpeg" class="card-img-top" alt="Card Image 1" width="80px">
+                            </td>
+                        </tr>
+                    </table>
+                </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
+        
+                <!-- Card 2 -->
+                <div class="card">
+                    <table>
+                        <tr>
+                            <td>
+                                <div class="card-body">
+                                    <h5 class="card-title">0</h5>
+                                    <p>Appointments</p>
+                                </div>
+                            </td>
+                            <td>
+                                <img src="/static/images/appointment.png" class="card-img-top" alt="Card Image 2" width="60px">
+                            </td>
+                        </tr>
+                    </table> 
+                </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
+        
+                <!-- Card 3 -->
+                <div class="card">
+                    <table>
+                        <tr>
+                           <td>
+                            <div class="card-body">
+                                <h5 class="card-title">0</h5>
+                                <p>Doctors</p>
+                            </div>
+                           </td>
+                           <td>
+                            <img src="/static/images/doctors.jpeg" class="card-img-top" alt="Card Image 2" width="80px">
+                           </td>
+                        </tr>
+                    </table>
+                </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
+        
+                <!-- Card 2 -->
+                <div class="card">
+                    <table>
+                        <tr>
+                            <td>
+                                <div class="card-body">
+                                    <h5 class="card-title">0</h5>
+                                    <p>Feedback</p>
+                                    
+                                </div>
+                            </td>
+                            <td>
+                                <img src="/static/images/feedbacks.png" class="card-img-top" alt="Card Image 2" width="30px">
+        
+                            </td>
+                        </tr>
+                    </table> 
+                </div>
+        
+                <!-- Add more cards as needed -->
+        
+            </div>
+        </div>
+
+          <!-- Bootstrap Cards -->
+   
+
+       
+
+<script src="{{url_for('static', filename='js/script.js')}}"></script>
+
+    </body>
+</html>
