@@ -35,7 +35,7 @@ def admin_login():
         else:
             message ='Login failed. Please check your credentials.', 'danger'
     return render_template("admin_login.html")
-
+"/home/manqasana/Desktop/Clinic-Online-Booking-System/app/admin_views.py", 
 
 @app.route('/Admin_Dashboard_Page')
 def Admin_Dashboard_Page():
@@ -96,7 +96,7 @@ def Admin_Patients_Page():
         data = cur.fetchall()
         return render_template("Admin_Patients_Page.html", patient=data)
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error: {e}") 
         return "An error occurred."
     finally:
         if cur:

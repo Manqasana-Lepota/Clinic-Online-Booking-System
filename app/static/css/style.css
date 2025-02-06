@@ -418,17 +418,16 @@ button a:hover {
     justify-content: center;
     min-height: 100vh;
     align-items: center;
-    background: url('/static/images/background.jpeg')no-repeat;
     background-size: cover;
     background-size: cover;
 }
 .wrapper {
     width: 420px;
-    background: transparent;
-    border: 2px solid rgba(255, 255, 255, .2);
+    background: url('/static/images/background.jpeg')no-repeat;
+    border: 2px solid rgba(18, 85, 85, 0.2);
     backdrop-filter: blur(50px);
     box-shadow: 0 0 10px rgba(0, 0, 0, .2);
-    color: #db89c9;
+    color: #068fbc;
     border-radius: 10px;
     padding: 30px 40px;
 }
@@ -436,6 +435,7 @@ button a:hover {
 .wrapper h1 {
     font-size: 32px;
     text-align: center;
+    font-weight: bolder;
 }
 
 .wrapper .input-box {
@@ -504,7 +504,7 @@ button a:hover {
     cursor: pointer;
     font-size: 16px;
     color: #db89c9;
-    font-weight: 600;
+    font-weight: bolder;
 }
 
 .wrapper .btn:hover{
@@ -599,12 +599,13 @@ button a:hover {
 
 /*############################# LOGIN ROLES ############################*/
 .loginroles-background {
-    background: url('/static/images/background1.avif')no-repeat;
+    background: url()no-repeat;
     background-size: cover;
     padding-left: 20px;
 }
 .loginroles-table {
     padding: 100px 260px;
+
 }
 
 .loginroles-table a {
@@ -616,8 +617,9 @@ button a:hover {
 
 .loginroles-table a:hover {
     text-decoration: underline;
-    background: #db89c9;
     color: #db89c9;
+    font-weight: 900;
+    
   
 }
 
@@ -729,6 +731,7 @@ button a:hover {
     width: 90%;
     display: flex;
     align-items: center;
+
 }
    
 
