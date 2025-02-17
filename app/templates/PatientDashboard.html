@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar p-4">
+                <h4 class="mb-4 text-center">Clinic Dashboard</h4>
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action active">Dashboard</a>
+                    <a href="{{'BookAppointmentForm'}}" class="list-group-item list-group-item-action">Book Appointment</a>
+                    <a href="#" class="list-group-item list-group-item-action">My Appointments</a>
+                    <a href="#" class="list-group-item list-group-item-action">Medical History</a>
+                    <a href="#" class="list-group-item list-group-item-action">Profile</a>
+                    <a href="#" class="list-group-item list-group-item-action text-danger">Logout</a>
+                </div>
+            </nav>
+    
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <h2 class="mt-4">Welcome, <span class="fw-bold">{{session.firstname}} {{session.lastname}}</span></h2>
+    
+                <div class="row mt-4">
+                    <!-- Next Appointment Card -->
+                    <div class="col-md-4">
+                        <div class="card shadow-sm border-primary mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="card-title mb-0">Next Appointment</h5>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Date:</strong> 20 Feb 2025</p>
+                                <p><strong>Doctor:</strong> Dr. Smith</p>
+                                <button class="btn btn-warning btn-sm">Reschedule</button>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Book Appointment Card -->
+                    <div class="col-md-4">
+                        <div class="card shadow-sm border-success mb-4">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="card-title mb-0">Book a New Appointment</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>Choose your doctor and book a slot.</p>
+                                <a href="{{BookAppointmentForm}}" class="btn btn-primary">Book Now</a>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Upcoming Appointments Card -->
+                    <div class="col-md-4">
+                        <div class="card shadow-sm border-info mb-4">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="card-title mb-0">Upcoming Appointments</h5>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Feb 25, 2025</strong> - Dr. Brown</p>
+                                <p><strong>March 1, 2025</strong> - Dr. White</p>
+                                <button class="btn btn-secondary btn-sm">View Details</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12 mt-4">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="card-title mb-0">Your Upcoming Appointments</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if appointments %}
+                                <ul class="list-group">
+                                    {% for appointment in appointments %}
+                                        <li class="list-group-item">
+                                            <strong>{{ appointment.date }}</strong> at {{ appointment.time }} with {{ appointment.doctor_name }}
+                                            <span class="badge bg-info float-end">Status: {{ appointment.status }}</span>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p>No upcoming appointments.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+    
+                <!-- Notifications Section -->
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="alert alert-info">
+                            <strong>Reminder:</strong> Your appointment with Dr. Smith is tomorrow at 10:00 AM.
+                        </div>
+                        <div class="alert alert-warning">
+                            <strong>New Updates:</strong> New clinic policies are now available. Click <a href="#">here</a> to read.
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+</body>
+</html>

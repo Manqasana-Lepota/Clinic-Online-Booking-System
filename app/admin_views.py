@@ -12,15 +12,16 @@ app.secret_key = "Thisismysecretket"
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'password'
-app.config['MYSQL_DB'] = 'OnlineBookings_DB'
+app.config['MYSQL_DB'] = 'BookingSystem'
 app.config['MYSQL_AUTOCOMMIT'] = True
 app.config['MYSQL_DATABASE_POOL_SIZE'] = 10  # Adjust as neede
 mysql = MySQL(app)
 
 
-@app.route('/admin_login', methods = ['GET', "POST"])
+
+
+@app.route('/admin_login', methods=['GET', "POST"])
 def admin_login():
-    message = ''
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -28,14 +29,15 @@ def admin_login():
         cursor.execute("SELECT * FROM admin WHERE username = %s AND password = %s", (username, password))
         user = cursor.fetchone()
         cursor.close()
+        
         if user:
             session['username'] = username
-            message = 'Login successful!', 'success'
+            flash('Login successful!', 'success')
             return redirect(url_for('Admin_Dashboard_Page'))
         else:
-            message ='Login failed. Please check your credentials.', 'danger'
+            flash('Login failed. Please check your credentials.', 'danger')
+
     return render_template("admin_login.html")
-"/home/manqasana/Desktop/Clinic-Online-Booking-System/app/admin_views.py", 
 
 @app.route('/Admin_Dashboard_Page')
 def Admin_Dashboard_Page():
