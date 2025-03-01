@@ -1,47 +1,46 @@
-from app import app
-from flask import Flask, render_template, redirect, request, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_mysqldb import MySQL
-import MySQLdb.cursors
-import re
-import logging
+from werkzeug.security import check_password_hash
 
+app = Flask(__name__)
+app.secret_key = "Thisismysecretket" # Change this to a secure secret key
 
+# MySQL Configuration
+app.config["MYSQL_HOST"] = "localhost"
+app.config["MYSQL_USER"] = "root"
+app.config["MYSQL_PASSWORD"] = "password"
+app.config["MYSQL_DB"] = "BookingSystem"
+app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
-app.secret_key = "Thisismysecretket"
-
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'password'
-app.config['MYSQL_DB'] = 'BookingSystem'
-app.config['MYSQL_AUTOCOMMIT'] = True
-app.config['MYSQL_DATABASE_POOL_SIZE'] = 10  # Adjust as neede
 mysql = MySQL(app)
 
+# Admin Login Route
+@app.route("/admin/login", methods=["GET", "POST"])
+def AdminLogin():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
 
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM admin WHERE username = %s", (username,))
+        admin = cur.fetchone()
+        cur.close()
 
-
-@app.route('/admin_login', methods=['GET', "POST"])
-def admin_login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        cursor = mysql.connection.cursor()
-        cursor.execute("SELECT * FROM admin WHERE username = %s AND password = %s", (username, password))
-        user = cursor.fetchone()
-        cursor.close()
-        
-        if user:
-            session['username'] = username
-            flash('Login successful!', 'success')
-            return redirect(url_for('Admin_Dashboard_Page'))
+        if admin and check_password_hash(admin["password"], password):  # Checking hashed password
+            session["admin_logged_in"] = True
+            session["admin_username"] = admin["username"]
+            flash("Login successful!", "success")
+            return redirect(url_for('AdminDashboard'))
         else:
-            flash('Login failed. Please check your credentials.', 'danger')
+            flash("Invalid username or password", "danger")
 
-    return render_template("admin_login.html")
+    return render_template('AdminLogin.html')
 
-@app.route('/Admin_Dashboard_Page')
-def Admin_Dashboard_Page():
-    return render_template("Admin_Dashboard_Page.html")
+
+@app.route('/AdminDashboard')
+def AdminDashboard():
+    return render_template("AdminDashboard.html")
+
 
 
 # Fetching all doctors information from database    

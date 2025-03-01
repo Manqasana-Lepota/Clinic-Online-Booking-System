@@ -12,22 +12,23 @@
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar p-4">
+             <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar p-4">
                 <h4 class="mb-4 text-center">Clinic Dashboard</h4>
                 <div class="list-group">
                     <a href="#" class="list-group-item list-group-item-action active">Dashboard</a>
-                    <a href="{{'BookAppointmentForm'}}" class="list-group-item list-group-item-action">Book Appointment</a>
+                    <!-- Change href to # and add data-bs-toggle & data-bs-target to trigger modal -->
+                     <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#bookAppointmentModal">
+                        Book Appointment</a>
                     <a href="#" class="list-group-item list-group-item-action">My Appointments</a>
                     <a href="#" class="list-group-item list-group-item-action">Medical History</a>
                     <a href="#" class="list-group-item list-group-item-action">Profile</a>
                     <a href="#" class="list-group-item list-group-item-action text-danger">Logout</a>
                 </div>
             </nav>
-    
+            
             <!-- Main Content -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <h2 class="mt-4">Welcome, <span class="fw-bold">{{session.firstname}} {{session.lastname}}</span></h2>
-    
                 <div class="row mt-4">
                     <!-- Next Appointment Card -->
                     <div class="col-md-4">
@@ -51,11 +52,48 @@
                             </div>
                             <div class="card-body">
                                 <p>Choose your doctor and book a slot.</p>
-                                <a href="{{BookAppointmentForm}}" class="btn btn-primary">Book Now</a>
+                                <!-- Button to trigger modal -->
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bookAppointmentModal">
+                                    Book Now
+                                </button>
                             </div>
                         </div>
                     </div>
-    
+                    
+                   <!-- Bootstrap Modal -->
+                    <div class="modal fade" id="bookAppointmentModal" tabindex="-1" aria-labelledby="bookAppointmentModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="bookAppointmentModalLabel">Book an Appointment</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Appointment Booking Form -->
+                                  <form action="{{ url_for('BookAppointmentForm') }}" method="POST">
+                                    <div class="mb-3">
+                                        <label for="doctor" class="form-label">Choose a Doctor</label>
+                                        <select class="form-select" id="doctor" name="doctor">
+                                            <option value="Dr. Smith">Dr. Smith</option>
+                                            <option value="Dr. Jane">Dr. Jane</option>
+                                                <!-- Add more doctors as needed -->
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="date" class="form-label">Select Date</label>
+                                            <input type="date" class="form-control" id="date" name="date" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="time" class="form-label">Select Time</label>
+                                             <input type="time" class="form-control" id="time" name="time" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-success">Confirm Appointment</button>
+                                    </form>
+                                </div>
+                            </div>
+                         </div>
+                    </div>
+
                     <!-- Upcoming Appointments Card -->
                     <div class="col-md-4">
                         <div class="card shadow-sm border-info mb-4">
@@ -110,4 +148,5 @@
     </div>
     
 </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </html>

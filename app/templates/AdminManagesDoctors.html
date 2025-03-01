@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Manage Doctors</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+         /* Additional CSS to increase form input size */
+         .form-control-lg {
+            font-size: 1.2rem; /* Increased font size */
+            padding: 15px; /* Increased padding */
+            height: 50px; /* Increased height */
+        }
+
+        textarea.form-control-lg {
+            font-size: 1.2rem;
+            padding: 15px;
+            height: 150px; /* Increased textarea height */
+        }
+
+        .modal-dialog {
+            max-width: 50%; /* Increased modal width */
+        }
+
+        .btn-lg {
+            font-size: 1.2rem; /* Larger button font size */
+            padding: 15px 20px; /* Increased button padding */
+        }
+
+        .container {
+            max-width: 1000px; /* Increased container width */
+        }
+
+        .mb-3 {
+            margin-bottom: 20px; /* More space between form fields */
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4 text-center">Manage Doctors</h2>
+
+        <!-- New Doctor Button (Triggers Modal) -->
+        <button type="button" class="btn btn-success mb-4" data-bs-toggle="modal" data-bs-target="#addDoctorModal">
+            <i class="fas fa-plus-circle"></i> Add New Doctor
+        </button>
+
+        <!-- Doctor List Table -->
+        <div>
+            <h4 class="mb-3">Doctors List</h4>
+            <table class="table table-bordered table-striped sky-blue-table">
+                <thead class="table-dark">
+                    <tr>
+                        <th  style="width: 100px;">Doctor ID</th>
+                        <th  style="width: 120px;">First Name</th>
+                        <th  style="width: 120px;">Last Name</th>
+                        <th>Specialization</th>
+                        <th>Experience (Years)</th>
+                        <th>Available Days</th>
+                        <th>Username</th>
+                        <th>Password</th>
+                        <th style="width: 200px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for doctor in doctors %}
+                    <tr>
+                        <td>{{ doctor.doctor_id }}</td>
+                        <td>{{ doctor.firstname }}</td>
+                        <td>{{ doctor.lastname }}</td>
+                        <td>{{ doctor.specialization }}</td>
+                        <td>{{ doctor.experience_years }}</td>
+                        <td>{{ doctor.available_days }}</td>
+                        <td>{{ doctor.username }}</td>
+                        <td>{{ doctor.password }}</td>
+                        <td>
+                            <!-- Edit Button (opens modal) -->
+                             <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ doctor.doctor_id }}">
+                                Edit
+                            </button>
+
+                            <!-- Modal -->
+                             <div class="modal fade" id="editModal{{ doctor.doctor_id }}" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editModalLabel">Edit Doctor</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form method="POST" action="{{ url_for('admin.edit_doctor', doctor_id=doctor.doctor_id) }}">
+                                                <div class="mb-3">
+                                                    <label for="firstname" class="form-label">First Name</label>
+                                                    <input type="text" class="form-control" name="firstname" value="{{ doctor.firstname }}" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="lastname" class="form-label">Last Name</label>
+                                                    <input type="text" class="form-control" name="lastname" value="{{ doctor.lastname }}" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="specialization" class="form-label">Specialization</label>
+                                                    <input type="text" class="form-control" name="specialization" value="{{ doctor.specialization }}" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="experience_years" class="form-label">Experience (Years)</label>
+                                                    <input type="number" class="form-control" name="experience_years" value="{{ doctor.experience_years }}" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="available_days" class="form-label">Available Days</label><br>
+                                                    {% set days = doctor.available_days.split(', ') %}
+                                                    <input type="checkbox" name="available_days[]" value="Mon" {% if 'Mon' in days %} checked {% endif %}> Mon
+                                                    <input type="checkbox" name="available_days[]" value="Tue" {% if 'Tue' in days %} checked {% endif %}> Tue
+                                                    <input type="checkbox" name="available_days[]" value="Wed" {% if 'Wed' in days %} checked {% endif %}> Wed
+                                                    <input type="checkbox" name="available_days[]" value="Thu" {% if 'Thu' in days %} checked {% endif %}> Thu
+                                                    <input type="checkbox" name="available_days[]" value="Fri" {% if 'Fri' in days %} checked {% endif %}> Fri
+                                                    <input type="checkbox" name="available_days[]" value="Sat" {% if 'Sat' in days %} checked {% endif %}> Sat
+                                                    <input type="checkbox" name="available_days[]" value="Sun" {% if 'Sun' in days %} checked {% endif %}> Sun
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="username" class="form-label">Username</label>
+                                                    <input type="text" class="form-control" name="username" value="{{ doctor.username }}" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="password" class="form-label">Password</label>
+                                                    <input type="password" class="form-control" name="password" value="{{ doctor.password }}" required>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        
+                            <!-- The delete button should make a POST request to delete the doctor -->
+                            <form action="{{ url_for('admin.delete_doctor', doctor_id=doctor.doctor_id) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </td>                         
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Modal for Adding Doctor -->
+        <div class="modal fade" id="addDoctorModal" tabindex="-1" aria-labelledby="addDoctorModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addDoctorModalLabel">Add New Doctor</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Add Doctor Form -->
+                        <form method="POST" action="{{ url_for('admin.AdminManagesDoctors') }}">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="firstname" class="form-label">First Name</label>
+                                        <input type="text" class="form-control" id="firstname" name="firstname" required placeholder="First name">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="specialization" class="form-label">Specialization</label>
+                                        <select class="form-control" id="specialization" name="specialization" required>
+                                            <option value="" disabled selected>Select specialization</option>
+                                            <option value="General Practitioner">General Practitioner</option>
+                                            <option value="Cardiologist">Cardiologist</option>
+                                            <option value="Dermatologist">Dermatologist</option>
+                                            <option value="Neurologist">Neurologist</option>
+                                            <option value="Orthopedic Surgeon">Orthopedic Surgeon</option>
+                                            <option value="Pediatrician">Pediatrician</option>
+                                            <option value="Psychiatrist">Psychiatrist</option>
+                                            <option value="Radiologist">Radiologist</option>
+                                            <option value="Urologist">Urologist</option>
+                                            <option value="Gynecologist">Gynecologist</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="experience_years" class="form-label">Experience Years</label>
+                                        <input type="number" class="form-control" id="experience_years" name="experience_years" required placeholder="Years of experience">
+                                    </div>
+                                    
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="lastname" class="form-label">Last Name</label>
+                                        <input type="text" class="form-control" id="lastname" name="lastname" required placeholder="Last name">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Available Days</label><br>
+                                        <input type="checkbox" name="available_days[]" value="Mon"> Mon
+                                        <input type="checkbox" name="available_days[]" value="Tue"> Tue
+                                        <input type="checkbox" name="available_days[]" value="Wed"> Wed
+                                        <input type="checkbox" name="available_days[]" value="Thu"> Thu
+                                        <input type="checkbox" name="available_days[]" value="Fri"> Fri
+                                        <input type="checkbox" name="available_days[]" value="Sat"> Sat
+                                        <input type="checkbox" name="available_days[]" value="Sun"> Sun
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="username" class="form-label">Username</label>
+                                        <input type="email" class="form-control" id="username" name="username" required placeholder="Username">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="password" class="form-label">Password</label>
+                                        <input type="password" class="form-control" id="password" name="password" required placeholder="Password">
+                                        <small><button type="button" class="btn btn-link p-0" onclick="generatePassword()">Generate Password</button></small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100">Add Doctor</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a href="javascript:window.history.back();" class="btn btn-primary">
+            <i class="bi bi-arrow-left"></i> Back
+        </a>    
+    </div>
+    
+
+    <!-- Bootstrap JS (for interactive elements) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JS to generate Username and Password -->
+    <script>
+        function generateUsername() {
+            const firstname = document.getElementById("firstname").value;
+            const lastname = document.getElementById("lastname").value;
+            const username = firstname.toLowerCase() + '.' + lastname.toLowerCase();
+            document.getElementById("username").value = username;
+        }
+
+        function generatePassword() {
+            const password = Math.random().toString(36).slice(-8);  // Generates an 8-character password
+            document.getElementById("password").value = password;
+        }
+    </script>
+</body>
+</html>
