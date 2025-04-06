@@ -80,10 +80,35 @@ def PatientDashboard():
     return render_template("PatientDashboard.html")
 
 
-@app.route('/BookAppointmentForm')
-def BookAppointmentForm():
-    return render_template("BookAppointmentForm.html")
 
+@app.route('/book-appointment', methods=['GET', 'POST'])
+def book_appointment():
+    cursor = mysql.cursor()
+
+    # Fetch doctors from MySQL - Assuming 'doctor_id', 'firstname', and 'lastname' columns in the 'doctors' table
+    cursor.execute("SELECT doctor_id, firstname, lastname FROM doctors")
+    doctors = cursor.fetchall()
+
+    # Assuming 'patient_id' is available (e.g., from session or logged-in user)
+    patient_id = 1  # Replace this with actual patient_id (e.g., session['patient_id'])
+
+    if request.method == 'POST':
+        selected_doctor_id = request.form['doctor']
+        appointment_date = request.form['date']
+        appointment_time = request.form['time']
+
+        # Save appointment to MySQL
+        cursor.execute(
+            "INSERT INTO appointments (patient_id, doctor_id, appointment_date, appointment_time) VALUES (%s, %s, %s, %s)",
+            (patient_id, selected_doctor_id, appointment_date, appointment_time)
+        )
+        mysql.commit()
+
+        flash("Appointment booked successfully!", "success")
+        return redirect(url_for('book_appointment'))
+
+    cursor.close()
+    return render_template("book_appointment.html", doctors=doctors)
 
 # Fetching all patients information from database
 @app.route('/patient_details')

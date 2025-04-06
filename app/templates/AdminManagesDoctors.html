@@ -41,11 +41,34 @@
     </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h2 class="mb-4 text-center">Manage Doctors</h2>
+     <!-- Navbar -->
+     <nav class="navbar navbar-expand-lg navbar-dark " style="background-color:#0b94ea;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Admin Dashboard</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('admin.AdminManagesDoctors') }}">Manage Doctors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin.AdminDashboard') }}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid  mt-5">
+        <h2 class="mb-4 text-center" style="font-weight: 900;">Manage Doctors</h2>
 
         <!-- New Doctor Button (Triggers Modal) -->
-        <button type="button" class="btn btn-success mb-4" data-bs-toggle="modal" data-bs-target="#addDoctorModal">
+        <button type="button" class="btn btn-success ms-auto mb-4" data-bs-toggle="modal" data-bs-target="#addDoctorModal">
             <i class="fas fa-plus-circle"></i> Add New Doctor
         </button>
 
@@ -55,7 +78,7 @@
             <table class="table table-bordered table-striped sky-blue-table">
                 <thead class="table-dark">
                     <tr>
-                        <th  style="width: 100px;">Doctor ID</th>
+                        <th  style="width: 120px;">Doctor ID</th>
                         <th  style="width: 120px;">First Name</th>
                         <th  style="width: 120px;">Last Name</th>
                         <th>Specialization</th>

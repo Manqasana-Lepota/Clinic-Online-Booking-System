@@ -2,8 +2,15 @@ from flask import Flask, Blueprint, render_template, request, redirect, url_for,
 from flask_mysqldb import MySQL
 import MySQLdb.cursors  # Import MySQLdb cursors
 from werkzeug.security import check_password_hash
+from werkzeug.security import generate_password_hash
+import bcrypt
+from datetime import datetime
+
 
 app = Flask(__name__)  
+app = Flask(__name__, template_folder='templates')  # Ensure templates is set correctly
+app = Flask(__name__, template_folder='path_to_templates')
+
 
 admin = Blueprint("admin", __name__)  # Define Blueprint
 
@@ -54,15 +61,19 @@ def AdminLogin():
 
 @admin.route("/admin/dashboard")
 def AdminDashboard():
-     # Fetch the total number of doctors from the database
+   # Fetch the total number of doctors from the database
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute("SELECT COUNT(*) AS total FROM doctors")
     result = cursor.fetchone()
-    total_doctors = result['total']  # Extract the total count
+    total_doctors = result['total']  # Extract the total count of doctors
 
-    # Pass the total_doctors count to the template
-    return render_template("AdminDashboard.html", total_doctors=total_doctors)
+    # Fetch the total number of patients from the database (using raw SQL query)
+    cursor.execute("SELECT COUNT(*) AS total FROM patients")  # Assuming your table name is 'patients'
+    result_patients = cursor.fetchone()
+    total_patients = result_patients['total']
 
+    # Render the template and pass both the total_doctors and total_patients values
+    return render_template('AdminDashboard.html', total_doctors=total_doctors, total_patients=total_patients)
 
 @admin.route('/admin/adminManagesDoctors', methods=['GET', 'POST'])
 def AdminManagesDoctors():
@@ -153,3 +164,124 @@ def delete_doctor(doctor_id):
     flash("Doctor deleted successfully!", "success")
     return redirect(url_for('admin.AdminManagesDoctors'))
 
+
+@admin.route('/admin/adminManagePatients', methods=['GET', 'POST'])
+def AdminManagePatients():
+    # Open a cursor to interact with the MySQL database
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    
+    # Execute the query to fetch all patients
+    cursor.execute("SELECT * FROM patients")  # Adjust the table name if necessary
+    patients = cursor.fetchall()  # Fetch all patient data as a list of dictionaries
+    
+    # Close the cursor
+    cursor.close()
+    
+    # Render the template and pass the patients data
+    return render_template('AdminManagePatients.html', patients=patients)
+
+
+
+@admin.route("/admin/adminaddpatient", methods=["POST"])
+def AdminAddPatient():
+    if request.method == "POST":
+        firstname = request.form["firstname"]
+        lastname = request.form["lastname"]
+        DateOfBirth = request.form["DateOfBirth"]
+        age = request.form["age"]
+        gender = request.form["gender"]
+        marital_status = request.form["marital_status"]
+        email = request.form["email"]
+        contact = request.form["contact"]
+        address = request.form["address"]
+        password = request.form["password"]
+        
+        # Insert data into the database
+        cursor = mysql.connection.cursor()
+        cursor.execute("""
+            INSERT INTO patients (firstname, lastname, DateOfBirth, age, gender, marital_status, email, contact, address, password)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """, (firstname, lastname, DateOfBirth, age, gender, marital_status, email, contact, address, password))
+        mysql.connection.commit()
+        cursor.close()
+
+        flash("Patient added successfully!", "success")
+        return redirect(url_for('admin.AdminManagePatients'))  # Redirect back to the patient management page
+    
+
+
+
+
+
+# Update the route name to AdminDeletePatient
+@admin.route('/admin/delete_patient', methods=['POST'])
+def AdminDeletePatient():
+    patient_id = request.form['patient_id'] if 'patient_id' in request.form else None
+    
+    # Debugging: Print received data
+    print(f"Received patient_id: {patient_id}") 
+     
+
+    if not patient_id:
+        flash("Error: No patient ID received.", "danger")
+        return redirect(url_for('admin.AdminManagePatients'))
+
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.execute("DELETE FROM patients WHERE patient_id = %s", (patient_id,))
+        mysql.connection.commit()
+        cursor.close()
+
+        flash("Patient deleted successfully!", "success")
+    except Exception as e:
+        flash(f"Error occurred while deleting patient: {str(e)}", "danger")
+
+    return redirect(url_for('admin.AdminManagePatients'))
+
+
+
+@admin.route('/admin/edit_patient', methods=['POST'])
+def AdminEditPatient():
+    # Print the form data to debug
+    print("Form Data:", request.form)
+
+    patient_id = request.form['patient_id'] if 'patient_id' in request.form else None
+    
+    if not patient_id:
+        flash("Error: No patient ID received.", "danger")
+        return redirect(url_for('admin.AdminManagePatients'))  # Redirect back to the patients page
+
+    try:
+        # Update patient details based on form data
+        cursor = mysql.connection.cursor()
+        cursor.execute("UPDATE patients SET firstname = %s, lastname = %s, DateOfBirth = %s, age = %s, gender = %s, marital_status = %s, address = %s, email = %s, contact = %s, password = %s WHERE patient_id = %s", 
+                       (request.form['firstname'],  # First Name
+                        request.form['lastname'],  # Last Name
+                        request.form['DateOfBirth'],
+                        request.form['age'],
+                        request.form['gender'],
+                        request.form['marital_status'],
+                        request.form['address'],
+                        request.form['email'],
+                        request.form['contact'],
+                        request.form['password'],
+                        patient_id))
+
+        mysql.connection.commit()
+        cursor.close()
+
+        flash("Patient updated successfully!", "success")
+    except Exception as e:
+        flash(f"Error occurred while updating patient: {str(e)}", "danger")
+
+    return redirect(url_for('admin.AdminManagePatients'))
+
+
+
+
+@app.route('/logout')
+def logout():
+    # Remove the user session (if you're using Flask-Login or sessions)
+    session.pop('user_id', None)  # Replace 'user_id' with your session variable
+    flash('You have been logged out successfully!', 'success')
+    return redirect(url_for('loginroles'))  # Redirect to the login page (or another page)

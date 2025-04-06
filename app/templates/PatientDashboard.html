@@ -70,25 +70,27 @@
                                 </div>
                                 <div class="modal-body">
                                     <!-- Appointment Booking Form -->
-                                  <form action="{{ url_for('BookAppointmentForm') }}" method="POST">
-                                    <div class="mb-3">
-                                        <label for="doctor" class="form-label">Choose a Doctor</label>
-                                        <select class="form-select" id="doctor" name="doctor">
-                                            <option value="Dr. Smith">Dr. Smith</option>
-                                            <option value="Dr. Jane">Dr. Jane</option>
-                                                <!-- Add more doctors as needed -->
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="date" class="form-label">Select Date</label>
-                                            <input type="date" class="form-control" id="date" name="date" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="time" class="form-label">Select Time</label>
-                                             <input type="time" class="form-control" id="time" name="time" required>
-                                        </div>
-                                        <button type="submit" class="btn btn-success">Confirm Appointment</button>
-                                    </form>
+                                 <!-- Appointment Booking Form -->
+
+                                 <form method="POST" action="{{ url_for('book_appointment') }}">
+                                    <label for="doctor" class="form-label">Choose a Doctor</label>
+                                    <select class="form-select" id="doctor" name="doctor" required>
+                                        <option value="">Select a Doctor</option>
+                                        {% for doctor in doctors %}
+                                            <option value="{{ doctor[0] }}">{{ doctor[1] }} {{ doctor[2] }}</option> <!-- doctor[0] is doctor_id -->
+                                        {% endfor %}
+                                    </select>
+                                
+                                    <label for="date" class="form-label">Choose a Date</label>
+                                    <input type="date" class="form-control" id="date" name="date" required>
+                                
+                                    <label for="time" class="form-label">Choose a Time</label>
+                                    <input type="time" class="form-control" id="time" name="time" required>
+                                
+                                    <button type="submit" class="btn btn-primary">Book Appointment</button>
+                                </form>
+                                
+                                
                                 </div>
                             </div>
                          </div>

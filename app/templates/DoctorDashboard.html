@@ -2,92 +2,207 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doctor Dashboard</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome for Icons -->
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .profile-pic {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+        }
+        .card-title-icon {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Gradient background for the welcome card */
+.welcome-card {
+    background: linear-gradient(135deg, #6c63ff, #0e6292); /* Gradient background */
+    color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    
+}
+
+/* Adjusting the title text color */
+.welcome-card h3 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+/* Styling for the paragraph text */
+.welcome-card p {
+    font-size: 1.2rem;
+    opacity: 0.85;
+}
+
+/* Hover effect for the card */
+.welcome-card:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    transform: translateY(-8px);
+}
+
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <!-- Back Arrow -->
-        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-primary mb-3">
-            <i class="fas fa-arrow-left"></i>
-        </a>
-
-        <h2 class="mb-4 text-center">Doctor Dashboard</h2>
-
-        <!-- Add Doctor Form -->
-        <div class="card p-4 shadow">
-            <h4 class="mb-3">Add New Doctor</h4>
-            <form method="POST" action="{{ url_for('add_doctor') }}">
-                <div class="mb-3">
-                    <label for="firstname" class="form-label">First Name</label>
-                    <input type="text" class="form-control" id="firstname" name="firstname" required placeholder="Enter doctor's first name">
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <!-- Sidebar: Profile Settings -->
+            <div class="col-md-3">
+                <div class="card shadow p-4 text-center">
+                    <!-- Profile Picture or Avatar -->
+                    <img src="{{ url_for('static', filename='images/' + (doctor['profile_picture'] if doctor['profile_picture'] else 'default-avatar.png')) }}" 
+                         alt="Profile Picture"
+                         class="rounded-circle mb-3" 
+                         style="width: 120px; height: 120px; object-fit: cover; align-self: center;">
+            
+                    <h5 class="mb-0">Dr. {{ doctor['firstname'] }} {{ doctor['lastname'] }}</h5>
+            
+                    <small class="text-muted">
+                        {% if doctor['specialization'] %}
+                            Specialization: {{ doctor['specialization'] }}
+                        {% else %}
+                            Specialization not set.
+                        {% endif %}
+                    </small>
+            
+                    <!-- Form to upload profile picture -->
+                    <form action="{{ url_for('doctor.upload_profile_picture') }}" method="POST" enctype="multipart/form-data" class="mt-3">
+                        <div class="form-group">
+                            <input type="file" class="form-control-file" name="profile_picture" required>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-primary btn-block">Update Picture</button>
+                    </form>
+                    <hr>
+    
+                    <h6 class="text-left">Edit Info</h6>
+                    <form action="#" method="POST">
+                        <div class="form-group">
+                            <input type="text" class="form-control mb-2" name="phone" value="{{ doctor.phone }}" placeholder="Phone">
+                            <input type="text" class="form-control mb-2" name="specialization" value="{{ doctor.specialization }}" placeholder="Specialization">
+                        </div>
+                        <button class="btn btn-success btn-sm btn-block">Save Changes</button>
+                    </form>
+    
+                    <hr>
+    
+                    <h6 class="text-left">Change Password</h6>
+                    <form action="#" method="POST">
+                        <div class="form-group">
+                            <input type="password" class="form-control mb-2" name="current_password" placeholder="Current Password">
+                            <input type="password" class="form-control mb-2" name="new_password" placeholder="New Password">
+                            <input type="password" class="form-control mb-2" name="confirm_password" placeholder="Confirm Password">
+                        </div>
+                        <button class="btn btn-warning btn-sm btn-block">Change Password</button>
+                    </form>
                 </div>
-                <div class="mb-3">
-                    <label for="lastname" class="form-label">Last Name</label>
-                    <input type="text" class="form-control" id="lastname" name="lastname" required placeholder="Enter doctor's last name">
+            </div>
+    
+            <!-- Main Dashboard Content -->
+            <div class="col-md-9">
+                <!-- Welcome Section -->
+                <div class="card shadow p-4 mb-4 welcome-card">
+                    <h3>Welcome back, Dr. {{ doctor.lastname }}!</h3>
+                    <p class="text-muted">Here's your dashboard overview.</p>
                 </div>
-                <div class="mb-3">
-                    <label for="specialization" class="form-label">Specialization</label>
-                    <input type="text" class="form-control" id="specialization" name="specialization" required placeholder="Enter doctor's specialization">
+                
+                <!-- Row 1: Appointments + Notifications -->
+                <div class="row">
+                    <!-- Today's Appointments -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card shadow p-3">
+                            <h5>Today's Appointments</h5>
+                            <!-- Sample Table -->
+                            <table class="table table-sm table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Patient</th>
+                                        <th>Time</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for appt in todays_appointments %}
+                                    <tr>
+                                        <td>{{ appt.patient_name }}</td>
+                                        <td>{{ appt.time }}</td>
+                                        <td>{{ appt.status }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+    
+                    <!-- Notifications -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card shadow p-3">
+                            <h5>Notifications</h5>
+                            <ul class="list-group list-group-flush">
+                                {% for message in notifications %}
+                                <li class="list-group-item">{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="experience_years" class="form-label">Experience Years</label>
-                    <input type="number" class="form-control" id="experience_years" name="experience_years" required placeholder="Enter years of experience">
+    
+                <!-- Row 2: Appointment Management + Medical Records -->
+                <div class="row">
+                    <!-- Appointment Management -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card shadow p-3">
+                            <h5>Appointment Management</h5>
+                            <ul class="list-group">
+                                <li class="list-group-item">View All Appointments</li>
+                                <li class="list-group-item">Start Consultation</li>
+                                <li class="list-group-item">Mark as Completed</li>
+                                <li class="list-group-item">Cancel / Reschedule</li>
+                            </ul>
+                        </div>
+                    </div>
+    
+                    <!-- Medical Records -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card shadow p-3">
+                            <h5>Patient Medical Records</h5>
+                            <ul class="list-group">
+                                <li class="list-group-item">Access Medical History</li>
+                                <li class="list-group-item">Current Medications</li>
+                                <li class="list-group-item">Past Visits & Diagnoses</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="clinic_address" class="form-label">Clinic Address</label>
-                    <textarea class="form-control" id="clinic_address" name="clinic_address" required placeholder="Enter clinic address"></textarea>
+    
+                <!-- Row 3: Calendar + Prescriptions -->
+                <div class="row">
+                    <!-- Calendar View -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card shadow p-3">
+                            <h5>Calendar View</h5>
+                            <!-- Placeholder: Replace with actual calendar component -->
+                            <div class="text-center text-muted">[ Calendar Here ]</div>
+                        </div>
+                    </div>
+    
+                    <!-- Write/View Prescriptions -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card shadow p-3">
+                            <h5>Prescriptions</h5>
+                            <ul class="list-group">
+                                <li class="list-group-item">Create New Prescription</li>
+                                <li class="list-group-item">View / Print Past Prescriptions</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="available_days" class="form-label">Available Days</label>
-                    <input type="text" class="form-control" id="available_days" name="available_days" required placeholder="Enter available days (e.g., Mon, Tue)">
-                </div>
-                <button type="submit" class="btn btn-primary w-100">Add Doctor</button>
-            </form>
-        </div>
-
-        <!-- Doctors List Table -->
-        <div class="mt-5">
-            <h4 class="mb-3">Doctors List</h4>
-            <table class="table table-bordered table-striped">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Doctor ID</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Specialization</th>
-                        <th>Experience (Years)</th>
-                        <th>Clinic Address</th>
-                        <th>Available Days</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for doctor in doctors %}
-                    <tr>
-                        <td>{{ doctor.doctor_id }}</td>
-                        <td>{{ doctor.firstname }}</td>
-                        <td>{{ doctor.lastname }}</td>
-                        <td>{{ doctor.specialization }}</td>
-                        <td>{{ doctor.experience_years }}</td>
-                        <td>{{ doctor.clinic_address }}</td>
-                        <td>{{ doctor.available_days }}</td>
-                        <td>
-                            <a href="{{ url_for('edit_doctor', doctor_id=doctor.doctor_id) }}" class="btn btn-warning btn-sm">Edit</a>
-                            <a href="{{ url_for('delete_doctor', doctor_id=doctor.doctor_id) }}" class="btn btn-danger btn-sm">Delete</a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            </div>
         </div>
     </div>
-
-    <!-- Bootstrap JS (for interactive elements) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
 </body>
 </html>
