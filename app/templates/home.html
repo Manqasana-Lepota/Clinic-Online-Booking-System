@@ -8,14 +8,14 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}">
 
     <style>
-        body {
-            background: url('/static/images/stethoscope0.jpg');  /* URL to your background image */
-            background-size: 700px;
-            background-position: 450px 400px;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-        }
-        /* Add your other CSS styles here */
+    body {
+        background: url('/static/images/stethoscope0.jpg') no-repeat center center fixed;
+        background-size: cover;
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+    }
+
     </style>
   
 </head>
@@ -25,8 +25,7 @@
         <h1>Welcome to Jeppe Clinic</h1><br>
         <h2>Online Booking System</h2><br>
         <p>Conveniently schedule your visit with us online.</p><br>
-        <button><a href="{{ url_for('loginroles.login')}}">Now</a></button>
-
+        <a href="{{ url_for('loginroles.login') }}" class="cta-button">Book Now</a>
     </div>
 </body>
 </html>
