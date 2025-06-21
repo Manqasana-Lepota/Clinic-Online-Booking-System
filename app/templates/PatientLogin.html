@@ -76,7 +76,7 @@
             <div class="alert alert-danger text-center">{{ message }}</div>
             {% endif %}
 
-            <form action="{{ url_for('PatientLogin') }}" method="post">
+            <form action="{{ url_for('patient.PatientLogin') }}" method="post">
                 <div class="mb-3">
                     <input type="email" class="form-control" placeholder="Email" name="email" required>
                 </div>
@@ -91,7 +91,7 @@
             </form>
 
             <div class="text-center mt-3">
-                <p>Don't have an account? <a href="{{ url_for('PatientRegistrationForm') }}">Register here</a></p>
+                <p>Don't have an account? <a href="{{ url_for('patient.PatientRegistrationForm') }}">Register here</a></p>
             </div>
         </div>
     </div>

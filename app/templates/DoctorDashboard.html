@@ -4,63 +4,100 @@
     <meta charset="UTF-8">
     <title>Doctor Dashboard</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <style>
-        .profile-pic {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-        }
-        .card-title-icon {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Gradient background for the welcome card */
-.welcome-card {
-    background: linear-gradient(135deg, #6c63ff, #0e6292); /* Gradient background */
-    color: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    padding: 2rem;
-    
-}
-
-/* Adjusting the title text color */
-.welcome-card h3 {
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-}
-
-/* Styling for the paragraph text */
-.welcome-card p {
-    font-size: 1.2rem;
-    opacity: 0.85;
-}
-
-/* Hover effect for the card */
-.welcome-card:hover {
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-    transform: translateY(-8px);
-}
-
+    @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap');
+    .card-title-icon {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .welcome-card {
+        background: linear-gradient(135deg, #6c63ff, #0e6292);
+        color: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+    }
+    .welcome-card h3 {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+    .welcome-card p {
+        font-size: 1.2rem;
+        opacity: 0.85;
+    }
+    .welcome-card:hover {
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        transform: translateY(-8px);
+    }
+    .profile-pic-container {
+        position: relative;
+        display: inline-block;
+        width: 150px;
+        height: 150px;
+    }
+    .profile-pic-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 2px solid #9c9a9a;
+    }
+    .edit-icon {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background: #ffffffcc;
+        border-radius: 50%;
+        padding: 5px;
+        cursor: pointer;
+    }
+    .edit-icon i {
+        color: #000;
+        font-size: 14px;
+    }
     </style>
+
 </head>
 <body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+  
+
     <div class="container-fluid mt-4">
         <div class="row">
             <!-- Sidebar: Profile Settings -->
             <div class="col-md-3">
                 <div class="card shadow p-4 text-center">
                     <!-- Profile Picture or Avatar -->
-                    <img src="{{ url_for('static', filename='images/' + (doctor['profile_picture'] if doctor['profile_picture'] else 'default-avatar.png')) }}" 
-                         alt="Profile Picture"
-                         class="rounded-circle mb-3" 
-                         style="width: 120px; height: 120px; object-fit: cover; align-self: center;">
-            
-                    <h5 class="mb-0">Dr. {{ doctor['firstname'] }} {{ doctor['lastname'] }}</h5>
-            
+                    <form action="{{ url_for('doctor.update_profile_pic') }}" method="POST" enctype="multipart/form-data">
+                        <div class="profile-pic-container">
+                            <label for="profilePicInput">
+                                <img src="{{ url_for('static', filename='uploads/' + doctor.profile_picture) }}"
+                                     alt="Profile Picture">
+                                <div class="edit-icon">
+                                    <i class="fas fa-pen"></i> <!-- Use fa-pen if you want a pen instead -->
+                                </div>
+                            </label>
+                            <input type="file" id="profilePicInput" name="profile_pic" accept="image/*" style="display:none;" onchange="this.form.submit()">
+                        </div>
+                    </form><br>
+
+                    <h5 class="mb-0" style="font-style: normal; font-family: Dancing Script, cursive;">Dr. {{ doctor['firstname'] }} {{ doctor['lastname'] }}</h5>
                     <small class="text-muted">
                         {% if doctor['specialization'] %}
                             Specialization: {{ doctor['specialization'] }}
@@ -68,38 +105,40 @@
                             Specialization not set.
                         {% endif %}
                     </small>
-            
-                    <!-- Form to upload profile picture -->
-                    <form action="{{ url_for('doctor.upload_profile_picture') }}" method="POST" enctype="multipart/form-data" class="mt-3">
-                        <div class="form-group">
-                            <input type="file" class="form-control-file" name="profile_picture" required>
-                        </div>
-                        <button type="submit" class="btn btn-sm btn-primary btn-block">Update Picture</button>
-                    </form>
                     <hr>
-    
-                    <h6 class="text-left">Edit Info</h6>
-                    <form action="#" method="POST">
+  
+                    <h4 class="text-left">Edit Doctor Info</h4>
+                    <form action="" method="POST" enctype="multipart/form-data">
                         <div class="form-group">
-                            <input type="text" class="form-control mb-2" name="phone" value="{{ doctor.phone }}" placeholder="Phone">
-                            <input type="text" class="form-control mb-2" name="specialization" value="{{ doctor.specialization }}" placeholder="Specialization">
+                            <input type="text" class="form-control mb-2" name="firstname" value="{{ doctor.firstname }}" placeholder="First Name" required>
+                            <input type="text" class="form-control mb-2" name="lastname" value="{{ doctor.lastname }}" placeholder="Last Name" required>
+                            <input type="text" class="form-control mb-2" name="specialization" value="{{ doctor.specialization }}" placeholder="Specialization" required>
+                            <input type="text" class="form-control mb-2" name="experience_years" value="{{ doctor.experience_years }}" placeholder="Years of Experience" required>
+                            <input type="text" class="form-control mb-2" name="available_days" value="{{ doctor.available_days }}" placeholder="Available Days" required>
+                            <input type="text" class="form-control mb-2" name="username" value="{{ doctor.username }}" placeholder="Username" required>
                         </div>
-                        <button class="btn btn-success btn-sm btn-block">Save Changes</button>
+                        <button class="btn btn-sm btn-block"
+                        style="background-color: #0e6292; height: 40px; color: white;">Save Changes</button>
                     </form>
-    
-                    <hr>
-    
-                    <h6 class="text-left">Change Password</h6>
-                    <form action="#" method="POST">
-                        <div class="form-group">
-                            <input type="password" class="form-control mb-2" name="current_password" placeholder="Current Password">
-                            <input type="password" class="form-control mb-2" name="new_password" placeholder="New Password">
-                            <input type="password" class="form-control mb-2" name="confirm_password" placeholder="Confirm Password">
-                        </div>
-                        <button class="btn btn-warning btn-sm btn-block">Change Password</button>
-                    </form>
+                    <br>
+                  
+
+                    <button class="btn btn-sm btn-block" id="changePasswordButton" type="button"
+                    style="background-color: #0e6292;color: white;height: 40px;">Change Password</button>
+
+                    <div id="changePasswordForm" style="display: none;">
+                        <form action="{{ url_for('doctor.change_doctor_password') }}" method="POST">
+                            <div class="form-group">
+                                <input type="password" class="form-control mb-2" name="current_password" placeholder="Current Password" required>
+                                <input type="password" class="form-control mb-2" name="new_password" placeholder="New Password" required>
+                                <input type="password" class="form-control mb-2" name="confirm_password" placeholder="Confirm Password" required>
+                            </div>
+                            <button class="btn btn-warning btn-sm btn-block" type="submit">Save</button>
+                        </form>
+                    </div>
                 </div>
             </div>
+        
     
             <!-- Main Dashboard Content -->
             <div class="col-md-9">
@@ -203,6 +242,20 @@
             </div>
         </div>
     </div>
+
+    <script>
+
+    document.getElementById("changePasswordButton").addEventListener("click", function() {
+        const form = document.getElementById("changePasswordForm");
+        form.style.display = form.style.display === "none" ? "block" : "none";
+    });
+
+    </script>
+    <!-- jQuery (required for Bootstrap 4) -->
+     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+     <!-- Bootstrap JS -->
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+
     
 </body>
 </html>

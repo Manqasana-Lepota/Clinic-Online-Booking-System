@@ -1,4 +1,5 @@
 from flask import Flask, Blueprint, render_template, request, redirect, url_for, flash, session
+from app import mysql
 from flask_mysqldb import MySQL
 import MySQLdb.cursors  # Import MySQLdb cursors
 from werkzeug.security import check_password_hash
@@ -7,23 +8,7 @@ import bcrypt
 from datetime import datetime
 
 
-app = Flask(__name__)  
-app = Flask(__name__, template_folder='templates')  # Ensure templates is set correctly
-app = Flask(__name__, template_folder='path_to_templates')
-
-
 admin = Blueprint("admin", __name__)  # Define Blueprint
-
-app.secret_key = "Thisismysecretket" # Change this to a secure secret key
-
-# MySQL Configuration
-app.config["MYSQL_HOST"] = "localhost"
-app.config["MYSQL_USER"] = "root"
-app.config["MYSQL_PASSWORD"] = "password"
-app.config["MYSQL_DB"] = "BookingSystem"
-app.config["MYSQL_CURSORCLASS"] = "DictCursor"
-
-mysql = MySQL(app)
 
 
 # Admin Login Route
@@ -279,7 +264,7 @@ def AdminEditPatient():
 
 
 
-@app.route('/logout')
+@admin.route('/logout')
 def logout():
     # Remove the user session (if you're using Flask-Login or sessions)
     session.pop('user_id', None)  # Replace 'user_id' with your session variable

@@ -72,14 +72,15 @@
                                     <!-- Appointment Booking Form -->
                                  <!-- Appointment Booking Form -->
 
-                                 <form method="POST" action="{{ url_for('book_appointment') }}">
+                                 <form method="POST" action="{{ url_for('patient.BookAppointment') }}">
                                     <label for="doctor" class="form-label">Choose a Doctor</label>
                                     <select class="form-select" id="doctor" name="doctor" required>
                                         <option value="">Select a Doctor</option>
                                         {% for doctor in doctors %}
-                                            <option value="{{ doctor[0] }}">{{ doctor[1] }} {{ doctor[2] }}</option> <!-- doctor[0] is doctor_id -->
+                                            <option value="{{ doctor['id'] }}">{{ doctor['firstname'] }} {{ doctor['lastname'] }}</option>
                                         {% endfor %}
                                     </select>
+                                    
                                 
                                     <label for="date" class="form-label">Choose a Date</label>
                                     <input type="date" class="form-control" id="date" name="date" required>

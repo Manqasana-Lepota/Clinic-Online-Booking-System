@@ -1,19 +1,12 @@
-from app import app
-from flask import Flask, render_template, redirect, request, url_for, session, flash
+from flask import Flask, Blueprint, render_template, redirect, request, url_for, session, flash
+from app import mysql
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
 
-app.secret_key = "Thisismysecretket"
+patient = Blueprint('patient', __name__)
 
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'password'
-app.config['MYSQL_DB'] = 'BookingSystem'
-mysql = MySQL(app)
-
-
-@app.route('/PatientLogin', methods = ['GET', 'POST'])
+@patient.route('/PatientLogin', methods = ['GET', 'POST'])
 def PatientLogin():
     message = ''
     if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
@@ -35,13 +28,13 @@ def PatientLogin():
             session['contact'] = user['contact']
             session['address'] = user['address']
             message = 'Logged in successfully !'
-            return redirect(url_for('PatientDashboard'))
+            return redirect(url_for('patient.PatientDashboard'))
         else:
             message = 'Please enter correct email / password'
     return render_template("PatientLogin.html", message = message)
 
 
-@app.route('/PatientRegistrationForm', methods = ['GET', 'POST'])
+@patient.route('/PatientRegistrationForm', methods = ['GET', 'POST'])
 def PatientRegistrationForm():
     message = ''
     if request.method == 'POST' and 'firstname' in request.form and 'lastname' in request.form and 'DateOfBirth' in request.form and 'age' in request.form and 'gender' in request.form and 'marital_status' in request.form and 'email' in request.form and 'contact' in request.form and 'address'in request.form and 'password' in request.form  and 'confirm_password' in request.form:
@@ -72,45 +65,25 @@ def PatientRegistrationForm():
             message = 'Patient Registered Successful !'
     elif request.method == 'POST':
         message = 'Please fill out the form !'
-    return render_template("PatientRegistrationForm.html", message = message)
+    return render_template("patient.PatientRegistrationForm.html", message = message)
 
 
-@app.route('/PatientDashboard')
+@patient.route('/PatientDashboard')
 def PatientDashboard():
     return render_template("PatientDashboard.html")
 
 
-
-@app.route('/book-appointment', methods=['GET', 'POST'])
-def book_appointment():
-    cursor = mysql.cursor()
-
-    # Fetch doctors from MySQL - Assuming 'doctor_id', 'firstname', and 'lastname' columns in the 'doctors' table
-    cursor.execute("SELECT doctor_id, firstname, lastname FROM doctors")
+@patient.route('/book_appointment')
+def BookAppointment():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute("SELECT id, firstname, lastname FROM doctors")
     doctors = cursor.fetchall()
-
-    # Assuming 'patient_id' is available (e.g., from session or logged-in user)
-    patient_id = 1  # Replace this with actual patient_id (e.g., session['patient_id'])
-
-    if request.method == 'POST':
-        selected_doctor_id = request.form['doctor']
-        appointment_date = request.form['date']
-        appointment_time = request.form['time']
-
-        # Save appointment to MySQL
-        cursor.execute(
-            "INSERT INTO appointments (patient_id, doctor_id, appointment_date, appointment_time) VALUES (%s, %s, %s, %s)",
-            (patient_id, selected_doctor_id, appointment_date, appointment_time)
-        )
-        mysql.commit()
-
-        flash("Appointment booked successfully!", "success")
-        return redirect(url_for('book_appointment'))
-
     cursor.close()
-    return render_template("book_appointment.html", doctors=doctors)
 
-# Fetching all patients information from database
-@app.route('/patient_details')
-def patient_details():
-    return render_template("patient_details.html")
+    
+    return render_template("BookAppointmentForm.html", doctors=doctors)
+
+
+
+
+
