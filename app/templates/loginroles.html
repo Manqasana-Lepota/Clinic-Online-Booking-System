@@ -19,19 +19,21 @@
     <h2 style="margin-top: 30px; color: #3f51b5; text-align: center;">Select Your Role</h2>
     <div class="loginroles-wrapper container">
     <div class="role-box">
-        <a href="{{ url_for('admin.AdminLogin') }}">
+        <a href="{{ url_for('loginroles.show_universal_login', role='admin') }}">
             <img src="/static/images/Admin.png" alt="admin">
             <p>Admin</p>
         </a>
     </div>
+    
     <div class="role-box">
-        <a href="{{ url_for('patient.PatientLogin') }}">
+        <a href="{{ url_for('loginroles.show_universal_login', role='patient') }}">
             <img src="/static/images/patient.png" alt="patient">
             <p>Patient</p>
         </a>
     </div>
+
     <div class="role-box">
-        <a href="{{ url_for('doctor.DoctorLogin') }}">
+        <a href="{{ url_for('loginroles.show_universal_login', role='doctor') }}">
             <img src="/static/images/doctor-profile.png" alt="doctor">
             <p>Doctor</p>
         </a>

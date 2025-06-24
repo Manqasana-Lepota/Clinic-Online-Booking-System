@@ -12,6 +12,9 @@
         <br>
         <h3>User Login</h3>
         <br>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% include 'header.html' %}
+    <title>User Login Form</title>
         <form action="{{ url_for('login') }}" method="post">
             {% if message is defined and message %}
             <div class="alert alert-warning"{{ message }}></div>

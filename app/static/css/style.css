@@ -120,7 +120,6 @@
     font-size: 1.1rem;
    
 }
-
 .role-box:hover {
     transform: translateY(-6px);
     box-shadow: 0 4px 12px rgba(63, 81, 181, 0.3);
@@ -137,7 +136,99 @@
     }
 }
 
+/*********************************************LOGIN PAGE*****************************************/
+.body-background-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #f5f5f5; 
+}
 
+.wrapper {
+    width: 500px;
+    background-color: #fff; 
+    border: 2px solid rgba(18, 85, 85, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    color: #3f51b5;
+    border-radius: 12px;
+    padding: 30px 40px;
+}
+
+.wrapper h1 {
+    font-size: 28px;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Input box styling */
+.wrapper .input-box {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    margin-bottom: 20px;
+}
+
+.input-box input,
+.input-box select {
+    width: 100%;
+    height: 100%;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 30px;
+    font-size: 15px;
+    color: #333;
+    padding: 0 20px;
+    outline: none;
+}
+
+.input-box input::placeholder {
+    color: #999;
+}
+
+.input-box i {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+    font-size: 20px;
+}
+
+.wrapper .btn {
+    width: 100%;
+    height: 45px;
+    background: #3f51b5;
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.wrapper .btn:hover {
+    background: #303f9f;
+}
+
+.wrapper .form-links {
+    font-size: 14px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.form-links a {
+    color: #3f51b5;
+    text-decoration: none;
+    margin: 5px;
+    display: inline-block;
+}
+
+.form-links a:hover {
+    text-decoration: underline;
+    font-weight: 600;
+}
 
 
 
@@ -501,127 +592,7 @@ button.delete-btn {
 
 
 
-/*################################## LOGIN FORM #############################################*/
-.body-background-image {
-    display:flex;
-    justify-content: center;
-    min-height: 100vh;
-    align-items: center;
-    background-size: cover;
-    background-size: cover;
-}
-.wrapper {
-    width: 420px;
-    background: url('/static/images/background.jpeg')no-repeat;
-    border: 2px solid rgba(18, 85, 85, 0.2);
-    backdrop-filter: blur(50px);
-    box-shadow: 0 0 10px rgba(0, 0, 0, .2);
-    color: #068fbc;
-    border-radius: 10px;
-    padding: 30px 40px;
-}
 
-.wrapper h1 {
-    font-size: 32px;
-    text-align: center;
-    font-weight: bolder;
-}
-
-.wrapper .input-box {
-    position: relative;
-    width: 100%;
-    height: 50px;
-    margin: 30px 0;
-}
-
-.input-box input {
-    width: 100%;
-    height: 100%;
-    background: transparent;
-    border: none;
-    outline: none;
-    border: 2px solid rgba(255, 255, 255, .2);
-    border-radius: 40px;
-    font-size: 16px;
-    color: #fff;
-    padding: 20px 45px 20px 20px;
-}
-
-.input-box input::placeholder {
-    color: #fff;
-}
-
-.input-box i {
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 20px;
-}
-
-.wrapper .remember-forgot {
-    display: flex;
-    justify-content: space-between;
-    font-size: 14.5px;
-    margin: -15px 0 15px;
-}
-
-.remember-forgot label input {
-    accent-color: #fff;
-    margin-right: 3px;
-}
-
-.remember-forgot a {
-    color: #0b94ea;
-    text-decoration: none;
-}
-
-.remember-forgot a:hover {
-    text-decoration: underline;
-    color: #0b94ea;
-    font-weight: 600;
-}
-
-.wrapper .btn {
-    width: 100%;
-    height: 45px;
-    background: #068fbc;
-    border: none;
-    outline: none;
-    border-radius: 40px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
-    cursor: pointer;
-    font-size: 16px;
-    color: #db89c9;
-    font-weight: bolder;
-}
-
-.wrapper .btn:hover{
-    color: #db89c9;
-    background: #068fbc;
-}
-
-.wrapper .register-link {
-    font-size: 14.5px;
-    text-align: center;
-    margin: 20px 0 15px;
-}
-
-.register-link p {
-    font-weight: 600;
-
-}
-
-.register-link p a {
-    color: #fff;
-    text-decoration: none;
-    font-weight: 600;
-}
-
-.register-link p a:hover {
-    text-decoration: underline;
-    color: #0b94ea;
-}
 
 /*######################################### PATIENT DASHBOARD ################################*/
 .row {
