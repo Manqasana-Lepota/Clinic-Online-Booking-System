@@ -3,222 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clinic Admin Dashboard</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <style>
-    /* Sidebar styling */
-    .sidebar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        width: 280px;
-        z-index: 1000;
-        background-color: #fff;
-    }
-    .sidebar-items {
-        display: flex;
-        flex-direction: column;
-        gap: 30px; /* Space between items */
-    }
-    
-    .sidebar-item {
-        display: flex;
-        align-items: center;
-        padding: 20px;
-        padding-left: 70px;
-        font-size: 1.1em;
-        text-decoration: none;
-        color: #db89c9;
-        position: relative;
-    }
+        body {
+            background-color: #f4f6f9;
+        }
+        .sidebar {
+            height: 100vh;
+            background-color: #3f51b5;
+            padding-top: 30px;
+            color: white;
+        }
+        .sidebar a {
+            color: white;
+            display: block;
+            padding: 10px 20px;
+            text-decoration: none;
+        }
+        .sidebar a:hover {
+            background-color: #303f9f;
+        }
+        .card-stat {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        /* Main content section */
+        .admin-main {
+            padding: 30px;
+            background-color: #f4f6f9;
+            min-height: 100vh;
+        }
+        /* Page heading */
+        .admin-main h2 {
+            color: #3f51b5;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        /* Statistic cards */
+        .card-stat {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s;
+        }
+        .card-stat:hover {
+            transform: translateY(-5px);
+        }
+        .card-stat h5 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .card-stat .fs-4 {
+            font-size: 28px;
+            font-weight: bold;
+            color: #3f51b5;
+        }
+        /* Quick Action Buttons */
+        .quick-actions .btn {
+            min-width: 160px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            border-radius: 25px;
+            padding: 10px 20px;
+        }
+        .quick-actions .btn-primary {
+            background-color: #3f51b5;
+            border: none;
+        }
+        .quick-actions .btn-outline-primary {
+            border-color: #3f51b5;
+            color: #3f51b5;
+        }
+        .quick-actions .btn-outline-primary:hover {
+            background-color: #3f51b5;
+            color: white;
+        }
 
-    .sidebar-item:hover {
-        background-color: #fff; /* Background on hover */
-        border-radius: 5px;
-       
-    }
-
-    .sidebar-item i {
-        margin-right: 10px; /* Space between icon and text */
-        font-size: 2em; /* Icon size */
-        color: #007bff;
-    }
-
-    .icon-description {
-        display: none; /* Hidden by default */
-        font-size: 1em;
-        margin-left: 10px; /* Add some space between icon and text */
-    }
-
-    .sidebar-item:hover .icon-description {
-        display: inline-block; /* Show description on hover */
-        transition: opacity 0.3s ease; /* Smooth transition */
-    }
-
-    .sidebar-item.text-danger {
-        color: red; /* Red color for Logout */
-    }
-
-    .sidebar-item.text-danger:hover {
-        background-color: #fff;
-    }
-    /* Style for the active link */
-    .sidebar-item.active {
-        
-        color: #db89c9; /* Active text color */
-        font-weight: bold; /* Make active link text bold */
-    }
-
-    .sidebar-item.active i {
-        color: #007bff; /* Active icon color */
-    }
-
-    .sidebar-item.active .icon-description {
-        display: inline-block; /* Ensure description is visible */
-    }
-</style>
-
-
-    
-    
-
-
+    </style>
 </head>
 <body>
-
-    <!-- Sidebar -->
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#095fb0;">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#" style="font-weight: 900;padding-left: 800px;">Admin Dashboard</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" style="transition: color 0.3s ease;" onmouseover="this.style.color='pink'" onmouseout="this.style.color=''" >Logout</a>
-                    </li>
-                </ul>
-            </div>
-            
-        </div>
-    </nav>
-
     <div class="container-fluid">
         <div class="row">
+
             <!-- Sidebar -->
-            <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar py-4">
-                <h4 class="text-center" style="font-weight: 900; color: #db89c9;">Jeppe Clinic</h4><br><br>
-                <div class="sidebar-items">
-                    <!-- Dashboard -->
-                    <a href="#" class="sidebar-item active">
-                        <i class="fas fa-tachometer-alt"></i>
-                        <span class="icon-description">Dashboard</span>
-                    </a>
-                    <!-- Manage Doctors -->
-                    <a href="{{ url_for('admin.AdminManagesDoctors') }}" class="sidebar-item">
-                        <i class="fas fa-user-md"></i>
-                        <span class="icon-description">Doctors</span>
-                    </a>
-                    <!-- Manage Patients -->
-                    <a href="{{ url_for('admin.AdminManagePatients') }}" class="sidebar-item">
-                        <i class="fas fa-users"></i>
-                        <span class="icon-description">Patients</span>
-                    </a>
-                    <!-- Appointments -->
-                    <a href="#" class="sidebar-item">
-                        <i class="fas fa-calendar-check"></i>
-                        <span class="icon-description">Appointments</span>
-                    </a>
-                    <!-- Logout -->
-                    <a href="{{ url_for('loginroles') }}" class="sidebar-item text-danger">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span class="icon-description">Logout</span>
-                    </a>
-                </div>
-            </nav>
-            
+            <div class="col-md-3 sidebar">
+                <h4 class="text-center">Admin Panel</h4>
+                <hr style="border-top: 1px solid #fff;">
+                <a href="#">Dashboard</a>
+                <a href="#">Manage Doctors</a>
+                <a href="#">Manage Patients</a>
+                <a href="#">Appointments</a>
+                <a href="#">Doctor Schedules</a>
+                <a href="#">Reports</a>
+                <a href="#">Messages</a>
+                <a href="#">Notifications</a>
+                <a href="#">Settings</a>
+                <a href="{{ url_for('loginroles.login') }}">Logout</a>
+            </div>
 
-            <!-- Main Content -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <div class="row my-4">
-                    <!-- Total Doctors -->
-                    <div class="col-md-4">
-                        <div class="card border-success shadow-sm">
-                            <div class="card-body">
-                                <h5 class="card-title">Total Doctors</h5>
-                                <p class="fs-4">{{ total_doctors }}</p>
-                            </div>
+            <!-- Main content -->
+            <div class="col-md-9 p-4">
+                <h2>Welcome, Admin</h2>
+                <div class="row mt-4">
+                    <div class="col-md-4 mb-4">
+                        <div class="card-stat">
+                            <h5>Total Patients</h5>
+                            <p class="fs-4">123</p>
                         </div>
                     </div>
-
-                    <!-- Total Patients -->
-                    <div class="col-md-4">
-                        <div class="card border-primary shadow-sm">
-                            <div class="card-body">
-                                <h5 class="card-title">Total Patients</h5>
-                                <p class="fs-4">{{ total_patients }}</p>
-                            </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card-stat">
+                            <h5>Total Doctors</h5>
+                            <p class="fs-4">15</p>
                         </div>
                     </div>
-
-                    <!-- Total Appointments -->
-                    <div class="col-md-4">
-                        <div class="card border-warning shadow-sm">
-                            <div class="card-body">
-                                <h5 class="card-title">Total Appointments</h5>
-                                <p class="fs-4">{{ total_appointments }}</p>
-                            </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card-stat">
+                            <h5>Appointments Today</h5>
+                            <p class="fs-4">27</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Recent Appointments -->
-                <div class="card shadow-sm">
-                    <div class="card-header bg-success text-white">
-                        <h5 class="mb-0">Recent Appointments</h5>
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Patient</th>
-                                    <th>Doctor</th>
-                                    <th>Date</th>
-                                    <th>Time</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for appointment in appointments %}
-                                <tr>
-                                    <td>{{ appointment.patient_name }}</td>
-                                    <td>{{ appointment.doctor_name }}</td>
-                                    <td>{{ appointment.appointment_date }}</td>
-                                    <td>{{ appointment.appointment_time }}</td>
-                                    <td>
-                                        {% if appointment.status == 'Confirmed' %}
-                                            <span class="badge bg-success">Confirmed</span>
-                                        {% elif appointment.status == 'Pending' %}
-                                            <span class="badge bg-warning">Pending</span>
-                                        {% else %}
-                                            <span class="badge bg-danger">Cancelled</span>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                <div class="card p-4 mt-4">
+                    <h5>Quick Actions</h5>
+                    <div class="d-flex flex-wrap gap-3 mt-3">
+                        <a href="#" class="btn btn-primary">Add Doctor</a>
+                        <a href="#" class="btn btn-outline-primary">View Appointments</a>
+                        <a href="#" class="btn btn-outline-primary">Generate Report</a>
+                        <a href="#" class="btn btn-outline-secondary">Edit Clinic Info</a>
+                        <a href="#" class="btn btn-outline-warning">View Messages</a>
+                        <a href="#" class="btn btn-outline-success">Send Notifications</a>
                     </div>
                 </div>
-            </main>
+            </div>
         </div>
     </div>
-
 </body>
 </html>
-

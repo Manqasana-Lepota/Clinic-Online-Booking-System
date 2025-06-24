@@ -23,12 +23,13 @@ def universal_login():
     cursor = mysql.connection.cursor()
 
     if user_type == "admin":
-        cursor.execute("SELECT * FROM admin WHERE username=%s AND password=%s", (username, password))
+        cursor.execute("SELECT * FROM admin WHERE username=%s AND password_hash=%s", (username, password))
+        
         user = cursor.fetchone()
         if user:
             session['user_type'] = 'admin'
             session['username'] = username
-            return redirect(url_for('admin.dashboard'))
+            return redirect(url_for('admin.AdminDashboard'))
         else:
             flash("Invalid Admin credentials")
 
