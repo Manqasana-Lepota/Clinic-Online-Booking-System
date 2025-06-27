@@ -51,46 +51,11 @@ def DoctorLogin():
 
 @doctor.route('/doctor-dashboard', methods=['GET', 'POST'], endpoint="DoctorDashboard")
 def DoctorDashboard():
-    if 'doctor_id' not in session:
-        flash("Please login first.", "warning")
-        return redirect(url_for('doctor.DoctorLogin'))
+    if 'username' not in session:
+        return redirect(url_for('universal_login'))
 
-    doctor_id = session['doctor_id']
-    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-
-    if request.method == 'POST':
-        # Get form data
-        firstname = request.form['firstname']
-        lastname = request.form['lastname']
-        specialization = request.form['specialization']
-        experience_years = request.form['experience_years']
-        available_days = request.form['available_days']
-        username = request.form['username']
-
-        # Update the database
-        cursor.execute("""
-            UPDATE doctors 
-            SET firstname=%s, lastname=%s, specialization=%s, 
-                experience_years=%s, available_days=%s, username=%s 
-            WHERE doctor_id=%s
-        """, (firstname, lastname, specialization, experience_years, available_days, username, doctor_id))
-
-        mysql.connection.commit()
-
-        # Update session values
-        session['firstname'] = firstname
-        session['lastname'] = lastname
-        session['specialization'] = specialization
-
-        flash("Doctor profile updated successfully!", "success")
-        return redirect(url_for('doctor.DoctorDashboard'))
-
-    # Fetch doctor data from DB
-    cursor.execute("SELECT * FROM doctors WHERE doctor_id = %s", (doctor_id,))
-    doctor = cursor.fetchone()
-    cursor.close()
-
-    return render_template('DoctorDashboard.html', doctor=doctor)
+    firstname = session.get('firstname', 'Doctor')
+    return render_template('DoctorDashboard.html', firstname=firstname)
 
 
 @doctor.route('/update-profile-pic', methods=['POST'])

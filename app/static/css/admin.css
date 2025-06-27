@@ -1,0 +1,112 @@
+body {
+      background-color: #f4f6f9;
+    }
+
+    .sidebar {
+      min-height: 100vh;
+      background-color: #3f51b5;
+      padding-top: 30px;
+      color: white;
+    }
+
+    .sidebar h4 {
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .sidebar a {
+      color: white;
+      display: block;
+      padding: 12px 20px;
+      font-size: 16px;
+      text-decoration: none;
+      transition: background-color 0.2s;
+    }
+
+    .sidebar a:hover {
+      background-color: #303f9f;
+    }
+
+    .admin-main {
+      padding: 40px 30px;
+      background-color: #f4f6f9;
+    }
+
+    .admin-main h2 {
+      color: #3f51b5;
+      font-weight: 700;
+      margin-bottom: 30px;
+    }
+
+    .card-stat {
+      background-color: #ffffff;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transition: transform 0.2s;
+      text-align: center;
+    }
+
+    .card-stat:hover {
+      transform: translateY(-5px);
+    }
+
+    .card-stat h5 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .card-stat .fs-4 {
+      font-size: 30px;
+      font-weight: bold;
+      color: #3f51b5;
+    }
+
+    .quick-actions .btn {
+      min-width: 160px;
+      font-weight: 600;
+      border-radius: 30px;
+      padding: 12px 24px;
+    }
+
+    .quick-actions .btn-outline-primary:hover {
+      background-color: #3f51b5;
+      color: white;
+    }
+
+    .card h5 {
+      font-weight: 600;
+    }
+    .back-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 999;
+  background-color: #ffffff;
+  border: 1px solid #3f51b5;
+  color: #3f51b5;
+  padding: 8px 15px;
+  border-radius: 30px;
+  font-weight: 500;
+  text-decoration: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: #3f51b5;
+  color: white;
+}
+
+
+    @media (max-width: 768px) {
+      .sidebar {
+        text-align: center;
+      }
+
+      .quick-actions .btn {
+        width: 100%;
+      }
+    }
+    

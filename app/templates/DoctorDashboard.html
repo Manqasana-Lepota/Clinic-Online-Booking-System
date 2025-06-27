@@ -3,259 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <title>Doctor Dashboard</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap');
-    .card-title-icon {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    .welcome-card {
-        background: linear-gradient(135deg, #6c63ff, #0e6292);
-        color: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        padding: 2rem;
-    }
-    .welcome-card h3 {
-        font-size: 2rem;
-        font-weight: bold;
-        margin-bottom: 1rem;
-    }
-    .welcome-card p {
-        font-size: 1.2rem;
-        opacity: 0.85;
-    }
-    .welcome-card:hover {
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-        transform: translateY(-8px);
-    }
-    .profile-pic-container {
-        position: relative;
-        display: inline-block;
-        width: 150px;
-        height: 150px;
-    }
-    .profile-pic-container img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 50%;
-        border: 2px solid #9c9a9a;
-    }
-    .edit-icon {
-        position: absolute;
-        bottom: 10px;
-        right: 10px;
-        background: #ffffffcc;
-        border-radius: 50%;
-        padding: 5px;
-        cursor: pointer;
-    }
-    .edit-icon i {
-        color: #000;
-        font-size: 14px;
-    }
-    </style>
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+   <link rel="stylesheet" href="/static/css/doctor.css">
+   <link rel="shortcut icon" href="{{url_for('static', filename='images/clinic-logo.png')}}">
 </head>
+
 <body>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      {% for category, message in messages %}
-        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-          {{ message }}
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+    <div class="container pt-5 my-5">
+        <!-- Navigation Bar -->
+         <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #3f51b5;">
+            <div class="container-fluid px-4">
+                <a class="navbar-brand fw-bold" href="#" style="color: #fff;">Jeppe Clinic</a>
+                <div class="ms-auto d-flex">
+                    <a href="{{ url_for('loginroles.universal_login') }}" class="nav-link text-white me-4" style="font-weight: 500;">
+                        ← Back
+                    </a>
+                    <a href="#" class="nav-link text-white me-4 fw-medium">
+                        👤 Profile
+                    </a>
+                    <a href="#" class="nav-link text-white" style="font-weight: 500;">
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="text-center mb-4">
+            <h2 class="dashboard-heading">Welcome, Dr. {{ firstname }}</h2>
+            <p class="text-muted">Here’s a quick view of your activities</p>
         </div>
-      {% endfor %}
-    {% endif %}
-  {% endwith %}
-  
-
-    <div class="container-fluid mt-4">
-        <div class="row">
-            <!-- Sidebar: Profile Settings -->
-            <div class="col-md-3">
-                <div class="card shadow p-4 text-center">
-                    <!-- Profile Picture or Avatar -->
-                    <form action="{{ url_for('doctor.update_profile_pic') }}" method="POST" enctype="multipart/form-data">
-                        <div class="profile-pic-container">
-                            <label for="profilePicInput">
-                                <img src="{{ url_for('static', filename='uploads/' + doctor.profile_picture) }}"
-                                     alt="Profile Picture">
-                                <div class="edit-icon">
-                                    <i class="fas fa-pen"></i> <!-- Use fa-pen if you want a pen instead -->
-                                </div>
-                            </label>
-                            <input type="file" id="profilePicInput" name="profile_pic" accept="image/*" style="display:none;" onchange="this.form.submit()">
-                        </div>
-                    </form><br>
-
-                    <h5 class="mb-0" style="font-style: normal; font-family: Dancing Script, cursive;">Dr. {{ doctor['firstname'] }} {{ doctor['lastname'] }}</h5>
-                    <small class="text-muted">
-                        {% if doctor['specialization'] %}
-                            Specialization: {{ doctor['specialization'] }}
-                        {% else %}
-                            Specialization not set.
-                        {% endif %}
-                    </small>
-                    <hr>
-  
-                    <h4 class="text-left">Edit Doctor Info</h4>
-                    <form action="" method="POST" enctype="multipart/form-data">
-                        <div class="form-group">
-                            <input type="text" class="form-control mb-2" name="firstname" value="{{ doctor.firstname }}" placeholder="First Name" required>
-                            <input type="text" class="form-control mb-2" name="lastname" value="{{ doctor.lastname }}" placeholder="Last Name" required>
-                            <input type="text" class="form-control mb-2" name="specialization" value="{{ doctor.specialization }}" placeholder="Specialization" required>
-                            <input type="text" class="form-control mb-2" name="experience_years" value="{{ doctor.experience_years }}" placeholder="Years of Experience" required>
-                            <input type="text" class="form-control mb-2" name="available_days" value="{{ doctor.available_days }}" placeholder="Available Days" required>
-                            <input type="text" class="form-control mb-2" name="username" value="{{ doctor.username }}" placeholder="Username" required>
-                        </div>
-                        <button class="btn btn-sm btn-block"
-                        style="background-color: #0e6292; height: 40px; color: white;">Save Changes</button>
-                    </form>
-                    <br>
-                  
-
-                    <button class="btn btn-sm btn-block" id="changePasswordButton" type="button"
-                    style="background-color: #0e6292;color: white;height: 40px;">Change Password</button>
-
-                    <div id="changePasswordForm" style="display: none;">
-                        <form action="{{ url_for('doctor.change_doctor_password') }}" method="POST">
-                            <div class="form-group">
-                                <input type="password" class="form-control mb-2" name="current_password" placeholder="Current Password" required>
-                                <input type="password" class="form-control mb-2" name="new_password" placeholder="New Password" required>
-                                <input type="password" class="form-control mb-2" name="confirm_password" placeholder="Confirm Password" required>
-                            </div>
-                            <button class="btn btn-warning btn-sm btn-block" type="submit">Save</button>
-                        </form>
+        <div class="row g-4">
+            <!-- Appointments Card -->
+             <div class="col-md-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">📅 Upcoming Appointments</h5>
+                        <p class="card-text">View and manage your scheduled appointments</p>
+                        <a href="#" class="btn btn-primary">View Appointments</a>
                     </div>
                 </div>
             </div>
-        
-    
-            <!-- Main Dashboard Content -->
-            <div class="col-md-9">
-                <!-- Welcome Section -->
-                <div class="card shadow p-4 mb-4 welcome-card">
-                    <h3>Welcome back, Dr. {{ doctor.lastname }}!</h3>
-                    <p class="text-muted">Here's your dashboard overview.</p>
-                </div>
-                
-                <!-- Row 1: Appointments + Notifications -->
-                <div class="row">
-                    <!-- Today's Appointments -->
-                    <div class="col-md-6 mb-4">
-                        <div class="card shadow p-3">
-                            <h5>Today's Appointments</h5>
-                            <!-- Sample Table -->
-                            <table class="table table-sm table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Patient</th>
-                                        <th>Time</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for appt in todays_appointments %}
-                                    <tr>
-                                        <td>{{ appt.patient_name }}</td>
-                                        <td>{{ appt.time }}</td>
-                                        <td>{{ appt.status }}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-    
-                    <!-- Notifications -->
-                    <div class="col-md-6 mb-4">
-                        <div class="card shadow p-3">
-                            <h5>Notifications</h5>
-                            <ul class="list-group list-group-flush">
-                                {% for message in notifications %}
-                                <li class="list-group-item">{{ message }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
+
+            <!-- Schedule Card -->
+             <div class="col-md-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">🗓️ My Availability</h5>
+                        <p class="card-text">Update your schedule and time slots</p>
+                        <a href="#" class="btn btn-primary">Manage Schedule</a>
                     </div>
                 </div>
-    
-                <!-- Row 2: Appointment Management + Medical Records -->
-                <div class="row">
-                    <!-- Appointment Management -->
-                    <div class="col-md-6 mb-4">
-                        <div class="card shadow p-3">
-                            <h5>Appointment Management</h5>
-                            <ul class="list-group">
-                                <li class="list-group-item">View All Appointments</li>
-                                <li class="list-group-item">Start Consultation</li>
-                                <li class="list-group-item">Mark as Completed</li>
-                                <li class="list-group-item">Cancel / Reschedule</li>
-                            </ul>
-                        </div>
-                    </div>
-    
-                    <!-- Medical Records -->
-                    <div class="col-md-6 mb-4">
-                        <div class="card shadow p-3">
-                            <h5>Patient Medical Records</h5>
-                            <ul class="list-group">
-                                <li class="list-group-item">Access Medical History</li>
-                                <li class="list-group-item">Current Medications</li>
-                                <li class="list-group-item">Past Visits & Diagnoses</li>
-                            </ul>
-                        </div>
+            </div>
+
+            <!-- Patient Records Card -->
+             <div class="col-md-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">👥 Patient Records</h5>
+                        <p class="card-text">Access patient details and consultation history</p>
+                        <a href="#" class="btn btn-primary">View Patients</a>
                     </div>
                 </div>
-    
-                <!-- Row 3: Calendar + Prescriptions -->
-                <div class="row">
-                    <!-- Calendar View -->
-                    <div class="col-md-6 mb-4">
-                        <div class="card shadow p-3">
-                            <h5>Calendar View</h5>
-                            <!-- Placeholder: Replace with actual calendar component -->
-                            <div class="text-center text-muted">[ Calendar Here ]</div>
-                        </div>
+            </div>
+
+            <!-- Optional Notes/Reports -->
+             <div class="col-md-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">📝 Consultation Notes</h5>
+                        <p class="card-text">Write or view notes for patient visits</p>
+                        <a href="#" class="btn btn-primary">Manage Notes</a>
                     </div>
-    
-                    <!-- Write/View Prescriptions -->
-                    <div class="col-md-6 mb-4">
-                        <div class="card shadow p-3">
-                            <h5>Prescriptions</h5>
-                            <ul class="list-group">
-                                <li class="list-group-item">Create New Prescription</li>
-                                <li class="list-group-item">View / Print Past Prescriptions</li>
-                            </ul>
-                        </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">📊 Reports</h5>
+                        <p class="card-text">Track your appointment stats</p>
+                        <a href="#" class="btn btn-primary">View Reports</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-
-    document.getElementById("changePasswordButton").addEventListener("click", function() {
-        const form = document.getElementById("changePasswordForm");
-        form.style.display = form.style.display === "none" ? "block" : "none";
-    });
-
-    </script>
-    <!-- jQuery (required for Bootstrap 4) -->
-     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-     <!-- Bootstrap JS -->
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    
 </body>
 </html>

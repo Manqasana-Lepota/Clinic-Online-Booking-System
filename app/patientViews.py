@@ -6,6 +6,18 @@ import re
 
 patient = Blueprint('patient', __name__)
 
+
+@patient.route('/PatientDashboard')
+def PatientDashboard():
+    if 'username' not in session:
+        return redirect(url_for('universal_login'))
+
+    firstname = session.get('firstname', 'Patient')
+    return render_template("PatientDashboard.html", firstname=firstname)
+   
+
+
+
 @patient.route('/PatientLogin', methods = ['GET', 'POST'])
 def PatientLogin():
     message = ''
@@ -68,9 +80,7 @@ def PatientRegistrationForm():
     return render_template("patient.PatientRegistrationForm.html", message = message)
 
 
-@patient.route('/PatientDashboard')
-def PatientDashboard():
-    return render_template("PatientDashboard.html")
+
 
 
 @patient.route('/book_appointment')

@@ -23,7 +23,7 @@ def universal_login():
     cursor = mysql.connection.cursor()
 
     if user_type == "admin":
-        cursor.execute("SELECT * FROM admin WHERE username=%s AND password_hash=%s", (username, password))
+        cursor.execute("SELECT * FROM admin WHERE username=%s AND password=%s", (username, password))
         
         user = cursor.fetchone()
         if user:
@@ -34,22 +34,32 @@ def universal_login():
             flash("Invalid Admin credentials")
 
     elif user_type == "doctor":
-        cursor.execute("SELECT * FROM doctor WHERE username=%s AND password=%s", (username, password))
+        cursor.execute("SELECT * FROM doctors WHERE username=%s AND password=%s", (username, password))
         user = cursor.fetchone()
         if user:
             session['user_type'] = 'doctor'
             session['username'] = username
-            return redirect(url_for('doctor.dashboard'))
+
+            firstname = user['firstname'].split()[0]
+
+            firstname = firstname.split()[0] if firstname else 'Patient'
+            session['firstname'] = firstname
+            return redirect(url_for('doctor.DoctorDashboard'))
         else:
             flash("Invalid Doctor credentials")
 
     elif user_type == "patient":
-        cursor.execute("SELECT * FROM patient WHERE username=%s AND password=%s", (username, password))
+        cursor.execute("SELECT * FROM patients WHERE username=%s AND password=%s", (username, password))
         user = cursor.fetchone()
         if user:
             session['user_type'] = 'patient'
             session['username'] = username
-            return redirect(url_for('patient.dashboard'))
+
+            firstname = user['firstname'].split()[0]
+
+            firstname = firstname.split()[0] if firstname else 'Patient'
+            session['firstname'] = firstname
+            return redirect(url_for('patient.PatientDashboard'))
         else:
             flash("Invalid Patient credentials")
 

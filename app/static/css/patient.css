@@ -1,0 +1,89 @@
+  body {
+      background: linear-gradient(to right, #e3f2fd, #f8f9fa);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .navbar {
+      background-color: #3f51b5;
+    }
+
+    .navbar-brand,
+    .nav-link {
+      color: #fff !important;
+    }
+
+    .navbar .nav-link.active,
+    .navbar .nav-link:hover {
+      text-decoration: underline;
+      color: #dcdcdc !important;
+    }
+
+    .patient-dashboard-wrapper {
+      padding: 60px 20px 40px;
+    }
+
+    .dashboard-heading {
+      color: #2c3e50;
+      font-size: 2.3rem;
+      font-weight: 700;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .stat-card {
+      background-color: #fff;
+      border: 2px solid #3f51b5;
+      border-radius: 15px;
+      text-align: center;
+      padding: 30px 20px;
+      color: #3f51b5;
+      box-shadow: 0 4px 12px rgba(63, 81, 181, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(63, 81, 181, 0.2);
+      background-color: #f0f3ff;
+    }
+
+    .stat-card h5 {
+      font-size: 1.3rem;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .stat-card p {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .dashboard-actions a {
+      font-weight: 600;
+      border-radius: 30px;
+      padding: 14px 24px;
+      font-size: 1rem;
+    }
+
+    .dashboard-actions a.btn-outline-primary {
+      background-color: #fff;
+      border: 2px solid #3f51b5;
+      color: #3f51b5;
+    }
+
+    .dashboard-actions a.btn-outline-primary:hover {
+      background-color: #3f51b5;
+      color: #fff;
+    }
+
+    .feedback-form {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .feedback-form textarea {
+      resize: none;
+    }
