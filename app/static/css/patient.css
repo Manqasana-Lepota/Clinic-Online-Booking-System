@@ -1,89 +1,164 @@
-  body {
-      background: linear-gradient(to right, #e3f2fd, #f8f9fa);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+body {
+  background: linear-gradient(to right, #e3f2fd, #f8f9fa);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-    .navbar {
-      background-color: #3f51b5;
+/*#####################################################PATIENT REGISTER FORM################################################ */
+.body-background {
+  background: #f5f5f5;
+  min-height: 100vh;
+  padding-top: 10px;
+}
+.card {
+ border-radius: 12px;
+ overflow: hidden;;
+}
+.card-header {
+  background-color: #3f51b5 !important;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+h4 {
+  color: white;
+  font-weight: 900;
+  font-size: 2em;
+}
+h5 {
+  font-weight: 600;
+  color: #3f51b5;
+}
+label {
+  font-weight: 500;
+  color: #3f51b5;
+}
+.form-control,
+.form-select {
+  border-radius: 30px;
+  background-color: #f0f0f0;
+  padding-left: 20px;
+}
+.form-section-title {
+  margin-top: 30px;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #3f51b5;
+  padding-bottom: 5px;
+  color: #3f51b5;
+}
+textarea.form-control {
+  border-radius: 15px;
+}
+.btn-success {
+  background-color: #3f51b5;
+  border: none;
+  font-weight: 600;
+  border-radius: 30px;
+}
+.btn-success:hover {
+    background-color: #303f9f;
+}
+a {
+  color: #3f51b5;
+  font-weight: 600;
+}
+a:hover {
+  text-decoration: underline;
+  color: #db89c9;
+}
+@media (max-width: 768px) {
+    .card {
+        margin: 0 15px;
     }
+}
 
-    .navbar-brand,
-    .nav-link {
-      color: #fff !important;
-    }
+/*#####################################################PATIENT DASHBOARD################################################ */
 
-    .navbar .nav-link.active,
-    .navbar .nav-link:hover {
-      text-decoration: underline;
-      color: #dcdcdc !important;
-    }
+.navbar {
+  background-color: #3f51b5;
+}
 
-    .patient-dashboard-wrapper {
-      padding: 60px 20px 40px;
-    }
+.navbar-brand,
+.nav-link {
+  color: #fff !important;
+}
 
-    .dashboard-heading {
-      color: #2c3e50;
-      font-size: 2.3rem;
-      font-weight: 700;
-      margin-bottom: 40px;
-      text-align: center;
-    }
+.navbar .nav-link.active,
+.navbar .nav-link:hover {
+  text-decoration: underline;
+  color: #dcdcdc !important;
+}
 
-    .stat-card {
-      background-color: #fff;
-      border: 2px solid #3f51b5;
-      border-radius: 15px;
-      text-align: center;
-      padding: 30px 20px;
-      color: #3f51b5;
-      box-shadow: 0 4px 12px rgba(63, 81, 181, 0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
+.patient-dashboard-wrapper {
+  padding: 60px 20px 40px;
+}
 
-    .stat-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(63, 81, 181, 0.2);
-      background-color: #f0f3ff;
-    }
+.dashboard-heading {
+  color: #2c3e50;
+  font-size: 2.3rem;
+  font-weight: 700;
+  margin-bottom: 40px;
+  text-align: center;
+}
 
-    .stat-card h5 {
-      font-size: 1.3rem;
-      margin-bottom: 12px;
-      font-weight: 600;
-    }
+.stat-card {
+  background-color: #fff;
+  border: 2px solid #3f51b5;
+  border-radius: 15px;
+  text-align: center;
+  padding: 30px 20px;
+  color: #3f51b5;
+  box-shadow: 0 4px 12px rgba(63, 81, 181, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
-    .stat-card p {
-      font-size: 2.5rem;
-      font-weight: bold;
-      margin: 0;
-    }
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(63, 81, 181, 0.2);
+  background-color: #f0f3ff;
+}
 
-    .dashboard-actions a {
-      font-weight: 600;
-      border-radius: 30px;
-      padding: 14px 24px;
-      font-size: 1rem;
-    }
+.stat-card h5 {
+  font-size: 1.3rem;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
 
-    .dashboard-actions a.btn-outline-primary {
-      background-color: #fff;
-      border: 2px solid #3f51b5;
-      color: #3f51b5;
-    }
+.stat-card p {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0;
+}
 
-    .dashboard-actions a.btn-outline-primary:hover {
-      background-color: #3f51b5;
-      color: #fff;
-    }
+.dashboard-actions a {
+  font-weight: 600;
+  border-radius: 30px;
+  padding: 14px 24px;
+  font-size: 1rem;
+}
 
-    .feedback-form {
-      background-color: #ffffff;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    }
+.dashboard-actions a.btn-outline-primary {
+  background-color: #fff;
+  border: 2px solid #3f51b5;
+  color: #3f51b5;
+}
 
-    .feedback-form textarea {
-      resize: none;
-    }
+.dashboard-actions a.btn-outline-primary:hover {
+  background-color: #3f51b5;
+  color: #fff;
+}
+
+.feedback-form {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.feedback-form textarea {
+  resize: none;
+}
+
+
+

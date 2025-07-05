@@ -16,34 +16,9 @@ def PatientDashboard():
     return render_template("PatientDashboard.html", firstname=firstname)
    
 
-
-
-@patient.route('/PatientLogin', methods = ['GET', 'POST'])
-def PatientLogin():
-    message = ''
-    if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
-        email = request.form['email']
-        password = request.form['password']
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM patients WHERE email = % s AND password = % s', (email, password, ))
-        user = cursor.fetchone()
-        if user:
-            session['loggedin'] = True
-            session['patient_id'] = user['patient_id']
-            session['firstname'] = user['firstname']
-            session['lastname'] = user['lastname']
-            session['DateOfBirth'] = user['DateOfBirth']
-            session['age'] = user['age']
-            session['gender'] = user['gender']
-            session['marital_status'] = user['marital_status']
-            session['email'] = user['email']
-            session['contact'] = user['contact']
-            session['address'] = user['address']
-            message = 'Logged in successfully !'
-            return redirect(url_for('patient.PatientDashboard'))
-        else:
-            message = 'Please enter correct email / password'
-    return render_template("PatientLogin.html", message = message)
+@patient.route('/PatientsRegisterForm', methods = ['GET', 'POST'])
+def PatientsRegisterForm():
+    return render_template("PatientsRegisterForm.html")
 
 
 @patient.route('/PatientRegistrationForm', methods = ['GET', 'POST'])
@@ -83,15 +58,6 @@ def PatientRegistrationForm():
 
 
 
-@patient.route('/book_appointment')
-def BookAppointment():
-    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute("SELECT id, firstname, lastname FROM doctors")
-    doctors = cursor.fetchall()
-    cursor.close()
-
-    
-    return render_template("BookAppointmentForm.html", doctors=doctors)
 
 
 
