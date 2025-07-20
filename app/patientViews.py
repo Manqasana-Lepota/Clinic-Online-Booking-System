@@ -1,65 +1,105 @@
-from flask import Flask, Blueprint, render_template, redirect, request, url_for, session, flash
+from flask import Blueprint, render_template, redirect, request, url_for, session, flash, current_app
 from app import mysql
-from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
+import os
+from werkzeug.utils import secure_filename
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 patient = Blueprint('patient', __name__)
-
 
 @patient.route('/PatientDashboard')
 def PatientDashboard():
     if 'username' not in session:
-        return redirect(url_for('universal_login'))
+        return redirect(url_for('loginroles.universal_login'))
 
     firstname = session.get('firstname', 'Patient')
     return render_template("PatientDashboard.html", firstname=firstname)
    
-
-@patient.route('/PatientsRegisterForm', methods = ['GET', 'POST'])
+@patient.route('/PatientsRegisterForm', methods=['GET', 'POST'])
 def PatientsRegisterForm():
-    return render_template("PatientsRegisterForm.html")
-
-
-@patient.route('/PatientRegistrationForm', methods = ['GET', 'POST'])
-def PatientRegistrationForm():
     message = ''
-    if request.method == 'POST' and 'firstname' in request.form and 'lastname' in request.form and 'DateOfBirth' in request.form and 'age' in request.form and 'gender' in request.form and 'marital_status' in request.form and 'email' in request.form and 'contact' in request.form and 'address'in request.form and 'password' in request.form  and 'confirm_password' in request.form:
-        firstname = request.form['firstname']
-        lastname = request.form['lastname']
-        DateOfBirth = request.form['DateOfBirth']
-        age = request.form['age']
-        gender = request.form['gender']
-        marital_status = request.form['marital_status']
-        email = request.form['email']
-        contact = request.form['contact']
-        address = request.form['address']
-        password = request.form['password']
-        confirm_password = request.form['confirm_password']
-       
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM patients WHERE email = % s', (email, ))
-        account = cursor.fetchone()
-        if account:
-            message = 'User already exists !'
+    
+    if request.method == 'POST':
+        # Basic personal info
+        firstname = request.form.get('firstname')
+        lastname = request.form.get('lastname')
+        date_of_birth = request.form.get('DateOfBirth')
+        age = request.form.get('age')
+        gender = request.form.get('gender')
+        marital_status = request.form.get('marital_status')
+        national_id = request.form.get('national_id')
+
+        # Contact
+        email = request.form.get('email')
+        contact = request.form.get('contact')
+        address = request.form.get('address')
+
+        # Login
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        # Medical
+        medical_aid_number = request.form.get('medical_aid_number')
+        blood_type = request.form.get('blood_type')
+        allergies = request.form.get('allergies')
+        chronic_conditions = request.form.get('chronic_conditions')
+
+        # Emergency Contact
+        emergency_contact_name = request.form.get('emergency_contact_name')
+        emergency_contact_relationship = request.form.get('emergency_contact_relationship')
+        emergency_contact_phone = request.form.get('emergency_contact_phone')
+
+        # File upload
+        profile_image = request.files.get('profile_image')
+        filename = None
+        if profile_image and allowed_file(profile_image.filename):
+            filename = secure_filename(profile_image.filename)
+            upload_folder = current_app.config['UPLOAD_FOLDER']
+            filepath = os.path.join(upload_folder, filename)
+            profile_image.save(filepath)
+
+        # Basic validation
+        if not all([firstname, lastname, date_of_birth, age, gender, marital_status, email, contact, address, username, password]):
+            message = 'Please fill out all required fields!'
         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-            message = 'Invalid email address !'
-        elif not firstname or not lastname or not DateOfBirth or not age or not gender or not marital_status or not password or not confirm_password or not email or not contact or not address:
-            message = 'Please fill out the form !'
+            message = 'Invalid email address!'
         else:
-            cursor.execute('INSERT INTO patients (firstname, lastname, DateOfBirth, age, gender, marital_status, email, contact, address, password, confirm_password) VALUES (% s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s )', (firstname, lastname, DateOfBirth, age, gender, marital_status, email,contact, address, password, confirm_password))
-            mysql.connection.commit()
-            message = 'Patient Registered Successful !'
-    elif request.method == 'POST':
-        message = 'Please fill out the form !'
-    return render_template("patient.PatientRegistrationForm.html", message = message)
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT * FROM patients WHERE email = %s', (email,))
+            account = cursor.fetchone()
 
+            if account:
+                message = 'An account with this email already exists.'
+            else:
+                cursor.execute('''
+                    INSERT INTO patients (
+                        firstname, lastname, DateOfBirth, age, gender, marital_status,
+                        national_id, email, contact, address,
+                        username, password,
+                        medical_aid_number, blood_type, allergies, chronic_conditions,
+                        emergency_contact_name, emergency_contact_relationship, emergency_contact_phone,
+                        profile_image
+                    ) VALUES (%s, %s, %s, %s, %s, %s,
+                              %s, %s, %s, %s,
+                              %s, %s,
+                              %s, %s, %s, %s,
+                              %s, %s, %s,
+                              %s)
+                ''', (
+                    firstname, lastname, date_of_birth, age, gender, marital_status,
+                    national_id, email, contact, address,
+                    username, password,
+                    medical_aid_number, blood_type, allergies, chronic_conditions,
+                    emergency_contact_name, emergency_contact_relationship, emergency_contact_phone,
+                    filename
+                ))
+                mysql.connection.commit()
+                message = 'Patient registered successfully!'
 
-
-
-
-
-
-
-
-
+    return render_template("PatientsRegisterForm.html", message=message)
