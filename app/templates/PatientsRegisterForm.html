@@ -66,7 +66,7 @@
             </div>
             <div class="col-md-6">
               <label class="form-label">Contact</label>
-              <input type="text" name="contact" class="form-control" required>
+              <input type="text" name="contact" class="form-control" required inputmode="numeric" pattern="\d{10}" title="Please enter exactly 10 digits">
             </div>
             <div class="col-md-12">
               <label class="form-label">Address</label>
@@ -76,11 +76,14 @@
             <h5 class="mt-3 ">Login Details</h5>
             <div class="col-md-6">
               <label class="form-label">Username</label>
-              <input type="text" name="username" class="form-control" required>
+              <input type="text" name="username" class="form-control" required
+              pattern="[A-Za-z0-9]{4,}" itle="Username must be at least 4 characters and contain only letters and numbers.">
             </div>
             <div class="col-md-6">
               <label class="form-label">Password</label>
-              <input type="password" name="password" class="form-control" required>
+              <input type="password" name="password" class="form-control" required
+              pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+              title="Password must be at least 8 characters long, with at least one uppercase letter, one lowercase letter, and one digit.">
             </div>
 
             <h5 class="mt-3 ">Medical Details</h5>
@@ -135,5 +138,8 @@
     </form>
   </div>
 </div>
+
+<script src="/static/js/patientRegisterFormValidate.js"></script>
+
 </body>
 </html>

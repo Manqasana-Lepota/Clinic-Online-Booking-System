@@ -100,6 +100,6 @@ def PatientsRegisterForm():
                     filename
                 ))
                 mysql.connection.commit()
-                message = 'Patient registered successfully!'
+                return redirect(url_for('patient.PatientDashboard'))
 
     return render_template("PatientsRegisterForm.html", message=message)
