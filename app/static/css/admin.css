@@ -110,3 +110,151 @@ body {
       }
     }
     
+/*Admin Manage Patients*/
+
+.address-column {
+  min-width: 200px;
+  white-space: normal;
+  word-wrap: break-word;
+}
+.dof-column {
+  min-width: 150px;
+}
+.action-column {
+  min-width: 200px;
+}
+
+    /* Table styling */
+.table-hover tbody tr:hover {
+    background-color: #f1f5f9; /* light gray on hover */
+}
+
+.table thead th {
+    vertical-align: middle;
+    text-align: center;
+    font-weight: 600;
+    color: #fff;
+    background-color: #3f51b5;
+    white-space: nowrap;
+}
+
+.table tbody td {
+    vertical-align: middle;
+    font-size: 0.9rem;
+}
+
+/* Profile image styling */
+.table img.rounded-circle {
+    border: 2px solid #3f51b5;
+    padding: 2px;
+    object-fit: cover;
+}
+
+/* Address column wrapping */
+.address-column {
+    min-width: 250px;
+    max-width: 400px;
+    white-space: normal;
+    word-wrap: break-word;
+    text-align: left;
+}
+
+/* Date of birth column */
+.dof-column {
+    min-width: 130px;
+}
+
+/* Action buttons */
+.action-column a {
+    margin: 2px;
+    font-size: 0.85rem;
+}
+
+/* Pagination */
+.pagination .page-item.active .page-link {
+    background-color: #3f51b5;
+    border-color: #3f51b5;
+    color: white;
+}
+
+.pagination .page-link {
+    color: #3f51b5;
+}
+
+.pagination .page-link:hover {
+    background-color: #e0e0e0;
+}
+
+/* Back button styling */
+.back-button {
+    color: #3f51b5;
+    font-weight: 500;
+}
+
+.back-button:hover {
+    text-decoration: none;
+    background-color: #e3e7f5;
+    border-radius: 4px;
+}
+
+/* Table responsiveness */
+.table-responsive {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 5px;
+    background-color: #fff;
+    box-shadow: 0 0 8px rgba(0,0,0,0.05);
+}
+
+/* Flash messages */
+.alert {
+    font-size: 0.95rem;
+    border-radius: 6px;
+}
+
+/* Search input styling */
+.input-group .form-control {
+    border-radius: 4px 0 0 4px;
+}
+
+.input-group .btn {
+    border-radius: 0 4px 4px 0;
+    font-weight: 500;
+}
+/* Page Heading */
+h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #3f51b5;
+    margin-bottom: 20px;
+}
+
+
+/* Back Button Styling */
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #3f51b5;
+    background-color: #e3e7f5;
+    border: 1px solid #3f51b5;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: 0.2s all ease-in-out;
+}
+
+.back-button i {
+    margin-right: 6px;
+    font-size: 1.2rem;
+}
+
+/* Hover effect */
+.back-button:hover {
+    background-color: #3f51b5;
+    color: #fff;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}

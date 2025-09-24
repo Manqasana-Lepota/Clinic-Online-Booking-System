@@ -149,22 +149,43 @@ def delete_doctor(doctor_id):
     flash("Doctor deleted successfully!", "success")
     return redirect(url_for('admin.AdminManagesDoctors'))
 
+# Admin Manage Patients
+@admin.route('/manage_patients')
+def manage_patients():
+    # Get query parameters
+    search = request.args.get('search', '')
+    page = int(request.args.get('page', 1))
+    per_page = 10  # number of patients per page
+    sort_by = request.args.get('sort_by', 'patient_id')  # default sort column
+    order = request.args.get('order', 'asc')  # asc or desc
 
-@admin.route('/admin/adminManagePatients', methods=['GET', 'POST'])
-def AdminManagePatients():
-    # Open a cursor to interact with the MySQL database
-    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    
-    # Execute the query to fetch all patients
-    cursor.execute("SELECT * FROM patients")  # Adjust the table name if necessary
-    patients = cursor.fetchall()  # Fetch all patient data as a list of dictionaries
-    
-    # Close the cursor
-    cursor.close()
-    
-    # Render the template and pass the patients data
-    return render_template('AdminManagePatients.html', patients=patients)
+    offset = (page - 1) * per_page
+    cursor = mysql.connection.cursor()
 
+    # Prepare base query
+    base_query = "SELECT * FROM patients WHERE firstname LIKE %s OR lastname LIKE %s OR username LIKE %s"
+    params = ('%' + search + '%', '%' + search + '%', '%' + search + '%')
+
+    # Count total records
+    cursor.execute(f"SELECT COUNT(*) as total FROM ({base_query}) as t", params)
+    total_records = cursor.fetchone()['total']
+    total_pages = (total_records + per_page - 1) // per_page  # ceil division
+
+    # Fetch current page with sorting
+    query = f"{base_query} ORDER BY {sort_by} {order} LIMIT %s OFFSET %s"
+    cursor.execute(query, params + (per_page, offset))
+    patients = cursor.fetchall()
+
+    return render_template(
+        'AdminManagePatients.html',
+        patients=patients,
+        page=page,
+        total_pages=total_pages,
+        search=search,
+        sort_by=sort_by,
+        order=order
+    )
+  
 
 
 @admin.route("/admin/adminaddpatient", methods=["POST"])
