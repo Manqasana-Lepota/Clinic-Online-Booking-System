@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Patient Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/patient.css">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='images/clinic-logo.png') }}">
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark shadow-sm" style="background-color: #3f51b5;">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold" href="#">Jeppe Clinic</a>
+      <div class="collapse navbar-collapse justify-content-end">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('patient.PatientDashboard') }}">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link active" href="#">Profile</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('patient.patient_logout') }}">Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Profile Section -->
+  <div class="container mt-5">
+    <div class="card shadow-lg">
+      <div class="card-header text-white" style="background-color: #3f51b5;">
+        <h4 class="mb-0">Patient Profile</h4>
+      </div>
+      <div class="card-body">
+        <div class="row mb-3">
+            <div class="col-md-4 text-center">
+                {% if patient.profile_image %}
+                <img src="{{ url_for('static', filename='uploads/' ~ patient.profile_image) }}" 
+                alt="Profile Picture" class="img-fluid rounded-circle shadow-sm" width="150">
+                {% else %}
+                <img src="{{ url_for('static', filename='images/default-avatar.png') }}" 
+                alt="Profile Picture" class="img-fluid rounded-circle shadow-sm" width="150">
+                {% endif %}
+            </div>
+
+          <div class="col-md-8">
+            <h5 class="fw-bold">{{ patient.firstname }} {{ patient.lastname }}</h5>
+            <p class="text-muted">Patient ID: {{ patient.patient_id }}</p>
+          </div>
+        </div>
+
+        <!-- Personal Info -->
+        <h6 class="fw-bold mt-4">Personal Information</h6>
+        <hr>
+        <div class="row">
+          <div class="col-md-6">
+            <p><strong>Email:</strong> {{ patient.email }}</p>
+            <p><strong>Phone:</strong> {{ patient.contact }}</p>
+            <p><strong>Marital Status:</strong> {{ patient.marital_status }}</p>
+          </div>
+          <div class="col-md-6">
+            <p><strong>Date of Birth:</strong> {{ patient.DateOfBirth }}</p>
+            <p><strong>Gender:</strong> {{ patient.gender }}</p>
+            <p><strong>Address:</strong> {{ patient.address }}</p>
+          </div>
+        </div>
+
+        <!-- Medical Info -->
+        <h6 class="fw-bold mt-4">Medical Information</h6>
+        <hr>
+        <div class="row">
+          <div class="col-md-6">
+            <p><strong>Medical Aid Number:</strong> {{ patient.medical_aid_number }}</p>
+            <p><strong>Blood Type:</strong> {{ patient.blood_type }}</p>
+            <p><strong>Allergies:</strong> {{ patient.allergies }}</p>
+          </div>
+          <div class="col-md-6">
+            <p><strong>Chronic Conditions:</strong> {{ patient.chronic_conditions }}</p>
+            <p><strong>Emergency Contact:</strong> {{ patient.emergency_contact_name }}</p>
+            <p><strong>Relationship:</strong> {{ patient.emergency_contact_relationship }}</p>
+            <p><strong>Phone:</strong> {{ patient.emergency_contact_phone }}</p>
+          </div>
+        </div>
+
+        <!-- Edit Profile -->
+        <div class="text-center mt-4">
+          <a href="/patient/edit_profile" class="btn btn-outline-primary">✏️ Edit Profile</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
