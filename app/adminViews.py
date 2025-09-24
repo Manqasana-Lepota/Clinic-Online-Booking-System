@@ -186,63 +186,19 @@ def manage_patients():
         order=order
     )
   
-
-
-@admin.route("/admin/adminaddpatient", methods=["POST"])
-def AdminAddPatient():
-    if request.method == "POST":
-        firstname = request.form["firstname"]
-        lastname = request.form["lastname"]
-        DateOfBirth = request.form["DateOfBirth"]
-        age = request.form["age"]
-        gender = request.form["gender"]
-        marital_status = request.form["marital_status"]
-        email = request.form["email"]
-        contact = request.form["contact"]
-        address = request.form["address"]
-        password = request.form["password"]
-        
-        # Insert data into the database
-        cursor = mysql.connection.cursor()
-        cursor.execute("""
-            INSERT INTO patients (firstname, lastname, DateOfBirth, age, gender, marital_status, email, contact, address, password)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-        """, (firstname, lastname, DateOfBirth, age, gender, marital_status, email, contact, address, password))
-        mysql.connection.commit()
-        cursor.close()
-
-        flash("Patient added successfully!", "success")
-        return redirect(url_for('admin.AdminManagePatients'))  # Redirect back to the patient management page
-    
-
-
-
-
-
-# Update the route name to AdminDeletePatient
-@admin.route('/admin/delete_patient', methods=['POST'])
-def AdminDeletePatient():
-    patient_id = request.form['patient_id'] if 'patient_id' in request.form else None
-    
-    # Debugging: Print received data
-    print(f"Received patient_id: {patient_id}") 
-     
-
-    if not patient_id:
-        flash("Error: No patient ID received.", "danger")
-        return redirect(url_for('admin.AdminManagePatients'))
-
+# Admin Delete Patients
+@admin.route("/delete_patient/<int:patient_id>", methods=["GET", "POST"])
+def delete_patient(patient_id):
     try:
-        cursor = mysql.connection.cursor()
-        cursor.execute("DELETE FROM patients WHERE patient_id = %s", (patient_id,))
+        cur = mysql.connection.cursor()
+        cur.execute("DELETE FROM patients WHERE patient_id = %s", (patient_id,))
         mysql.connection.commit()
-        cursor.close()
-
+        cur.close()
         flash("Patient deleted successfully!", "success")
     except Exception as e:
-        flash(f"Error occurred while deleting patient: {str(e)}", "danger")
+        flash(f"Error deleting patient: {str(e)}", "danger")
+    return redirect(url_for("admin.manage_patients"))
 
-    return redirect(url_for('admin.AdminManagePatients'))
 
 
 
