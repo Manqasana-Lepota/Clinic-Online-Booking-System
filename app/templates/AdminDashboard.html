@@ -19,7 +19,7 @@
                 <h4 class="text-center w-100">Admin Panel</h4>
                 <hr style="border-top: 1px solid #fff;" class="w-100" />
                 <a href="#">📊 Dashboard</a>
-                <a href="#">👨‍⚕️ Manage Doctors</a>
+                <a href="{{ url_for('admin.manage_doctors') }}">👨‍⚕️ Manage Doctors</a>
                 <a href="{{ url_for('admin.manage_patients')}}">👩‍⚕️ Manage Patients</a>
                 <a href="#">📅 Appointments</a>
                 <a href="#">🕒 Doctor Schedules</a>

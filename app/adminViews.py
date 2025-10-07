@@ -1,9 +1,11 @@
 from flask import Flask, Blueprint, render_template, request, redirect, url_for, flash, session
 from app import mysql
 from flask_mysqldb import MySQL
-import MySQLdb.cursors  # Import MySQLdb cursors
+import MySQLdb.cursors
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
+from werkzeug.utils import secure_filename
+import os
 import bcrypt
 from datetime import datetime
 
@@ -60,94 +62,92 @@ def AdminDashboard():
     # Render the template and pass both the total_doctors and total_patients values
     return render_template('AdminDashboard.html', total_doctors=total_doctors, total_patients=total_patients)
 
-@admin.route('/admin/adminManagesDoctors', methods=['GET', 'POST'])
-def AdminManagesDoctors():
-    message = ''
-    doctors = []  # Initialize doctors list
-
-    # Fetch doctors data from the database (GET request)
+# Admin Manages Doctors
+@admin.route('/manage_doctors', methods=['GET', 'POST'])
+def manage_doctors():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute("SELECT * FROM doctors")  # Fetch all doctors
-    doctors = cursor.fetchall()  # Store the result in a list of dictionaries
-    cursor.close()  # Close the cursor after fetching data
 
-    if request.method == 'POST' and 'firstname' in request.form and 'lastname' in request.form and 'specialization' in request.form and 'experience_years' in request.form and 'available_days[]' in request.form and 'username' in request.form and 'password' in request.form:
-        firstname = request.form['firstname']
-        lastname = request.form['lastname']
-        specialization = request.form['specialization']
-        experience_years = request.form['experience_years']
-        available_days = ', '.join(request.form.getlist('available_days[]'))  # Convert list to string
-        username = request.form['username']
-        password = request.form['password']
-       
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM doctors WHERE username = %s', (username,))
-        account = cursor.fetchone()
-
-        if account:
-            message = 'Doctor already exists!'
-        elif not firstname or not lastname or not specialization or not experience_years or not available_days or not username or not password:
-            message = 'Please fill out the form!'
-        else:
-            cursor.execute('INSERT INTO doctors (firstname, lastname, specialization, experience_years, available_days, username, password) VALUES (%s, %s, %s, %s, %s, %s, %s)',
-                           (firstname, lastname, specialization, experience_years, available_days, username, password))
-            mysql.connection.commit()
-            message = 'Doctor Registered Successfully!'
-
-    elif request.method == 'POST':
-        message = 'Please fill out the form!'
-
-    return render_template("AdminManagesDoctors.html", message=message, doctors=doctors)
-
-@admin.route('/admin/edit_doctor/<doctor_id>', methods=['GET', 'POST'])
-def edit_doctor(doctor_id):
-    # Fetch the doctor by doctor_id
-    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute("SELECT * FROM doctors WHERE doctor_id = %s", (doctor_id,))
-    doctor = cursor.fetchone()
-    cursor.close()
-
-    if not doctor:
-        flash("Doctor not found!", "danger")
-        return redirect(url_for('admin.AdminManagesDoctors'))
-
-    # Handle form submission (if POST)
     if request.method == 'POST':
-        firstname = request.form['firstname']
-        lastname = request.form['lastname']
-        specialization = request.form['specialization']
-        experience_years = request.form['experience_years']
-        available_days = ', '.join(request.form.getlist('available_days[]'))
-        username = request.form['username']
-        password = request.form['password']
+        # Get form data safely
+        firstname = request.form.get('firstname', '').strip()
+        lastname = request.form.get('lastname', '').strip()
+        specialization = request.form.get('specialization', '').strip()
+        experience_years = request.form.get('experience_years', 0)
+        email = request.form.get('email', '').strip()
+        username = request.form.get('username', '').strip()
+        password = request.form.get('password', '').strip()
+        if len(password) < 8 or len(password) > 12:
+            flash("Password must be between 8 and 12 characters.", "danger")
+        available_days = ', '.join(request.form.getlist('available_days'))
 
-        # Update doctor details
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('''UPDATE doctors 
-                          SET firstname = %s, lastname = %s, specialization = %s, 
-                              experience_years = %s, available_days = %s, 
-                              username = %s, password = %s 
-                          WHERE doctor_id = %s''', 
-                       (firstname, lastname, specialization, experience_years, 
-                        available_days, username, password, doctor_id))
+        # Hash the password
+        #password_hash = generate_password_hash(password)
+        password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+
+        # Handle profile picture safely
+        filename = "default.png"  # default image in your uploads folder
+        if 'profile_picture' in request.files:
+            file = request.files['profile_picture']
+            if file.filename != "":
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+
+        # Prepare insert query
+        insert_query = """
+            INSERT INTO doctors 
+            (firstname, lastname, specialization, experience_years, available_days, email, username, password, profile_picture) 
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+
+        # Execute safely
+        cursor.execute(insert_query, (
+            firstname, lastname, specialization, experience_years, 
+            available_days, email, username, password_hash, filename
+        ))
         mysql.connection.commit()
-        cursor.close()
+        flash("Doctor added successfully!", "success")
+        return redirect(url_for('admin.manage_doctors'))
 
-        flash("Doctor details updated successfully!", "success")
-        return redirect(url_for('admin.AdminManagesDoctors'))
+    # Handle GET request: fetch doctors with search, pagination, and sorting
+    search = request.args.get('search', '')
+    page = int(request.args.get('page', 1))
+    per_page = 10
+    sort_by = request.args.get('sort_by', 'doctor_id')
+    order = request.args.get('order', 'asc')
+    offset = (page - 1) * per_page
 
-    return render_template("edit_doctor.html", doctor=doctor)
+    base_query = """
+        SELECT * FROM doctors
+        WHERE firstname LIKE %s OR lastname LIKE %s OR specialization LIKE %s
+    """
+    params = ('%' + search + '%', '%' + search + '%', '%' + search + '%')
 
-@admin.route('/admin/delete_doctor/<doctor_id>', methods=['POST'])
-def delete_doctor(doctor_id):
-    # Delete the doctor by doctor_id
-    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute("DELETE FROM doctors WHERE doctor_id = %s", (doctor_id,))
-    mysql.connection.commit()
+    cursor.execute(f"SELECT COUNT(*) AS total FROM ({base_query}) AS t", params)
+    total_records = cursor.fetchone()['total']
+    total_pages = (total_records + per_page - 1) // per_page
+
+    query = f"{base_query} ORDER BY {sort_by} {order} LIMIT %s OFFSET %s"
+    cursor.execute(query, params + (per_page, offset))
+    doctors = cursor.fetchall()
     cursor.close()
 
-    flash("Doctor deleted successfully!", "success")
-    return redirect(url_for('admin.AdminManagesDoctors'))
+    return render_template(
+        'AdminManagesDoctors.html',
+        doctors=doctors,
+        page=page,
+        total_pages=total_pages,
+        search=search,
+        sort_by=sort_by,
+        order=order
+    )
+
+
+
+
+
+
+
 
 # Admin Manage Patients
 @admin.route('/manage_patients')
