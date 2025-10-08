@@ -45,30 +45,30 @@ def AdminLogin():
 
     return render_template('AdminLogin.html')
 
-
+# Admin Dashboard route
 @admin.route("/admin/dashboard")
 def AdminDashboard():
    # Fetch the total number of doctors from the database
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute("SELECT COUNT(*) AS total FROM doctors")
     result = cursor.fetchone()
-    total_doctors = result['total']  # Extract the total count of doctors
+    total_doctors = result['total']  
 
     # Fetch the total number of patients from the database (using raw SQL query)
-    cursor.execute("SELECT COUNT(*) AS total FROM patients")  # Assuming your table name is 'patients'
+    cursor.execute("SELECT COUNT(*) AS total FROM patients") 
     result_patients = cursor.fetchone()
     total_patients = result_patients['total']
 
-    # Render the template and pass both the total_doctors and total_patients values
+    
     return render_template('AdminDashboard.html', total_doctors=total_doctors, total_patients=total_patients)
 
-# Admin Manages Doctors
+
+# Admin Manages Doctors route
 @admin.route('/manage_doctors', methods=['GET', 'POST'])
 def manage_doctors():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
     if request.method == 'POST':
-        # Get form data safely
         firstname = request.form.get('firstname', '').strip()
         lastname = request.form.get('lastname', '').strip()
         specialization = request.form.get('specialization', '').strip()
@@ -76,40 +76,37 @@ def manage_doctors():
         email = request.form.get('email', '').strip()
         username = request.form.get('username', '').strip()
         password = request.form.get('password', '').strip()
+        
         if len(password) < 8 or len(password) > 12:
             flash("Password must be between 8 and 12 characters.", "danger")
-        available_days = ', '.join(request.form.getlist('available_days'))
+            return redirect(url_for('admin.manage_doctors'))
+        
+        available_days = ', '.join(request.form.getlist('available_days[]'))
 
-        # Hash the password
-        #password_hash = generate_password_hash(password)
         password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
-        # Handle profile picture safely
-        filename = "default.png"  # default image in your uploads folder
+        filename = "default.png"
         if 'profile_picture' in request.files:
             file = request.files['profile_picture']
             if file.filename != "":
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-
-        # Prepare insert query
         insert_query = """
-            INSERT INTO doctors 
-            (firstname, lastname, specialization, experience_years, available_days, email, username, password, profile_picture) 
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        INSERT INTO doctors 
+        (firstname, lastname, specialization, experience_years, available_days, email, username, password, profile_picture) 
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
 
-        # Execute safely
         cursor.execute(insert_query, (
             firstname, lastname, specialization, experience_years, 
             available_days, email, username, password_hash, filename
         ))
+
         mysql.connection.commit()
         flash("Doctor added successfully!", "success")
         return redirect(url_for('admin.manage_doctors'))
 
-    # Handle GET request: fetch doctors with search, pagination, and sorting
     search = request.args.get('search', '')
     page = int(request.args.get('page', 1))
     per_page = 10
@@ -142,22 +139,33 @@ def manage_doctors():
         order=order
     )
 
+# Admin Delete Doctor route
+@admin.route("/delete_doctor/<int:doctor_id>", methods=["GET", "POST"])
+def delete_doctor(doctor_id):
+    try:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("DELETE FROM doctors WHERE doctor_id = %s", (doctor_id,))
+        mysql.connection.commit()
+        cursor.close()
+        flash("Doctor deleted successfully!", "success")
+    except Exception as e:
+        mysql.connection.rollback()
+        flash(f"Error deleting doctor: {str(e)}", "danger")
+    
+    return redirect(url_for("admin.manage_doctors"))
 
 
 
 
-
-
-
-# Admin Manage Patients
+# Admin Manage Patients route
 @admin.route('/manage_patients')
 def manage_patients():
     # Get query parameters
     search = request.args.get('search', '')
     page = int(request.args.get('page', 1))
-    per_page = 10  # number of patients per page
-    sort_by = request.args.get('sort_by', 'patient_id')  # default sort column
-    order = request.args.get('order', 'asc')  # asc or desc
+    per_page = 10  
+    sort_by = request.args.get('sort_by', 'patient_id')  
+    order = request.args.get('order', 'asc') 
 
     offset = (page - 1) * per_page
     cursor = mysql.connection.cursor()

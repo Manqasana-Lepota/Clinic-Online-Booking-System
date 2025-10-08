@@ -1,84 +1,86 @@
+/******************************* ADMIN DASHBOARD **************************************************/
+
 body {
-      background-color: #f4f6f9;
-    }
+  background-color: #f4f6f9;
+}
 
-    .sidebar {
-      min-height: 100vh;
-      background-color: #3f51b5;
-      padding-top: 30px;
-      color: white;
-    }
+.sidebar {
+  min-height: 100vh;
+  background-color: #3f51b5;
+  padding-top: 30px;
+  color: white;
+}
 
-    .sidebar h4 {
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
+.sidebar h4 {
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+.sidebar a {
+  color: white;
+  display: block;
+  padding: 12px 20px;
+  font-size: 16px;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
 
-    .sidebar a {
-      color: white;
-      display: block;
-      padding: 12px 20px;
-      font-size: 16px;
-      text-decoration: none;
-      transition: background-color 0.2s;
-    }
+.sidebar a:hover {
+  background-color: #303f9f;
+}
 
-    .sidebar a:hover {
-      background-color: #303f9f;
-    }
+.admin-main {
+  padding: 40px 30px;
+  background-color: #f4f6f9;
+}
 
-    .admin-main {
-      padding: 40px 30px;
-      background-color: #f4f6f9;
-    }
+.admin-main h2 {
+  color: #3f51b5;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
 
-    .admin-main h2 {
-      color: #3f51b5;
-      font-weight: 700;
-      margin-bottom: 30px;
-    }
+.card-stat {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s;
+  text-align: center;
+}
 
-    .card-stat {
-      background-color: #ffffff;
-      border-radius: 12px;
-      padding: 30px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      transition: transform 0.2s;
-      text-align: center;
-    }
+.card-stat:hover {
+  transform: translateY(-5px);
+}
 
-    .card-stat:hover {
-      transform: translateY(-5px);
-    }
+.card-stat h5 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
 
-    .card-stat h5 {
-      font-size: 18px;
-      font-weight: 600;
-      color: #333;
-    }
+.card-stat .fs-4 {
+  font-size: 30px;
+  font-weight: bold;
+  color: #3f51b5;
+}
 
-    .card-stat .fs-4 {
-      font-size: 30px;
-      font-weight: bold;
-      color: #3f51b5;
-    }
+.quick-actions .btn {
+  min-width: 160px;
+  font-weight: 600;
+  border-radius: 30px;
+  padding: 12px 24px;
+}
 
-    .quick-actions .btn {
-      min-width: 160px;
-      font-weight: 600;
-      border-radius: 30px;
-      padding: 12px 24px;
-    }
+.quick-actions .btn-outline-primary:hover {
+  background-color: #3f51b5;
+  color: white;
+}
 
-    .quick-actions .btn-outline-primary:hover {
-      background-color: #3f51b5;
-      color: white;
-    }
+.card h5 {
+  font-weight: 600;
+}
 
-    .card h5 {
-      font-weight: 600;
-    }
-    .back-button {
+.back-button {
   position: absolute;
   top: 20px;
   right: 20px;
@@ -87,46 +89,54 @@ body {
   border: 1px solid #3f51b5;
   color: #3f51b5;
   padding: 8px 15px;
-  border-radius: 30px;
+  border-radius: 10px;
   font-weight: 500;
   text-decoration: none;
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
   transition: background-color 0.3s ease;
 }
 
+.back-button i {
+    margin-right: 6px;
+    font-size: 1.2rem;
+}
+
 .back-button:hover {
   background-color: #3f51b5;
-  color: white;
+  color: #fff;
+  text-decoration: none;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
-
-    @media (max-width: 768px) {
-      .sidebar {
-        text-align: center;
-      }
-
-      .quick-actions .btn {
-        width: 100%;
-      }
-    }
-    
-/*Admin Manage Patients*/
-
-.address-column {
-  min-width: 200px;
-  white-space: normal;
-  word-wrap: break-word;
-}
-.dof-column {
-  min-width: 150px;
-}
-.action-column {
-  min-width: 200px;
+@media (max-width: 768px) {
+  .sidebar {
+    text-align: center;
+  }
+  .quick-actions .btn {
+    width: 100%;
+  }
 }
 
-    /* Table styling */
+/******************************* ADMIN MANAGES PATIENTS/DOCTORS***************************************/
+
+.header h2 {
+  font-weight: 800;
+  color: #3f51b5;
+}
+
+.button-color {
+  background-color: #3f51b5;
+  color: #fff;
+}
+
+.button-color:hover {
+  background-color: #303f9f;
+  color: #fff;
+}
+
 .table-hover tbody tr:hover {
-    background-color: #f1f5f9; /* light gray on hover */
+    background-color: #f1f5f9;
 }
 
 .table thead th {
@@ -143,14 +153,20 @@ body {
     font-size: 0.9rem;
 }
 
-/* Profile image styling */
 .table img.rounded-circle {
     border: 2px solid #3f51b5;
     padding: 2px;
     object-fit: cover;
 }
 
-/* Address column wrapping */
+.table-responsive {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 5px;
+    background-color: #fff;
+    box-shadow: 0 0 8px rgba(0,0,0,0.05);
+}
+
 .address-column {
     min-width: 250px;
     max-width: 400px;
@@ -159,18 +175,15 @@ body {
     text-align: left;
 }
 
-/* Date of birth column */
 .dof-column {
     min-width: 130px;
 }
 
-/* Action buttons */
-.action-column a {
-    margin: 2px;
-    font-size: 0.85rem;
+.action-column {
+  min-width: 200px;
 }
 
-/* Pagination */
+
 .pagination .page-item.active .page-link {
     background-color: #3f51b5;
     border-color: #3f51b5;
@@ -185,26 +198,11 @@ body {
     background-color: #e0e0e0;
 }
 
-/* Back button styling */
-.back-button {
-    color: #3f51b5;
-    font-weight: 500;
-}
 
-.back-button:hover {
-    text-decoration: none;
-    background-color: #e3e7f5;
-    border-radius: 4px;
-}
+
 
 /* Table responsiveness */
-.table-responsive {
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-    padding: 5px;
-    background-color: #fff;
-    box-shadow: 0 0 8px rgba(0,0,0,0.05);
-}
+
 
 /* Flash messages */
 .alert {
@@ -221,40 +219,14 @@ body {
     border-radius: 0 4px 4px 0;
     font-weight: 500;
 }
-/* Page Heading */
-h2 {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #3f51b5;
-    margin-bottom: 20px;
-}
 
 
-/* Back Button Styling */
-.back-button {
-    display: inline-flex;
-    align-items: center;
-    padding: 6px 14px;
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: #3f51b5;
-    background-color: #e3e7f5;
-    border: 1px solid #3f51b5;
-    border-radius: 6px;
-    text-decoration: none;
-    transition: 0.2s all ease-in-out;
-}
 
-.back-button i {
-    margin-right: 6px;
-    font-size: 1.2rem;
-}
 
-/* Hover effect */
-.back-button:hover {
-    background-color: #3f51b5;
-    color: #fff;
-    text-decoration: none;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-}
+
+
+
+
+
+
+
