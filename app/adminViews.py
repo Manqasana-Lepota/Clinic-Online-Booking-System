@@ -139,6 +139,7 @@ def manage_doctors():
         order=order
     )
 
+
 # Admin Delete Doctor route
 @admin.route("/delete_doctor/<int:doctor_id>", methods=["GET", "POST"])
 def delete_doctor(doctor_id):
@@ -153,6 +154,64 @@ def delete_doctor(doctor_id):
         flash(f"Error deleting doctor: {str(e)}", "danger")
     
     return redirect(url_for("admin.manage_doctors"))
+
+
+# Admin Edit Doctor route
+@admin.route('/edit_doctor/<int:doctor_id>', methods=['POST'])
+def edit_doctor(doctor_id):
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+
+    firstname = request.form.get('firstname')
+    lastname = request.form.get('lastname')
+    specialization = request.form.get('specialization')
+    experience_years = request.form.get('experience_years')
+    email = request.form.get('email')
+    username = request.form.get('username')
+
+    
+    selected_days = request.form.getlist('available_days[]')
+    available_days = ', '.join(selected_days) if selected_days else ''
+
+   
+    password = request.form.get('password', '').strip()
+    if password:
+        password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    else:
+        password_hash = None 
+
+   
+    filename = None
+    if 'profile_picture' in request.files:
+        file = request.files['profile_picture']
+        if file.filename != "":
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+  
+    update_query = """
+        UPDATE doctors
+        SET firstname=%s, lastname=%s, specialization=%s, experience_years=%s,
+            available_days=%s, email=%s, username=%s
+    """
+    params = [firstname, lastname, specialization, experience_years, available_days, email, username]
+
+    if password_hash:
+        update_query += ", password=%s"
+        params.append(password_hash)
+
+    if filename:
+        update_query += ", profile_picture=%s"
+        params.append(filename)
+
+    update_query += " WHERE doctor_id=%s"
+    params.append(doctor_id)
+
+    cursor.execute(update_query, params)
+    mysql.connection.commit()
+    flash("Doctor details updated successfully!", "success")
+    return redirect(url_for('admin.manage_doctors'))
+
+
 
 
 

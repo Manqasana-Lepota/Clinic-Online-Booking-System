@@ -198,19 +198,12 @@ body {
     background-color: #e0e0e0;
 }
 
-
-
-
-/* Table responsiveness */
-
-
-/* Flash messages */
 .alert {
     font-size: 0.95rem;
     border-radius: 6px;
 }
 
-/* Search input styling */
+
 .input-group .form-control {
     border-radius: 4px 0 0 4px;
 }
@@ -219,6 +212,35 @@ body {
     border-radius: 0 4px 4px 0;
     font-weight: 500;
 }
+
+.btn-success {
+  background-color: #3f51b5;
+  border-color: #3f51b5;
+  font-weight: 700;
+}
+
+.btn-success:hover {
+  background-color: #5162c4;
+}
+
+.modal-header {
+  background-color: #3f51b5;
+  color: white;
+}
+
+.modal-content {
+  border-radius: 12px;
+}
+
+.form-label {
+  font-weight: 500;
+}
+
+.btn-sm {
+  padding: 4px 10px;
+}
+
+   
 
 
 
