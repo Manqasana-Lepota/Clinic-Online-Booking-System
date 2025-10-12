@@ -77,13 +77,15 @@ def manage_doctors():
         username = request.form.get('username', '').strip()
         password = request.form.get('password', '').strip()
         
-        if len(password) < 8 or len(password) > 12:
-            flash("Password must be between 8 and 12 characters.", "danger")
+   
+        if len(password) < 12 or len(password) > 16:
+            flash("Password must be between 12 and 16 characters.", "danger")
             return redirect(url_for('admin.manage_doctors'))
         
         available_days = ', '.join(request.form.getlist('available_days[]'))
 
-        password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+       
+        password_to_save = password  
 
         filename = "default.png"
         if 'profile_picture' in request.files:
@@ -100,13 +102,14 @@ def manage_doctors():
 
         cursor.execute(insert_query, (
             firstname, lastname, specialization, experience_years, 
-            available_days, email, username, password_hash, filename
+            available_days, email, username, password_to_save, filename
         ))
 
         mysql.connection.commit()
         flash("Doctor added successfully!", "success")
         return redirect(url_for('admin.manage_doctors'))
 
+  
     search = request.args.get('search', '')
     page = int(request.args.get('page', 1))
     per_page = 10
@@ -138,7 +141,6 @@ def manage_doctors():
         sort_by=sort_by,
         order=order
     )
-
 
 # Admin Delete Doctor route
 @admin.route("/delete_doctor/<int:doctor_id>", methods=["GET", "POST"])
