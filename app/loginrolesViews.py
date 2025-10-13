@@ -36,17 +36,23 @@ def universal_login():
     elif user_type == "doctor":
         cursor.execute("SELECT * FROM doctors WHERE username=%s AND password=%s", (username, password))
         user = cursor.fetchone()
+        cursor.close()
+
         if user:
+        # Set all required session keys
             session['user_type'] = 'doctor'
-            session['username'] = username
+            session['doctor_id'] = user['doctor_id']   # THIS IS THE KEY FIX
+            session['username'] = user['username']
+            session['firstname'] = user['firstname']
+            session['lastname'] = user['lastname']
+            session['profile_picture'] = user['profile_picture']
+            session['specialization'] = user['specialization']
 
-            firstname = user['firstname'].split()[0]
-
-            firstname = firstname.split()[0] if firstname else 'Patient'
-            session['firstname'] = firstname
+            flash("Login successful!", "success")
             return redirect(url_for('doctor.DoctorDashboard'))
         else:
-            flash("Invalid Doctor credentials")
+            flash("Invalid Doctor credentials", "danger")
+
 
     elif user_type == "patient":
         cursor.execute("SELECT * FROM patients WHERE username=%s AND password=%s", (username, password))

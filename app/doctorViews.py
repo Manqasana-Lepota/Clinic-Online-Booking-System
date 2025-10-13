@@ -30,99 +30,37 @@ def DoctorLogin():
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute("SELECT * FROM doctors WHERE username = %s", (username,))
         doctor = cursor.fetchone()
+        cursor.close()
 
-        if doctor and doctor['password'] == password:
+        if doctor and doctor['password'] == password:  # or use check_password_hash if hashed
             session['doctor_id'] = doctor['doctor_id']
             session['firstname'] = doctor['firstname']
             session['lastname'] = doctor['lastname']
             session['profile_picture'] = doctor['profile_picture']
             session['specialization'] = doctor['specialization']
-           
 
             flash("Login successful!", "success")
             return redirect(url_for('doctor.DoctorDashboard'))
         else:
             flash("Invalid credentials, please try again.", "danger")
 
-        cursor.close()
-
     return render_template('DoctorLogin.html')
 
 
 @doctor.route('/doctor-dashboard', methods=['GET', 'POST'], endpoint="DoctorDashboard")
 def DoctorDashboard():
-    if 'username' not in session:
-        return redirect(url_for('universal_login'))
-
-    firstname = session.get('firstname', 'Doctor')
-    return render_template('DoctorDashboard.html', firstname=firstname)
-
-
-@doctor.route('/update-profile-pic', methods=['POST'])
-def update_profile_pic():
-    if 'profile_pic' in request.files:
-        file = request.files['profile_pic']
-        if file.filename != '':
-            filename = secure_filename(file.filename)
-
-            # Ensure upload folder is correct
-            upload_folder = os.path.join(current_app.root_path, 'static', 'uploads')
-            os.makedirs(upload_folder, exist_ok=True)
-
-            filepath = os.path.join(upload_folder, filename)
-            file.save(filepath)
-
-            # Update DB
-            doctor_id = session.get('doctor_id')
-            cursor = mysql.connection.cursor()
-            cursor.execute("UPDATE doctors SET profile_picture = %s WHERE doctor_id = %s", (filename, doctor_id))
-            mysql.connection.commit()
-            cursor.close()
-
-            # Update session (optional)
-            session['profile_picture'] = filename
-
-            flash("Profile picture updated!", "success")
-    else:
-        flash("No file uploaded", "warning")
-
-    return redirect(url_for('doctor.DoctorDashboard'))
-
-def is_strong_password(password):
-    return re.match(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!]).{8,}$', password)
-
-@doctor.route('/change-password', methods=['POST'], endpoint='change_doctor_password')
-def change_doctor_password():
     if 'doctor_id' not in session:
-        flash("You must be logged in to change your password.", "warning")
-        return redirect(url_for('doctor.DoctorLogin'))
+        flash("Please log in first.", "warning")
+        return redirect(url_for('loginroles.universal_login'))
 
-    doctor_id = session['doctor_id']
-    current_password = request.form['current_password']
-    new_password = request.form['new_password']
-    confirm_password = request.form['confirm_password']
 
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute("SELECT password FROM doctors WHERE doctor_id = %s", (doctor_id,))
+    cursor.execute("SELECT * FROM doctors WHERE doctor_id = %s", (session['doctor_id'],))
     doctor = cursor.fetchone()
-
-    if not doctor or doctor['password'] != current_password:
-        flash("Current password is incorrect.", "danger")
-        return redirect(url_for('doctor.DoctorDashboard'))
-
-    if new_password != confirm_password:
-        flash("New passwords do not match.", "warning")
-        return redirect(url_for('doctor.DoctorDashboard'))
-
-    # Strong password check here
-    if not is_strong_password(new_password):
-        flash("Password must be at least 8 characters long and include uppercase, lowercase, a number, and a special character.", "danger")
-        return redirect(url_for('doctor.DoctorDashboard'))
-
-    # Save new password
-    cursor.execute("UPDATE doctors SET password = %s WHERE doctor_id = %s", (new_password, doctor_id))
-    mysql.connection.commit()
     cursor.close()
 
-    flash("Password changed successfully!", "success")
-    return redirect(url_for('doctor.DoctorDashboard'))
+    firstname = doctor['firstname'] if doctor else "Doctor"
+    return render_template('DoctorDashboard.html', firstname=firstname, doctor=doctor)
+
+
+
