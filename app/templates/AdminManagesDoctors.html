@@ -50,6 +50,7 @@
           <th>Experience (Years)</th>
           <th>Available Days</th>
           <th>Email</th>
+          <th>Phone No</th>
           <th>Username</th>
           <th>Password</th>
           <th class="action-column">Actions</th>
@@ -66,6 +67,7 @@
           <td>{{ doctor.experience_years }}</td>
           <td>{{ doctor.available_days }}</td>
           <td>{{ doctor.email }}</td>
+          <td>{{ doctor.phone}}</td>
           <td>{{ doctor.username }}</td>
           <td>{{ doctor.password }}</td>
           <td>
@@ -115,6 +117,10 @@
                     <div class="col-md-6">
                       <label class="form-label">Email</label>
                       <input type="email" name="email" class="form-control" value="{{ doctor.email }}" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Phone</label>
+                      <input type="tel" name="phone" class="form-control" value="{{ doctor.phone }}" required>
                     </div>
                   <div class="col-md-6">
                     <label class="form-label">Available Days</label><br>
@@ -193,6 +199,13 @@
 
               <label class="form-label mt-3">Email</label>
               <input type="email" name="email" class="form-control" required>
+
+              <label class="form-label mt-3">Password</label>
+              <div class="input-group">
+                <input type="password" name="password" id="password" class="form-control" required>
+                <button type="button" class="btn btn-outline-secondary" onclick="generatePassword()">Generate</button>
+              </div>
+
             </div>
             <div class="col-md-6">
               <label class="form-label">Last Name</label>
@@ -207,11 +220,8 @@
               <label class="form-label mt-3">Username</label>
               <input type="text" name="username" id="username" class="form-control" required>
 
-              <label class="form-label mt-3">Password</label>
-              <div class="input-group">
-                <input type="password" name="password" id="password" class="form-control" required>
-                <button type="button" class="btn btn-outline-secondary" onclick="generatePassword()">Generate</button>
-              </div>
+              <label class="form-label mt-3">Phone</label>
+              <input type="tel" name="phone" class="form-control" required>
             </div>
           </div>
           <div class="mt-4 text-end">

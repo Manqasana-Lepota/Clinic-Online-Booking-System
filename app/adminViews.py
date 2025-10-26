@@ -74,6 +74,7 @@ def manage_doctors():
         specialization = request.form.get('specialization', '').strip()
         experience_years = request.form.get('experience_years', 0)
         email = request.form.get('email', '').strip()
+        phone = request.form.get('phone', '').strip()
         username = request.form.get('username', '').strip()
         password = request.form.get('password', '').strip()
         
@@ -96,13 +97,13 @@ def manage_doctors():
 
         insert_query = """
         INSERT INTO doctors 
-        (firstname, lastname, specialization, experience_years, available_days, email, username, password, profile_picture) 
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        (firstname, lastname, specialization, experience_years, available_days, email, phone, username, password, profile_picture) 
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
 
         cursor.execute(insert_query, (
             firstname, lastname, specialization, experience_years, 
-            available_days, email, username, password_to_save, filename
+            available_days, email, phone, username, password_to_save, filename
         ))
 
         mysql.connection.commit()
@@ -168,6 +169,7 @@ def edit_doctor(doctor_id):
     specialization = request.form.get('specialization')
     experience_years = request.form.get('experience_years')
     email = request.form.get('email')
+    phone = request.form.get('phone')
     username = request.form.get('username')
 
     
@@ -193,9 +195,9 @@ def edit_doctor(doctor_id):
     update_query = """
         UPDATE doctors
         SET firstname=%s, lastname=%s, specialization=%s, experience_years=%s,
-            available_days=%s, email=%s, username=%s
+            available_days=%s, email=%s, phone=%s, username=%s
     """
-    params = [firstname, lastname, specialization, experience_years, available_days, email, username]
+    params = [firstname, lastname, specialization, experience_years, available_days, email, phone, username]
 
     if password_hash:
         update_query += ", password=%s"
