@@ -96,7 +96,7 @@
     </div>
     
     <div class="text-center mb-4">
-      <h2 class="dashboard-heading">Welcome, Dr. {{ firstname }}</h2>
+     <h2 class="dashboard-heading">Welcome, Dr. {{ doctor.firstname }} {{ doctor.lastname }}</h2>
       <p class="text-muted">Here’s a quick view of your activities</p>
     </div>
     <div class="row g-4">
@@ -127,35 +127,56 @@
       </div>
     </div>
 
+   
+
+ 
     <!-- Manage Schedule Modal -->
 <div class="modal fade" id="scheduleModal" tabindex="-1" aria-labelledby="scheduleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
-      <form action="{{ url_for('doctor.doctor_schedule') }}" method="POST">
+     <form action="{{ url_for('doctor.doctor_schedule') }}" method="POST">
+     
         <div class="modal-header">
           <h5 class="modal-title" id="scheduleModalLabel">Manage My Schedule</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
+        
         <div class="modal-body">
+
+          <!-- Flash messages inside modal -->
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                  {{ message }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+
           <!-- Existing Slots -->
           <h6>Existing Time Slots</h6>
           <ul class="list-group mb-3">
             {% for slot in schedules %}
-            <li class="list-group-item d-flex justify-content-between">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
               {{ slot.day }} | {{ slot.start_time }} - {{ slot.end_time }}
 
-              <!-- Edit Button -->
-              <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editSlotModal{{ slot.id }}">Edit</button>
-              
-              <!-- Delete Button -->
-              <a href="{{ url_for('doctor.delete_schedule', id=slot['id']) }}" class="btn btn-sm btn-danger">Delete</a>
+              <div>
+                <!-- Edit -->
+                <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editSlotModal{{ slot.schedule_id }}">
+                  Edit
+                </button>
+                <!-- Delete -->
+                <a href="{{ url_for('doctor.delete_schedule', schedule_id=slot.schedule_id) }}" class="btn btn-sm btn-danger">Delete</a>
+              </div>
 
-              <!-- EDIT MODAL INSIDE THE LOOP -->
-              <div class="modal fade" id="editSlotModal{{ slot.id }}" tabindex="-1" aria-hidden="true">
+              <!-- Edit Modal inside loop -->
+              <div class="modal fade" id="editSlotModal{{ slot.schedule_id }}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                   <div class="modal-content">
-                    <form method="POST" action="{{ url_for('doctor.edit_schedule', id=slot['id']) }}">
+                    <form method="POST" action="{{ url_for('doctor.edit_schedule', schedule_id=slot.schedule_id) }}">
                       <div class="modal-header">
                         <h5 class="modal-title">Edit Schedule</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -187,7 +208,7 @@
                   </div>
                 </div>
               </div>
-              <!-- END EDIT MODAL -->
+              <!-- End edit modal -->
 
             </li>
             {% else %}
@@ -195,7 +216,7 @@
             {% endfor %}
           </ul>
 
-          <!-- Add Form -->
+          <!-- Add Schedule Form -->
           <div class="row g-2">
             <div class="col-md-4">
               <label class="form-label">Day</label>
@@ -226,12 +247,6 @@
     </div>
   </div>
 </div>
-
-    
- 
-
-
-
     
     <!-- Patient Records Card -->
     <div class="col-md-4">
@@ -297,6 +312,13 @@
   });
 
 
+
+
+  
+
+
 </script>
+
+
 </body>
 </html>

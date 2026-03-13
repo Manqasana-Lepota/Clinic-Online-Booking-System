@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Doctor Schedules</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/css/admin.css">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/clinic-logo.png') }}">
+</head>
+<body class="p-4">
+
+<h2 style="color: #3f51b5; font-weight: 800;">Doctor Schedules</h2>
+
+<a href="javascript:history.back()" class="back-button">
+    <i class="bx bx-arrow-back"></i> Back
+</a><br><br>
+
+<!-- Search and Filter -->
+<form method="GET" class="row mb-3 g-2">
+    <div class="col-md-4">
+        <input type="text" name="search" value="{{ search }}" class="form-control" placeholder="Search doctor or specialization">
+    </div>
+    <div class="col-md-3">
+        <select name="day" class="form-select">
+            <option value="">Filter by Day</option>
+            <option value="Monday" {% if day == "Monday" %}selected{% endif %}>Monday</option>
+            <option value="Tuesday" {% if day == "Tuesday" %}selected{% endif %}>Tuesday</option>
+            <option value="Wednesday" {% if day == "Wednesday" %}selected{% endif %}>Wednesday</option>
+            <option value="Thursday" {% if day == "Thursday" %}selected{% endif %}>Thursday</option>
+            <option value="Friday" {% if day == "Friday" %}selected{% endif %}>Friday</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100">
+            <i class='bx bx-search'></i> Search
+        </button>
+    </div>
+    <div class="col-md-2">
+        <a href="{{ url_for('admin.doctor_schedules') }}" class="btn btn-secondary w-100">Reset</a>
+    </div>
+</form>
+
+<!-- Add Schedule Button -->
+<button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addScheduleModal">
+    <i class='bx bx-plus'></i> Add Schedule
+</button>
+
+<!-- Add Schedule Modal -->
+<div class="modal fade" id="addScheduleModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="{{ url_for('admin.add_schedule') }}">
+                <div class="modal-header">
+                    <h5>Add Doctor Schedule</h5>
+                </div>
+                <div class="modal-body">
+                    <select name="doctor_id" class="form-select mb-2" required>
+                        {% for doctor in doctors %}
+                        <option value="{{ doctor.doctor_id }}">
+                            {{ doctor.firstname }} {{ doctor.lastname }}
+                        </option>
+                        {% endfor %}
+                    </select>
+
+                    <select name="day" class="form-select mb-2" required>
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                    </select>
+
+                    <input type="time" name="start_time" class="form-control mb-2" required>
+                    <input type="time" name="end_time" class="form-control mb-2" required>
+
+                    <select name="status" class="form-select" required>
+                        <option value="Available">🟢 Available</option>
+                        <option value="Not Available">🔴 Not Available</option>
+                    </select>
+                </div>
+                <button class="btn btn-success w-100">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Flash messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }} alert-dismissible fade show">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<!-- Doctor Schedules Table -->
+<div class="table-responsive shadow-sm">
+    <table class="table table-hover table-striped table-bordered align-middle">
+        <thead class="table-primary">
+            <tr class="text-center">
+                <th>Doctor Name</th>
+                <th>Specialization</th>
+                <th>Day</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sched in schedules %}
+            <tr class="text-center">
+                <td>{{ sched.firstname }} {{ sched.lastname }}</td>
+                <td>{{ sched.specialization }}</td>
+                <td>{{ sched.day }}</td>
+                <td>{{ sched.start_time }}</td>
+                <td>{{ sched.end_time }}</td>
+                <td>
+                    <a href="{{ url_for('admin.toggle_schedule_status', schedule_id=sched.schedule_id) }}" style="text-decoration: none;">
+                        {% if sched.status == 'Available' %}
+                        <span style="font-size:20px; color:green;">●</span>
+                        {% else %}
+                        <span style="font-size:20px; color:red;">●</span>
+                        {% endif %}
+                    </a>
+                </td>
+                <td>
+                    <!-- Edit Button -->
+                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editScheduleModal{{ sched.schedule_id }}">
+                        <i class='bx bx-edit'></i>
+                    </button>
+
+                    <!-- Delete Button -->
+                    <form action="{{ url_for('admin.delete_schedule', schedule_id=sched.schedule_id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this schedule?');">
+                        <button type="submit" class="btn btn-sm btn-danger">
+                            <i class='bx bx-trash'></i>
+                        </button>
+                    </form>
+                </td>
+
+                <!-- Edit Schedule Modal -->
+                <div class="modal fade" id="editScheduleModal{{ sched.schedule_id }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <form method="POST" action="{{ url_for('admin.edit_schedule', schedule_id=sched.schedule_id) }}">
+                                <div class="modal-header">
+                                    <h5>Edit Schedule</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <select name="day" class="form-select mb-2" required>
+                                        <option value="Monday" {% if sched.day == 'Monday' %}selected{% endif %}>Monday</option>
+                                        <option value="Tuesday" {% if sched.day == 'Tuesday' %}selected{% endif %}>Tuesday</option>
+                                        <option value="Wednesday" {% if sched.day == 'Wednesday' %}selected{% endif %}>Wednesday</option>
+                                        <option value="Thursday" {% if sched.day == 'Thursday' %}selected{% endif %}>Thursday</option>
+                                        <option value="Friday" {% if sched.day == 'Friday' %}selected{% endif %}>Friday</option>
+                                    </select>
+
+                                    <input type="time" name="start_time" class="form-control mb-2" value="{{ sched.start_time }}" required>
+                                    <input type="time" name="end_time" class="form-control mb-2" value="{{ sched.end_time }}" required>
+
+                                    <select name="status" class="form-select" required>
+                                        <option value="Available" {% if sched.status == 'Available' %}selected{% endif %}>🟢 Available</option>
+                                        <option value="Not Available" {% if sched.status == 'Not Available' %}selected{% endif %}>🔴 Not Available</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-success w-100">Save Changes</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="7" class="text-center">No schedules found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

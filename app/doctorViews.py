@@ -53,14 +53,27 @@ def DoctorDashboard():
         flash("Please log in first.", "warning")
         return redirect(url_for('loginroles.universal_login'))
 
+    doctor_id = session['doctor_id']
 
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute("SELECT * FROM doctors WHERE doctor_id = %s", (session['doctor_id'],))
+
+    # Fetch doctor info
+    cursor.execute("SELECT * FROM doctors WHERE doctor_id = %s", (doctor_id,))
     doctor = cursor.fetchone()
+
+    # Fetch schedules
+    cursor.execute("SELECT * FROM doctor_schedule WHERE doctor_id = %s", (doctor_id,))
+    schedules = cursor.fetchall()
+
     cursor.close()
 
     firstname = doctor['firstname'] if doctor else "Doctor"
-    return render_template('DoctorDashboard.html', firstname=firstname, doctor=doctor)
+    return render_template(
+        'DoctorDashboard.html',
+        firstname=firstname,
+        doctor=doctor,
+        schedules=schedules
+    )
 
 
 @doctor.route('/update_profile', methods=['POST'])
@@ -139,45 +152,52 @@ def update_profile():
 
 
 
+
 @doctor.route('/schedule', methods=['GET', 'POST'])
 def doctor_schedule():
-    doctor_id = session.get('doctor_id')  # Get the logged-in doctor
+    doctor_id = session.get('doctor_id')  # Logged-in doctor
 
+    cursor = mysql.connection.cursor()
+
+    # POST: Add new schedule
     if request.method == 'POST':
         day = request.form['day']
         start_time = request.form['start_time']
         end_time = request.form['end_time']
 
-        cursor = mysql.connection.cursor()
         cursor.execute("""
             INSERT INTO doctor_schedule (doctor_id, day, start_time, end_time)
             VALUES (%s, %s, %s, %s)
         """, (doctor_id, day, start_time, end_time))
         mysql.connection.commit()
-        cursor.close()
-
         flash("Schedule added successfully!", "success")
         return redirect(url_for('doctor.doctor_schedule'))
 
-    # Fetch existing schedules
-    cursor = mysql.connection.cursor()
-    cursor.execute("SELECT * FROM doctor_schedule WHERE doctor_id = %s", (doctor_id,))
+    # GET: Fetch existing schedules
+    cursor.execute("""
+        SELECT * FROM doctor_schedule 
+        WHERE doctor_id = %s
+        ORDER BY 
+            FIELD(day, 'Monday','Tuesday','Wednesday','Thursday','Friday'), 
+            start_time
+    """, (doctor_id,))
     schedules = cursor.fetchall()
 
-    # Fetch doctor info for template
+    # Fetch doctor info
     cursor.execute("SELECT * FROM doctors WHERE doctor_id = %s", (doctor_id,))
-    doctor_info = cursor.fetchone()
+    doctor = cursor.fetchone()
     cursor.close()
 
     return render_template(
         "DoctorDashboard.html",
         schedules=schedules,
-        doctor=doctor_info  # Pass doctor info to template
+        doctor=doctor
     )
 
 
-@doctor.route("/schedule/edit/<int:id>", methods=["POST"])
-def edit_schedule(id):
+
+@doctor.route("/schedule/edit/<int:schedule_id>", methods=["POST"])
+def edit_schedule(schedule_id):
     day = request.form["day"]
     start_time = request.form["start_time"]
     end_time = request.form["end_time"]
@@ -186,8 +206,8 @@ def edit_schedule(id):
     cursor.execute("""
         UPDATE doctor_schedule
         SET day=%s, start_time=%s, end_time=%s
-        WHERE id=%s
-    """, (day, start_time, end_time, id))
+        WHERE schedule_id=%s
+    """, (day, start_time, end_time, schedule_id))
     mysql.connection.commit()
     cursor.close()
 
@@ -195,10 +215,10 @@ def edit_schedule(id):
     return redirect(url_for("doctor.doctor_schedule"))
 
 
-@doctor.route('/schedule/delete/<int:id>', methods=['GET'])
-def delete_schedule(id):
+@doctor.route('/schedule/delete/<int:schedule_id>', methods=['GET'])
+def delete_schedule(schedule_id):
     cursor = mysql.connection.cursor()
-    cursor.execute("DELETE FROM doctor_schedule WHERE id = %s", (id,))
+    cursor.execute("DELETE FROM doctor_schedule WHERE schedule_id = %s", (schedule_id,))
     mysql.connection.commit()
     cursor.close()
     flash("Schedule deleted.", "info")

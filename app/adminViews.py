@@ -318,3 +318,195 @@ def logout():
     session.pop('user_id', None)  # Replace 'user_id' with your session variable
     flash('You have been logged out successfully!', 'success')
     return redirect(url_for('loginroles'))  # Redirect to the login page (or another page)
+
+
+
+
+@admin.route('/doctor-schedules')
+def doctor_schedules():
+
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+
+    search = request.args.get('search', '')
+    day = request.args.get('day', '')
+    page = request.args.get('page', 1, type=int)
+
+    per_page = 5
+    offset = (page - 1) * per_page
+
+    query = """
+        SELECT ds.schedule_id, ds.doctor_id, ds.day, ds.start_time, ds.end_time,
+               ds.status,
+               d.firstname, d.lastname, d.specialization
+        FROM doctor_schedule ds
+        JOIN doctors d ON ds.doctor_id = d.doctor_id
+        WHERE 1=1
+    """
+
+    params = []
+
+    if search:
+        query += " AND (d.firstname LIKE %s OR d.lastname LIKE %s OR d.specialization LIKE %s)"
+        params.extend([f"%{search}%", f"%{search}%", f"%{search}%"])
+
+    if day:
+        query += " AND ds.day = %s"
+        params.append(day)
+
+    query += " ORDER BY d.firstname, ds.day LIMIT %s OFFSET %s"
+    params.extend([per_page, offset])
+
+    cursor.execute(query, params)
+    schedules = cursor.fetchall()
+
+    # Count total with filters
+    count_query = """
+        SELECT COUNT(*) as total
+        FROM doctor_schedule ds
+        JOIN doctors d ON ds.doctor_id = d.doctor_id
+        WHERE 1=1
+    """
+
+    count_params = []
+
+    if search:
+        count_query += " AND (d.firstname LIKE %s OR d.lastname LIKE %s OR d.specialization LIKE %s)"
+        count_params.extend([f"%{search}%", f"%{search}%", f"%{search}%"])
+
+    if day:
+        count_query += " AND ds.day = %s"
+        count_params.append(day)
+
+    cursor.execute(count_query, count_params)
+    total = cursor.fetchone()['total']
+
+    total_pages = (total + per_page - 1) // per_page
+
+    cursor.execute("SELECT * FROM doctors ORDER BY firstname")
+    doctors = cursor.fetchall()
+
+    cursor.close()
+
+    return render_template(
+        'AdminDoctorSchedules.html',
+        doctors=doctors,
+        schedules=schedules,
+        page=page,
+        total_pages=total_pages,
+        search=search,
+        day=day
+    )
+
+
+
+
+@admin.route('/add-schedule', methods=['POST'])
+def add_schedule():
+
+    doctor_id = request.form.get('doctor_id')
+    day = request.form.get('day')
+    start_time = request.form.get('start_time')
+    end_time = request.form.get('end_time')
+    status = request.form.get('status')
+
+    cursor = mysql.connection.cursor()
+
+    # Prevent overlapping schedules
+    cursor.execute("""
+        SELECT * FROM doctor_schedule
+        WHERE doctor_id = %s AND day = %s
+        AND NOT (end_time <= %s OR start_time >= %s)
+    """, (doctor_id, day, start_time, end_time))
+
+    existing = cursor.fetchone()
+
+    if existing:
+        flash("Schedule conflicts with an existing schedule.", "danger")
+        cursor.close()
+        return redirect(url_for('admin.doctor_schedules'))
+
+    # Insert schedule
+    cursor.execute("""
+        INSERT INTO doctor_schedule 
+        (doctor_id, day, start_time, end_time, status)
+        VALUES (%s, %s, %s, %s, %s)
+    """, (doctor_id, day, start_time, end_time, status))
+
+    mysql.connection.commit()
+    cursor.close()
+
+    flash("Doctor schedule added successfully.", "success")
+
+    return redirect(url_for('admin.doctor_schedules'))
+
+
+
+@admin.route('/toggle-schedule-status/<int:schedule_id>')
+def toggle_schedule_status(schedule_id):
+
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+
+    cursor.execute("""
+        SELECT status FROM doctor_schedule
+        WHERE schedule_id = %s
+    """, (schedule_id,))
+
+    schedule = cursor.fetchone()
+
+    if schedule['status'] == 'Available':
+        new_status = 'Not Available'
+    else:
+        new_status = 'Available'
+
+    cursor.execute("""
+        UPDATE doctor_schedule
+        SET status = %s
+        WHERE schedule_id = %s
+    """, (new_status, schedule_id))
+
+    mysql.connection.commit()
+    cursor.close()
+
+    return redirect(url_for('admin.doctor_schedules'))
+
+
+
+
+
+@admin.route('/edit-schedule/<int:schedule_id>', methods=['POST'])
+def edit_schedule(schedule_id):
+
+    day = request.form.get('day')
+    start_time = request.form.get('start_time')
+    end_time = request.form.get('end_time')
+    status = request.form.get('status')
+
+    cursor = mysql.connection.cursor()
+
+    cursor.execute("""
+        UPDATE doctor_schedule
+        SET day=%s, start_time=%s, end_time=%s, status=%s
+        WHERE schedule_id=%s
+    """, (day, start_time, end_time, status, schedule_id))
+
+    mysql.connection.commit()
+    cursor.close()
+
+    flash("Schedule updated successfully.", "success")
+
+    return redirect(url_for('admin.doctor_schedules'))
+
+
+
+
+@admin.route('/delete_schedule/<int:schedule_id>', methods=['POST'])
+def delete_schedule(schedule_id):
+
+    cursor = mysql.connection.cursor()
+    cursor.execute("DELETE FROM doctor_schedule WHERE schedule_id = %s", (schedule_id,))
+    mysql.connection.commit()
+    cursor.close()
+
+    flash("Schedule deleted successfully!", "success")
+
+    return redirect(url_for('admin.doctor_schedules'))
