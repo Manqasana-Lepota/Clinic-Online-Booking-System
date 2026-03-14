@@ -331,7 +331,7 @@ def doctor_schedules():
     day = request.args.get('day', '')
     page = request.args.get('page', 1, type=int)
 
-    per_page = 5
+    per_page = 20
     offset = (page - 1) * per_page
 
     query = """
@@ -339,7 +339,7 @@ def doctor_schedules():
                ds.status,
                d.firstname, d.lastname, d.specialization
         FROM doctor_schedule ds
-        JOIN doctors d ON ds.doctor_id = d.doctor_id
+        LEFT JOIN doctors d ON ds.doctor_id = d.doctor_id
         WHERE 1=1
     """
 
@@ -363,7 +363,7 @@ def doctor_schedules():
     count_query = """
         SELECT COUNT(*) as total
         FROM doctor_schedule ds
-        JOIN doctors d ON ds.doctor_id = d.doctor_id
+        LEFT JOIN doctors d ON ds.doctor_id = d.doctor_id
         WHERE 1=1
     """
 
