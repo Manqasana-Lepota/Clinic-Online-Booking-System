@@ -10,6 +10,8 @@ from werkzeug.utils import secure_filename
 from flask import current_app
 import re
 
+from collections import defaultdict
+
 # Define Blueprint for Doctor
 doctor = Blueprint('doctor', __name__)
 
@@ -152,47 +154,58 @@ def update_profile():
 
 
 
-
 @doctor.route('/schedule', methods=['GET', 'POST'])
 def doctor_schedule():
-    doctor_id = session.get('doctor_id')  # Logged-in doctor
+    doctor_id = session.get('doctor_id')
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
-    cursor = mysql.connection.cursor()
-
-    # POST: Add new schedule
+    # --- POST: Add a new schedule ---
     if request.method == 'POST':
         day = request.form['day']
         start_time = request.form['start_time']
         end_time = request.form['end_time']
+        status = request.form.get('status', 'Available')  # default Available
 
         cursor.execute("""
-            INSERT INTO doctor_schedule (doctor_id, day, start_time, end_time)
-            VALUES (%s, %s, %s, %s)
-        """, (doctor_id, day, start_time, end_time))
+            INSERT INTO doctor_schedule (doctor_id, day, start_time, end_time, status)
+            VALUES (%s,%s,%s,%s,%s)
+        """, (doctor_id, day, start_time, end_time, status))
+
         mysql.connection.commit()
         flash("Schedule added successfully!", "success")
         return redirect(url_for('doctor.doctor_schedule'))
 
-    # GET: Fetch existing schedules
+    # --- GET: Fetch schedules ---
     cursor.execute("""
-        SELECT * FROM doctor_schedule 
-        WHERE doctor_id = %s
-        ORDER BY 
-            FIELD(day, 'Monday','Tuesday','Wednesday','Thursday','Friday'), 
-            start_time
+        SELECT schedule_id, day, start_time, end_time, status
+        FROM doctor_schedule
+        WHERE doctor_id=%s
+        ORDER BY FIELD(day,'Monday','Tuesday','Wednesday','Thursday','Friday'), start_time
     """, (doctor_id,))
     schedules = cursor.fetchall()
 
-    # Fetch doctor info
-    cursor.execute("SELECT * FROM doctors WHERE doctor_id = %s", (doctor_id,))
+    # --- Convert start_time & end_time to HH:MM strings ---
+    for slot in schedules:
+        # timedelta -> HH:MM
+        slot['start_time_str'] = str(slot['start_time'])[:5]
+        slot['end_time_str'] = str(slot['end_time'])[:5]
+
+    # --- Group schedules by day ---
+    grouped_schedules = defaultdict(list)
+    for slot in schedules:
+        grouped_schedules[slot['day']].append(slot)
+
+    # --- Fetch doctor info ---
+    cursor.execute("SELECT * FROM doctors WHERE doctor_id=%s", (doctor_id,))
     doctor = cursor.fetchone()
     cursor.close()
 
     return render_template(
         "DoctorDashboard.html",
-        schedules=schedules,
+        grouped_schedules=grouped_schedules,
         doctor=doctor
     )
+
 
 
 
