@@ -13,13 +13,34 @@ def allowed_file(filename):
 
 patient = Blueprint('patient', __name__)
 
+
+
 @patient.route('/PatientDashboard')
 def PatientDashboard():
     if 'username' not in session:
         return redirect(url_for('loginroles.universal_login'))
 
     firstname = session.get('firstname', 'Patient')
-    return render_template("PatientDashboard.html", firstname=firstname)
+
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+
+    # Fetch doctors from database
+    cursor.execute("SELECT * FROM doctors")
+    doctors = cursor.fetchall()
+
+    doctors_count = len(doctors)
+
+    return render_template(
+        "PatientDashboard.html",
+        firstname=firstname,
+        doctors=doctors,
+        doctors_count=doctors_count
+    )
+
+
+
+
+
    
 @patient.route('/PatientsRegisterForm', methods=['GET', 'POST'])
 def PatientsRegisterForm():
@@ -174,6 +195,19 @@ def EditProfile():
         return redirect(url_for('patient.PatientProfile'))
 
     return render_template('EditPatientProfile.html', patient=patient)
+
+
+@patient.route('/book/<int:doctor_id>')
+def book_appointment(doctor_id):
+    if 'username' not in session:
+        return redirect(url_for('loginroles.universal_login'))
+
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute("SELECT * FROM doctors WHERE id = %s", (doctor_id,))
+    doctor = cursor.fetchone()
+
+    return render_template("BookAppointment.html", doctor=doctor)
+
 
 # logout route
 @patient.route('/logout')

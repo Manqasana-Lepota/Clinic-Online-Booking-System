@@ -30,7 +30,7 @@
     </nav>
 
     <!-- Main Content -->
-     <div class="container patient-dashboard-wrapper">
+    <div class="container patient-dashboard-wrapper">
         <h2 class="dashboard-heading">Welcome, {{ firstname }}</h2>
         <div class="row g-4">
             <div class="col-md-4">
@@ -39,16 +39,70 @@
                     <p>{{ upcoming_count }}</p>
                 </div>
             </div>
+
             <div class="col-md-4">
                 <div class="stat-card">
                     <h5>Past Appointments</h5>
                     <p>{{ past_count }}</p>
                 </div>
             </div>
+            
+            <!-- Doctors Card -->
             <div class="col-md-4">
-                <div class="stat-card">
-                    <h5>Doctors Available</h5>
-                    <p>{{ doctors_count }}</p>
+                <div class="stat-card" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#doctorsModal">
+                    <h5>👨‍⚕️ Doctors Available ({{ doctors_count }})</h5>
+                </div>
+            </div>
+            
+            <!-- Modal -->
+            <div class="modal fade" id="doctorsModal" tabindex="-1" aria-labelledby="doctorsModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="doctorsModalLabel">👨‍⚕️ Doctors Available ({{ doctors_count }})</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            {% if doctors %}
+                            <!-- Search and Filter -->
+                             <div class="mb-3 d-flex gap-2">
+                                <input type="text" id="doctorSearch" class="form-control" placeholder="Search by name...">
+                                <select id="specializationFilter" class="form-select">
+                                    <option value="">All Specializations</option>
+                                    {% for spec in doctors|map(attribute='specialization')|unique %}
+                                    <option value="{{ spec }}">{{ spec }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <!-- Doctors List -->
+                            <div class="row g-3" id="doctorsList">
+                                {% for doctor in doctors %}
+                                <div class="col-md-6 doctor-card" data-name="{{ doctor['firstname'] }} {{ doctor['lastname'] }}" data-specialization="{{ doctor['specialization'] }}">
+                                    <div class="card h-100 shadow-sm">
+                                        <div class="card-body d-flex">
+                                            <img src="{{ url_for('static', filename='uploads/' + doctor['profile_picture']) }}"
+                                            alt="Dr. {{ doctor['firstname'] }} {{ doctor['lastname'] }}"
+                                            class="rounded-circle me-3"
+                                            style="width:60px; height:60px; object-fit:cover;">
+                                            <div>
+                                                <strong>Dr. {{ doctor['firstname'] }} {{ doctor['lastname'] }}</strong><br>
+                                                <small class="text-muted">{{ doctor['specialization'] }}</small><br>
+                                                <small class="text-muted">Available: {{ doctor['available_days'] }}</small>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer text-end">
+                                            <a href="{{ url_for('patient.book_appointment', doctor_id=doctor['doctor_id']) }}"
+                                            class="btn btn-sm btn-primary">Book</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <p class="text-muted">No doctors available.</p>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -78,7 +132,37 @@
     </div>
 
     <!-- Bootstrap JS -->
-     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JavaScript for Live Search & Filter -->
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('doctorSearch');
+            const filterSelect = document.getElementById('specializationFilter');
+            const doctorsList = document.getElementById('doctorsList');
+            const doctorCards = doctorsList.querySelectorAll('.doctor-card');
+            
+            function filterDoctors() {
+                const searchValue = searchInput.value.toLowerCase();
+                const specializationValue = filterSelect.value;
+                
+                doctorCards.forEach(card => {
+                    const name = card.dataset.name.toLowerCase();
+                    const spec = card.dataset.specialization;
+                    
+                    if ((name.includes(searchValue)) && (specializationValue === "" || spec === specializationValue)) {
+                        card.style.display = "block";
+                    } else {
+                        card.style.display = "none";
+                    }
+                });
+            }
+            
+            searchInput.addEventListener('input', filterDoctors);
+            filterSelect.addEventListener('change', filterDoctors);
+        });
+    </script>
 
 </body>
 </html>
