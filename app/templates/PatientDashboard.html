@@ -144,10 +144,14 @@
         <!-- Action Buttons -->
          <div class="row mt-5 dashboard-actions">
             <div class="col-md-6 mb-3">
-                <a href="#" class="btn btn-primary w-100">📅 Book Appointment</a>
+                <a href="{{ url_for('patient.book_appointment') }}" class="btn btn-primary w-100">
+                    📅 Book Appointment
+                </a>
             </div>
             <div class="col-md-6 mb-3">
-                <a href="#" class="btn btn-outline-primary w-100">📋 My Appointments</a>
+                <a href="{{ url_for('patient.patient_appointments') }}" class="btn btn-outline-primary w-100">
+                    📋 My Appointments
+                </a>
             </div>
         </div>
 

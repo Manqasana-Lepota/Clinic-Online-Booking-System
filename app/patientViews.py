@@ -198,31 +198,38 @@ def EditProfile():
 
 
 # Patient Booking Route
-@patient.route('/book', methods=['POST'])
+@patient.route('/book-appointment')
 def book_appointment():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
-    if 'patient_id' not in session:
-        flash("Please login first", "danger")
-        return redirect(url_for('loginroles.login'))
+    cursor.execute("SELECT * FROM doctors")
+    doctors = cursor.fetchall()
 
-    doctor_id = request.form['doctor_id']
-    date = request.form['appointment_date']
-    time = request.form['appointment_time']
-    patient_id = session['patient_id']
+    return render_template("book_appointment.html", doctors=doctors)
 
-    cursor = mysql.connection.cursor()
 
-    cursor.execute("""
-        INSERT INTO appointments (patient_id, doctor_id, appointment_date, appointment_time)
-        VALUES (%s, %s, %s, %s)
-    """, (patient_id, doctor_id, date, time))
+# Patient Appointment Route
+@patient.route('/patient-appointments')
+def patient_appointments():
+    patient_id = session.get('patient_id')
 
-    mysql.connection.commit()
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
-    flash("Appointment booked successfully!", "success")
-    return redirect(url_for('patient.PatientDashboard'))
+    query = """
+        SELECT a.*, d.first_name, d.last_name
+        FROM appointments a
+        LEFT JOIN doctors d ON a.doctor_id = d.id
+        WHERE a.patient_id = %s
+        ORDER BY a.appointment_date DESC, a.appointment_time DESC
+    """
 
-# logout route
+    cursor.execute(query, (patient_id,))
+    appointments = cursor.fetchall()
+
+    return render_template("patient_appointments.html", appointments=appointments)
+
+
+# Patient Logout Route
 @patient.route('/logout')
 def patient_logout():
     # Clear the session

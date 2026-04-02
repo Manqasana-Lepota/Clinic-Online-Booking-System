@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Appointments</title>
+</head>
+<body>
+    <h3>My Appointments</h3>
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Doctor</th>
+      <th>Date</th>
+      <th>Time</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for a in appointments %}
+    <tr>
+      <td>{{ a.doctor_id }}</td>
+      <td>{{ a.appointment_date }}</td>
+      <td>{{ a.appointment_time }}</td>
+      <td>{{ a.status }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+    
+</body>
+</html>
