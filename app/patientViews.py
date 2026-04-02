@@ -197,17 +197,30 @@ def EditProfile():
     return render_template('EditPatientProfile.html', patient=patient)
 
 
-@patient.route('/book/<int:doctor_id>')
-def book_appointment(doctor_id):
-    if 'username' not in session:
-        return redirect(url_for('loginroles.universal_login'))
+# Patient Booking Route
+@patient.route('/book', methods=['POST'])
+def book_appointment():
 
-    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute("SELECT * FROM doctors WHERE id = %s", (doctor_id,))
-    doctor = cursor.fetchone()
+    if 'patient_id' not in session:
+        flash("Please login first", "danger")
+        return redirect(url_for('loginroles.login'))
 
-    return render_template("BookAppointment.html", doctor=doctor)
+    doctor_id = request.form['doctor_id']
+    date = request.form['appointment_date']
+    time = request.form['appointment_time']
+    patient_id = session['patient_id']
 
+    cursor = mysql.connection.cursor()
+
+    cursor.execute("""
+        INSERT INTO appointments (patient_id, doctor_id, appointment_date, appointment_time)
+        VALUES (%s, %s, %s, %s)
+    """, (patient_id, doctor_id, date, time))
+
+    mysql.connection.commit()
+
+    flash("Appointment booked successfully!", "success")
+    return redirect(url_for('patient.PatientDashboard'))
 
 # logout route
 @patient.route('/logout')

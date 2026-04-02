@@ -153,18 +153,18 @@ def update_profile():
     return redirect(url_for('doctor.DoctorDashboard'))
 
 
-
+# Doctor Schedule Route
 @doctor.route('/schedule', methods=['GET', 'POST'])
 def doctor_schedule():
     doctor_id = session.get('doctor_id')
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
-    # --- POST: Add a new schedule ---
+    # POST → Add schedule
     if request.method == 'POST':
         day = request.form['day']
         start_time = request.form['start_time']
         end_time = request.form['end_time']
-        status = request.form.get('status', 'Available')  # default Available
+        status = request.form.get('status', 'Available')
 
         cursor.execute("""
             INSERT INTO doctor_schedule (doctor_id, day, start_time, end_time, status)
@@ -175,57 +175,55 @@ def doctor_schedule():
         flash("Schedule added successfully!", "success")
         return redirect(url_for('doctor.doctor_schedule'))
 
-    # --- GET: Fetch schedules ---
+    # GET → Fetch schedules
     cursor.execute("""
-        SELECT schedule_id, day, start_time, end_time, status
-        FROM doctor_schedule
-        WHERE doctor_id=%s
-        ORDER BY FIELD(day,'Monday','Tuesday','Wednesday','Thursday','Friday'), start_time
-    """, (doctor_id,))
+                   SELECT schedule_id, day, start_time, end_time, status
+                   FROM doctor_schedule
+                   WHERE doctor_id=%s
+                   ORDER BY FIELD(day,'Monday','Tuesday','Wednesday','Thursday','Friday'), start_time
+                   """, (doctor_id,))
+    
     schedules = cursor.fetchall()
 
-    # --- Convert start_time & end_time to HH:MM strings ---
     for slot in schedules:
-        # timedelta -> HH:MM
-        slot['start_time_str'] = str(slot['start_time'])[:5]
-        slot['end_time_str'] = str(slot['end_time'])[:5]
+    # start_time
+        total_seconds = slot['start_time'].total_seconds()
+        hours = int(total_seconds // 3600)
+        minutes = int((total_seconds % 3600) // 60)
+        slot['start_time_str'] = f"{hours:02d}:{minutes:02d}"
 
-    # --- Group schedules by day ---
-    grouped_schedules = defaultdict(list)
-    for slot in schedules:
-        grouped_schedules[slot['day']].append(slot)
+    # end_time
+        total_seconds_end = slot['end_time'].total_seconds()
+        hours_end = int(total_seconds_end // 3600)
+        minutes_end = int((total_seconds_end % 3600) // 60)
+        slot['end_time_str'] = f"{hours_end:02d}:{minutes_end:02d}"
 
-    # --- Fetch doctor info ---
-    cursor.execute("SELECT * FROM doctors WHERE doctor_id=%s", (doctor_id,))
-    doctor = cursor.fetchone()
-    cursor.close()
+        cursor.close()
 
-    return render_template(
-        "DoctorDashboard.html",
-        grouped_schedules=grouped_schedules,
-        doctor=doctor
-    )
+        return render_template("doctor_schedule.html", schedules=schedules)
 
 
-
-
-@doctor.route("/schedule/edit/<int:schedule_id>", methods=["POST"])
+# Doctor Edit Schedule Route
+@doctor.route('/schedule/edit/<int:schedule_id>', methods=['POST'])
 def edit_schedule(schedule_id):
-    day = request.form["day"]
-    start_time = request.form["start_time"]
-    end_time = request.form["end_time"]
+    start_time = request.form['start_time']
+    end_time = request.form['end_time']
+    status = request.form.get('status')
 
     cursor = mysql.connection.cursor()
     cursor.execute("""
         UPDATE doctor_schedule
-        SET day=%s, start_time=%s, end_time=%s
+        SET start_time=%s,
+            end_time=%s,
+            status=%s
         WHERE schedule_id=%s
-    """, (day, start_time, end_time, schedule_id))
+    """, (start_time, end_time, status, schedule_id))
+
     mysql.connection.commit()
     cursor.close()
 
     flash("Schedule updated successfully!", "success")
-    return redirect(url_for("doctor.doctor_schedule"))
+    return redirect(url_for('doctor.doctor_schedule'))
 
 
 @doctor.route('/schedule/delete/<int:schedule_id>', methods=['GET'])
@@ -236,5 +234,8 @@ def delete_schedule(schedule_id):
     cursor.close()
     flash("Schedule deleted.", "info")
     return redirect(url_for('doctor.doctor_schedule'))
+
+
+
 
 

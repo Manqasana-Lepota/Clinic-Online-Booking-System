@@ -91,8 +91,13 @@
                                             </div>
                                         </div>
                                         <div class="card-footer text-end">
-                                            <a href="{{ url_for('patient.book_appointment', doctor_id=doctor['doctor_id']) }}"
-                                            class="btn btn-sm btn-primary">Book</a>
+                                            <button
+                                                class="btn btn-sm btn-primary book-btn"
+                                                data-id="{{ doctor['doctor_id'] }}"
+                                                data-name="Dr. {{ doctor['firstname'] }} {{ doctor['lastname'] }}"
+                                                >
+                                                Book
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -102,6 +107,35 @@
                             <p class="text-muted">No doctors available.</p>
                             {% endif %}
                         </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Booking Modal -->
+            <div class="modal fade" id="bookingModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">📅 Book Appointment</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <form method="POST" action="{{ url_for('patient.book_appointment') }}">
+                            <div class="modal-body">
+                                <input type="hidden" name="doctor_id" id="doctorId">
+                                <p id="doctorName" class="fw-bold"></p>
+                                <div class="mb-3">
+                                    <label>Date</label>
+                                    <input type="date" name="appointment_date" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label>Time</label>
+                                    <input type="time" name="appointment_time" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success">Confirm Booking</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -162,6 +196,30 @@
             searchInput.addEventListener('input', filterDoctors);
             filterSelect.addEventListener('change', filterDoctors);
         });
+
+
+        
+document.addEventListener("DOMContentLoaded", function () {
+
+    const bookingModal = new bootstrap.Modal(document.getElementById('bookingModal'));
+    const doctorIdInput = document.getElementById("doctorId");
+    const doctorNameText = document.getElementById("doctorName");
+
+    document.querySelectorAll(".book-btn").forEach(button => {
+        button.addEventListener("click", function () {
+
+            const doctorId = this.getAttribute("data-id");
+            const doctorName = this.getAttribute("data-name");
+
+            doctorIdInput.value = doctorId;
+            doctorNameText.innerText = doctorName;
+
+            bookingModal.show();
+        });
+    });
+
+});
+
     </script>
 
 </body>

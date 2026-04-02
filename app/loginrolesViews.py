@@ -59,6 +59,7 @@ def universal_login():
         user = cursor.fetchone()
         if user:
             session['user_type'] = 'patient'
+            session['patient_id'] = user['patient_id'] 
             session['username'] = username
 
             firstname = user['firstname'].split()[0]

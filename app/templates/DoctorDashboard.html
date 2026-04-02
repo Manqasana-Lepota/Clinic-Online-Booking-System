@@ -111,6 +111,7 @@
       </div>
     </div>
     
+
     <!-- Schedule Card -->
     <div class="col-md-4 mb-4">
       <div class="card shadow-sm border-0 h-100">
@@ -119,138 +120,13 @@
             <h5 class="card-title">🗓️ My Availability</h5>
             <p class="card-text">Update your schedule and time slots</p>
           </div>
-          <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#scheduleModal">
+          <a href="{{ url_for('doctor.doctor_schedule') }}" class="btn btn-primary mt-3">
             Manage Schedule
-          </button>
+          </a>
         </div>
       </div>
     </div>
-    
-    <!-- Manage Schedule Modal -->
-    <div class="modal fade" id="scheduleModal" tabindex="-1" aria-labelledby="scheduleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-          <form action="{{ url_for('doctor.doctor_schedule') }}" method="POST">
-            <div class="modal-header">
-              <h5 class="modal-title" id="scheduleModalLabel">Manage My Schedule</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <!-- Flash messages inside modal -->
-              {% with messages = get_flashed_messages(with_categories=true) %}
-              {% if messages %}
-              {% for category, message in messages %}
-              <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">{{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-              </div>
-              {% endfor %}
-              {% endif %}
-              {% endwith %}
-              
-              <!-- Existing Slots -->
-              <h6>Existing Time Slots</h6>
-              {% if grouped_schedules %}
-              {% for day, slots in grouped_schedules.items() %}
-              <h6 class="mt-3 text-primary">{{ day }}</h6>
-              <ul class="list-group mb-2">
-                {% for slot in slots %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                  <span>{{ slot.start_time_str }} - {{ slot.end_time_str }} | {{ slot.status }}</span>
-                  <div>
-                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                      data-bs-target="#editSlotModal{{ slot.schedule_id }}">Edit
-                    </button>
-                    <a href="{{ url_for('doctor.delete_schedule', schedule_id=slot.schedule_id) }}" class="btn btn-sm btn-danger">Delete</a>
-                  </div>
-                </li>
-                
-                <!-- Edit Modal -->
-                <div class="modal fade" id="editSlotModal{{ slot.schedule_id }}" tabindex="-1" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                      <form method="POST" action="{{ url_for('doctor.edit_schedule', schedule_id=slot.schedule_id) }}">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Edit Schedule</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body">
-                          <div class="mb-2">
-                            <label>Day</label>
-                              <select name="day" class="form-select" required>
-                                <option value="Monday" {% if slot.day=='Monday' %}selected{% endif %}>Monday</option>
-                                <option value="Tuesday" {% if slot.day=='Tuesday' %}selected{% endif %}>Tuesday</option>
-                                <option value="Wednesday" {% if slot.day=='Wednesday' %}selected{% endif %}>Wednesday</option>
-                                <option value="Thursday" {% if slot.day=='Thursday' %}selected{% endif %}>Thursday</option>
-                                <option value="Friday" {% if slot.day=='Friday' %}selected{% endif %}>Friday</option>
-                              </select>
-                          </div>
-                          <div class="mb-2">
-                            <label>Start Time</label>
-                            <input type="time" name="start_time" class="form-control" value="{{ slot.start_time_str }}" required>
-                          </div>
-                          <div class="mb-2">
-                            <label>End Time</label>
-                            <input type="time" name="end_time" class="form-control" value="{{ slot.end_time_str }}" required>
-                          </div>
-                          <div class="mb-2">
-                            <label>Status</label>
-                            <select name="status" class="form-select" required>
-                              <option value="Available" {% if slot.status=='Available' %}selected{% endif %}>Available</option>
-                              <option value="Not Available" {% if slot.status=='Not Available' %}selected{% endif %}>Not Available</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="submit" class="btn btn-primary">Save Changes</button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-                {% endfor %}
-              </ul>
-              {% endfor %}
-              {% else %}
-            <li class="list-group-item">No schedule added.</li>
-            {% endif %}
-            
-            <!-- Add Schedule Form -->
-            <div class="row g-2">
-              <div class="col-md-4">
-                <label class="form-label">Day</label>
-                <select class="form-select" name="day" required>
-                  <option value="">Select Day</option>
-                  <option>Monday</option>
-                  <option>Tuesday</option>
-                  <option>Wednesday</option>
-                  <option>Thursday</option>
-                  <option>Friday</option>
-                </select>
-              </div>
-              <div class="col-md-3">
-                <label class="form-label">Start Time</label>
-                <input type="time" class="form-control" name="start_time" required>
-              </div>
-              <div class="col-md-3">
-                <label class="form-label">End Time</label>
-                <input type="time" class="form-control" name="end_time" required>
-              </div>
-              <div class="col-md-3">
-                <label class="form-label">Status</label>
-                <select class="form-select" name="status" required>
-                  <option value="Available">Available</option>
-                  <option value="Not Available">Not Available</option>
-                </select>
-              </div>
-              <div class="col-md-2 d-flex align-items-end">
-                <button type="submit" class="btn btn-success w-100">Save</button>
-              </div>
-            </div>
-          </div>
-        </form>
-    </div>
-  </div>
-</div>
+          
     
     <!-- Patient Records Card -->
     <div class="col-md-4">
