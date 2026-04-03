@@ -95,7 +95,7 @@ a:hover {
 }
 
 .dashboard-heading {
-  color: #2c3e50;
+  color: #3f51b5;
   font-size: 2.3rem;
   font-weight: 700;
   margin-bottom: 40px;
@@ -160,5 +160,222 @@ a:hover {
   resize: none;
 }
 
+/****************************************** Doctor's Card Styling *************************************/
 
+.doctor-card-ui {
+    cursor: pointer;
+    border-radius: 15px;
+    padding: 25px;
+    background: #ffffff;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.doctor-card-ui .icon {
+    font-size: 40px;
+}
+
+.doctor-card-ui:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    background: linear-gradient(135deg, #3f51b5, #5c6bc0);
+    color: white;
+}
+
+.doctor-card-ui:hover h2,
+.doctor-card-ui:hover small {
+    color: #e0e0e0;
+}
+
+/************************************************ Modal Background *****************************************/
+.modal-content {
+    border-radius: 18px;
+    border: none;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f5f7ff, #eef1ff);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #3f51b5, #5c6bc0);
+    color: white;
+    border-bottom: none;
+}
+.modal-title {
+  color: white;
+}
+
+.modal-header .btn-close {
+    filter: invert(1);
+}
+
+.modal-body {
+    background: transparent;
+}
+
+.modal-backdrop.show {
+    background: rgba(0,0,0,0.6);
+}
+
+
+/******************************************* Doctor Cards Inside Modal *****************************************/
+.doctor-ui {
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+.doctor-ui:hover {
+    transform: translateY(-6px) scale(1.01);
+    box-shadow: 0 12px 30px rgba(9, 9, 206, 0.2);
+}
+
+.doctor-img {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #343c64;
+}
+
+/****************************************** Book Button **********************************/
+
+#bookingModal .modal-content {
+    background: linear-gradient(135deg, #ffffff, #f4f6ff);
+}
+
+/* Doctor Info Box */
+#doctorName {
+    background: rgba(63, 81, 181, 0.08);
+    padding: 12px;
+    border-radius: 10px;
+}
+
+/* Inputs */
+#bookingModal input,
+#bookingModal select {
+    border-radius: 10px;
+    border: 1px solid #dcdcdc;
+    transition: 0.2s;
+}
+
+/* Input Focus */
+#bookingModal input:focus,
+#bookingModal select:focus {
+    border-color: #3f51b5;
+    box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.15);
+}
+
+/* Submit Button */
+.book-submit-btn {
+    background: linear-gradient(135deg, #3f51b5, #5c6bc0);
+    border: none;
+    border-radius: 12px;
+    padding: 10px;
+    font-weight: 600;
+}
+
+.book-submit-btn:hover {
+    background: linear-gradient(135deg, #303f9f, #3949ab);
+    transform: scale(1.02);
+}
+
+
+/* Flash Alerts */
+.alert {
+    border-radius: 12px;
+    border: none;
+    font-weight: 500;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #3f51b5, #5c6bc0);
+    color: white;
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, #e53935, #ef5350);
+    color: white;
+}
+
+/**************************** My Appointments Button ******************************************/
+.dashboard-btn, .logout-btn {
+  font-weight: 700;
+}
+
+/* Title */
+.page-title {
+
+    margin-bottom: 20px;
+    color: #3f51b5;
+    font-weight: 700;
+}
+
+/* Table Wrapper */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+/* Table */
+.appointments-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.appointments-table th,
+.appointments-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.appointments-table th {
+    background: #3f51b5;
+    color: #fff;
+}
+
+/* Row Hover */
+.appointments-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Buttons */
+.btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* Badges */
+.badge {
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    color: #fff;
+}
+
+.badge.success {
+    background-color: #28a745;
+}
+
+.badge.danger {
+    background-color: #dc3545;
+}
+
+.badge.secondary {
+    background-color: #6c757d;
+}
 

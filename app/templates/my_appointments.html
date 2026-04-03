@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Appointments</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/patient.css">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/clinic-logo.png') }}">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<nav class="navbar navbar-dark px-3">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold">Jeppe Clinic</a>
+
+        <div>
+            <a href="{{ url_for('patient.PatientDashboard')}}" class="btn btn-primary btn-sm dashboard-btn">
+                <i class="fas fa-home"></i> Dashboard
+            </a>
+            <a href="{{ url_for('patient.patient_logout') }}" class="btn btn-danger btn-sm logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+</nav>
+
+<!-- ================= FLASH MESSAGES ================= -->
+<div class="container mt-3">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
+
+<!-- ================= MAIN CONTENT ================= -->
+<div class="container mt-4">
+
+    <h2 class="mb-4 text-center page-title">📅 My Appointments</h2>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+
+            <!-- TABLE HEADER -->
+            <thead class="appointments-table">
+                <tr>
+                    <th>#</th>
+                    <th>Doctor</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                    <th class="text-center">Action</th>
+                </tr>
+            </thead>
+
+            <!-- TABLE BODY -->
+            <tbody>
+
+                {% if appointments|length == 0 %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted">
+                        No appointments found.
+                    </td>
+                </tr>
+                {% endif %}
+
+                {% for appt in appointments %}
+                <tr>
+                    <td>{{ appt['appointment_id'] }}</td>
+                    <td>{{ appt['doctor_name'] }}</td>
+                    <td>{{ appt['appointment_date'] }}</td>
+                    <td>{{ appt['appointment_time'] }}</td>
+
+                    <!-- STATUS -->
+                    <td>
+                        {% if appt['status'] == 'Scheduled' %}
+                            <span class="badge bg-success">Scheduled</span>
+                        {% elif appt['status'] == 'Cancelled' %}
+                            <span class="badge bg-danger">Cancelled</span>
+                        {% else %}
+                            <span class="badge bg-secondary">{{ appt['status'] }}</span>
+                        {% endif %}
+                    </td>
+
+                    <!-- ACTIONS -->
+                    <td class="text-center">
+
+                        <!-- Reschedule -->
+                        <button 
+                            class="btn btn-sm btn-warning reschedule-btn"
+                            data-id="{{ appt['appointment_id'] }}"
+                            data-date="{{ appt['appointment_date'] }}"
+                            data-time="{{ appt['appointment_time'] }}"
+                            data-bs-toggle="modal"
+                            data-bs-target="#rescheduleModal">
+                            <i class="fas fa-calendar-alt"></i>
+                        </button>
+
+                        <!-- Cancel -->
+                        {% if appt['status'] != 'Cancelled' %}
+                        <a href="{{ url_for('patient.cancel_appointment', id=appt['appointment_id']) }}"
+                           class="btn btn-sm btn-danger">
+                            <i class="fas fa-times"></i>
+                        </a>
+                        {% else %}
+                        <span class="text-muted">—</span>
+                        {% endif %}
+
+                    </td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ================= RESCHEDULE MODAL ================= -->
+<div class="modal fade" id="rescheduleModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <form method="POST" id="rescheduleForm">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Reschedule Appointment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <input type="hidden" name="appointment_id" id="appointment_id">
+
+                    <div class="mb-3">
+                        <label>New Date</label>
+                        <input type="date" name="appointment_date" id="appointment_date" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>New Time</label>
+                        <input type="time" name="appointment_time" id="appointment_time" class="form-control" required>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Update</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- ================= SCRIPTS ================= -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    document.querySelectorAll(".reschedule-btn").forEach(btn => {
+        btn.addEventListener("click", function () {
+
+            const id = this.dataset.id;
+            const date = this.dataset.date;
+            const time = this.dataset.time;
+
+            document.getElementById("appointment_id").value = id;
+            document.getElementById("appointment_date").value = date;
+            document.getElementById("appointment_time").value = time;
+
+            document.getElementById("rescheduleForm").action = "/patient/reschedule/" + id;
+        });
+    });
+
+    // Auto-hide alerts
+    setTimeout(() => {
+        document.querySelectorAll('.alert').forEach(alert => {
+            alert.classList.remove('show');
+        });
+    }, 3000);
+
+});
+</script>
+
+</body>
+</html>

@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, redirect, request, url_for, session, flash, current_app
+from flask import Blueprint, render_template, redirect, request, url_for, session, flash, current_app, jsonify
 from app import mysql
 import MySQLdb.cursors
+from datetime import datetime
 import re
 import os
 from werkzeug.utils import secure_filename
@@ -12,6 +13,18 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 patient = Blueprint('patient', __name__)
+
+# Define Time Slot
+ALL_TIME_SLOTS = [
+    "09:00",
+    "10:00",
+    "11:00",
+    "12:00",
+    "13:00",
+    "14:00",
+    "15:00",
+    "16:00"
+]
 
 
 
@@ -196,37 +209,139 @@ def EditProfile():
 
     return render_template('EditPatientProfile.html', patient=patient)
 
+# Route To Get Available Slot
+@patient.route('/get_available_slots')
+def get_available_slots():
+    doctor_id = request.args.get('doctor_id')
+    date = request.args.get('date')
+
+    cursor = mysql.connection.cursor()
+
+    # Get already booked times
+    cursor.execute("""
+        SELECT appointment_time 
+        FROM appointments
+        WHERE doctor_id = %s AND appointment_date = %s
+    """, (doctor_id, date))
+
+    booked_slots = cursor.fetchall()
+    cursor.close()
+
+    # Convert DB results to list of strings
+    booked_times = [str(slot[0])[:5] for slot in booked_slots]
+
+    # Remove booked slots from all slots
+    available_slots = [slot for slot in ALL_TIME_SLOTS if slot not in booked_times]
+
+    return jsonify(available_slots)
+
 
 # Patient Booking Route
-@patient.route('/book-appointment')
+@patient.route('/book_appointment', methods=['POST'])
 def book_appointment():
-    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    try:
+        patient_id = session.get('patient_id')  # logged-in user
+        doctor_id = request.form['doctor_id']
+        date = request.form['appointment_date']
+        time = request.form['appointment_time']
 
-    cursor.execute("SELECT * FROM doctors")
-    doctors = cursor.fetchall()
+        cursor = mysql.connection.cursor()
 
-    return render_template("book_appointment.html", doctors=doctors)
+        # 🔒 1. Prevent double booking (same doctor, date, time)
+        cursor.execute("""
+            SELECT * FROM appointments
+            WHERE doctor_id = %s
+            AND appointment_date = %s
+            AND appointment_time = %s
+        """, (doctor_id, date, time))
+
+        existing = cursor.fetchone()
+
+        if existing:
+            flash("❌ This time slot is already booked. Please choose another.", "danger")
+            return redirect(url_for('patient.PatientDashboard'))
+
+        # 💾 2. Insert booking
+        cursor.execute("""
+            INSERT INTO appointments (patient_id, doctor_id, appointment_date, appointment_time)
+            VALUES (%s, %s, %s, %s)
+        """, (patient_id, doctor_id, date, time))
+
+        mysql.connection.commit()
+        cursor.close()
+
+        flash("✅ Appointment booked successfully!", "success")
+        return redirect(url_for('patient.PatientDashboard'))
+
+    except Exception as e:
+        flash(f"⚠️ Error: {str(e)}", "danger")
+        return redirect(url_for('patient.PatientDashboard'))
 
 
-# Patient Appointment Route
-@patient.route('/patient-appointments')
-def patient_appointments():
+# Patient Appointments Route
+@patient.route('/my_appointments')
+def my_appointments():
     patient_id = session.get('patient_id')
 
-    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor = mysql.connection.cursor()
 
-    query = """
-        SELECT a.*, d.first_name, d.last_name
-        FROM appointments a
-        LEFT JOIN doctors d ON a.doctor_id = d.id
-        WHERE a.patient_id = %s
-        ORDER BY a.appointment_date DESC, a.appointment_time DESC
-    """
+    cursor.execute("""
+    SELECT a.appointment_id, a.appointment_date, a.appointment_time,
+           a.status,
+           CONCAT(d.firstname, ' ', d.lastname) AS doctor_name
+    FROM appointments a
+    JOIN doctors d ON a.doctor_id = d.doctor_id
+    WHERE a.patient_id = %s
+    ORDER BY a.appointment_date DESC, a.appointment_time DESC
+""", (patient_id,))
 
-    cursor.execute(query, (patient_id,))
     appointments = cursor.fetchall()
+    cursor.close()
 
-    return render_template("patient_appointments.html", appointments=appointments)
+    return render_template("my_appointments.html", appointments=appointments)
+
+
+
+# Route To Update Appointment
+@patient.route('/reschedule/<int:id>', methods=['POST'])
+def update_reschedule(id):
+    new_date = request.form.get('appointment_date')
+    new_time = request.form.get('appointment_time')
+
+    cursor = mysql.connection.cursor()
+
+    cursor.execute("""
+        UPDATE appointments
+        SET appointment_date = %s,
+            appointment_time = %s,
+            status = 'Scheduled'
+        WHERE appointment_id = %s
+    """, (new_date, new_time, id))
+
+    mysql.connection.commit()
+    cursor.close()
+
+    flash("Appointment rescheduled successfully!", "success")
+
+    return redirect(url_for('patient.my_appointments'))
+
+
+
+# Route To Cancel Appointment
+@patient.route('/cancel_appointment/<int:id>')
+def cancel_appointment(id):
+    cursor = mysql.connection.cursor()
+
+    cursor.execute("""
+        UPDATE appointments
+        SET status = 'Cancelled'
+        WHERE appointment_id = %s
+    """, (id,))
+
+    mysql.connection.commit()
+    cursor.close()
+
+    return redirect(url_for('patient.my_appointments'))
 
 
 # Patient Logout Route

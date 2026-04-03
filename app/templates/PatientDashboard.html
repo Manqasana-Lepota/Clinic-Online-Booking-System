@@ -29,6 +29,19 @@
         </div>
     </nav>
 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="container mt-3">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
     <!-- Main Content -->
     <div class="container patient-dashboard-wrapper">
         <h2 class="dashboard-heading">Welcome, {{ firstname }}</h2>
@@ -49,8 +62,13 @@
             
             <!-- Doctors Card -->
             <div class="col-md-4">
-                <div class="stat-card" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#doctorsModal">
-                    <h5>👨‍⚕️ Doctors Available ({{ doctors_count }})</h5>
+                <div class="stat-card doctor-card-ui text-center"
+                    data-bs-toggle="modal"
+                    data-bs-target="#doctorsModal">
+                  
+                    <h5 class="fw-bold">👨‍⚕️ Doctors Available  ({{ doctors_count }}) </h5>
+                    
+                    <small class="text-muted">Click to view & book</small>
                 </div>
             </div>
             
@@ -59,57 +77,83 @@
                 <div class="modal-dialog modal-dialog-scrollable modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="doctorsModalLabel">👨‍⚕️ Doctors Available ({{ doctors_count }})</h5>
+                            <div>
+                                <h5 class="modal-title fw-bold" id="doctorsModalLabel">
+                                    👨‍⚕️ Doctors Available
+                                </h5>
+                                <small class="text-muted">
+                                    {{ doctors_count }} doctors ready to assist you
+                                </small>
+                            </div>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             {% if doctors %}
                             <!-- Search and Filter -->
-                             <div class="mb-3 d-flex gap-2">
-                                <input type="text" id="doctorSearch" class="form-control" placeholder="Search by name...">
-                                <select id="specializationFilter" class="form-select">
-                                    <option value="">All Specializations</option>
-                                    {% for spec in doctors|map(attribute='specialization')|unique %}
-                                    <option value="{{ spec }}">{{ spec }}</option>
-                                    {% endfor %}
-                                </select>
+                            <div class="mb-4 p-3 bg-light rounded shadow-sm">
+                                <div class="row g-2">
+                                    <div class="col-md-6">
+                                        <input type="text" id="doctorSearch"
+                                        class="form-control"
+                                        placeholder="🔍 Search doctor by name...">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <select id="specializationFilter" class="form-select">
+                                            <option value="">Filter by specialization</option>
+                                            {% for spec in doctors|map(attribute='specialization')|unique %}
+                                            <option value="{{ spec }}">{{ spec }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                             <!-- Doctors List -->
                             <div class="row g-3" id="doctorsList">
                                 {% for doctor in doctors %}
                                 <div class="col-md-6 doctor-card" data-name="{{ doctor['firstname'] }} {{ doctor['lastname'] }}" data-specialization="{{ doctor['specialization'] }}">
-                                    <div class="card h-100 shadow-sm">
-                                        <div class="card-body d-flex">
+                                    <div class="card doctor-ui h-100 border-0">
+                                        <div class="card-body d-flex align-items-center">
+                                            <!-- Profile -->
                                             <img src="{{ url_for('static', filename='uploads/' + doctor['profile_picture']) }}"
-                                            alt="Dr. {{ doctor['firstname'] }} {{ doctor['lastname'] }}"
-                                            class="rounded-circle me-3"
-                                            style="width:60px; height:60px; object-fit:cover;">
+                                            class="doctor-img me-3">
+                                            <!-- Info -->
                                             <div>
-                                                <strong>Dr. {{ doctor['firstname'] }} {{ doctor['lastname'] }}</strong><br>
-                                                <small class="text-muted">{{ doctor['specialization'] }}</small><br>
-                                                <small class="text-muted">Available: {{ doctor['available_days'] }}</small>
+                                                <h6 class="fw-bold mb-1">
+                                                    Dr. {{ doctor['firstname'] }} {{ doctor['lastname'] }}
+                                                </h6>
+                                                <span class="badge bg-primary mb-1">
+                                                    {{ doctor['specialization'] }}
+                                                </span>
+                                                <div class="text-muted small">
+                                                    📅 {{ doctor['available_days'] }}
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="card-footer text-end">
-                                            <button
-                                                class="btn btn-sm btn-primary book-btn"
-                                                data-id="{{ doctor['doctor_id'] }}"
-                                                data-name="Dr. {{ doctor['firstname'] }} {{ doctor['lastname'] }}"
-                                                >
-                                                Book
-                                            </button>
-                                        </div>
+                                        <!-- Footer -->
+                                        <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center">
+                                            <small class="text-success fw-semibold">
+                                                ● Available
+                                            </small>
+                                            <button class="btn btn-sm btn-primary book-btn"
+                                            data-id="{{ doctor['doctor_id'] }}"
+                                            data-name="Dr. {{ doctor['firstname'] }} {{ doctor['lastname'] }}">
+                                            Book →
+                                        </button>
                                     </div>
                                 </div>
-                                {% endfor %}
                             </div>
-                            {% else %}
-                            <p class="text-muted">No doctors available.</p>
-                            {% endif %}
+                            {% endfor %}
                         </div>
+                        {% else %}
+                        <div class="text-center py-4">
+                            <h6 class="text-muted">No doctors available</h6>
+                            <small>Please check back later</small>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
+        
             
             <!-- Booking Modal -->
             <div class="modal fade" id="bookingModal" tabindex="-1">
@@ -122,18 +166,25 @@
                         <form method="POST" action="{{ url_for('patient.book_appointment') }}">
                             <div class="modal-body">
                                 <input type="hidden" name="doctor_id" id="doctorId">
-                                <p id="doctorName" class="fw-bold"></p>
+                                <div class="mb-3 p-3 bg-light rounded">
+                                    <h6 class="mb-1 text-muted">Booking for</h6>
+                                    <h5 id="doctorName" class="fw-bold text-primary"></h5>
+                                </div>
                                 <div class="mb-3">
                                     <label>Date</label>
-                                    <input type="date" name="appointment_date" class="form-control" required>
+                                    <input type="date" id="appointmentDate" name="appointment_date" class="form-control" required>
                                 </div>
                                 <div class="mb-3">
                                     <label>Time</label>
-                                    <input type="time" name="appointment_time" class="form-control" required>
+                                    <select name="appointment_time" id="timeSlot" class="form-select" required>
+                                        <option value="">Select Time Slot</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-success">Confirm Booking</button>
+                                <button type="submit" class="btn btn-success w-100">
+                                    ✅ Confirm Appointment
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -149,7 +200,7 @@
                 </a>
             </div>
             <div class="col-md-6 mb-3">
-                <a href="{{ url_for('patient.patient_appointments') }}" class="btn btn-outline-primary w-100">
+                <a href="{{ url_for('patient.my_appointments') }}" class="btn btn-primary w-100">
                     📋 My Appointments
                 </a>
             </div>
@@ -171,60 +222,145 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- JavaScript for Live Search & Filter -->
     <script>
+    document.addEventListener("DOMContentLoaded", function () {
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.getElementById('doctorSearch');
-            const filterSelect = document.getElementById('specializationFilter');
-            const doctorsList = document.getElementById('doctorsList');
-            const doctorCards = doctorsList.querySelectorAll('.doctor-card');
-            
-            function filterDoctors() {
-                const searchValue = searchInput.value.toLowerCase();
-                const specializationValue = filterSelect.value;
-                
-                doctorCards.forEach(card => {
-                    const name = card.dataset.name.toLowerCase();
-                    const spec = card.dataset.specialization;
-                    
-                    if ((name.includes(searchValue)) && (specializationValue === "" || spec === specializationValue)) {
-                        card.style.display = "block";
-                    } else {
-                        card.style.display = "none";
-                    }
-                });
-            }
-            
-            searchInput.addEventListener('input', filterDoctors);
-            filterSelect.addEventListener('change', filterDoctors);
-        });
+    /* =========================
+       🔍 SEARCH & FILTER
+    ========================== */
+    const searchInput = document.getElementById('doctorSearch');
+    const filterSelect = document.getElementById('specializationFilter');
+    const doctorsList = document.getElementById('doctorsList');
+
+    if (doctorsList) {
+        const doctorCards = doctorsList.querySelectorAll('.doctor-card');
+
+        function filterDoctors() {
+            const searchValue = searchInput.value.toLowerCase();
+            const specializationValue = filterSelect.value;
+
+            doctorCards.forEach(card => {
+                const name = card.dataset.name.toLowerCase();
+                const spec = card.dataset.specialization;
+
+                if (name.includes(searchValue) &&
+                    (specializationValue === "" || spec === specializationValue)) {
+                    card.style.display = "";   // ✅ FIXED (no "block")
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        }
+
+        searchInput.addEventListener('input', filterDoctors);
+        filterSelect.addEventListener('change', filterDoctors);
+    }
 
 
-        
-document.addEventListener("DOMContentLoaded", function () {
-
-    const bookingModal = new bootstrap.Modal(document.getElementById('bookingModal'));
+    /* =========================
+       📅 BOOKING MODAL LOGIC
+    ========================== */
+    const bookingModalElement = document.getElementById('bookingModal');
+    const bookingModal = new bootstrap.Modal(bookingModalElement);
     const doctorIdInput = document.getElementById("doctorId");
     const doctorNameText = document.getElementById("doctorName");
+    const dateInput = document.querySelector("input[name='appointment_date']");
+    const timeSlot = document.getElementById("timeSlot");
 
+    // Disable past dates
+    if (dateInput) {
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.setAttribute("min", today);
+    }
+
+    // Time slots
+    const slots = ["09:00", "10:00", "11:00", "12:00", "14:00", "15:00"];
+
+    function loadTimeSlots() {
+        if (!timeSlot) return;
+
+        timeSlot.innerHTML = '<option value="">Select Time Slot</option>';
+        slots.forEach(time => {
+            let option = document.createElement("option");
+            option.value = time;
+            option.textContent = time;
+            timeSlot.appendChild(option);
+        });
+    }
+
+    // Book button click
     document.querySelectorAll(".book-btn").forEach(button => {
         button.addEventListener("click", function () {
 
-            const doctorId = this.getAttribute("data-id");
-            const doctorName = this.getAttribute("data-name");
+            const doctorId = this.dataset.id;
+            const doctorName = this.dataset.name;
 
             doctorIdInput.value = doctorId;
             doctorNameText.innerText = doctorName;
 
+            loadTimeSlots();
             bookingModal.show();
         });
     });
 
+
+    /* =========================
+       ⏳ FORM SUBMIT LOADING
+    ========================== */
+    const form = document.querySelector("#bookingModal form");
+
+    if (form) {
+        form.addEventListener("submit", function () {
+            const btn = form.querySelector("button[type='submit']");
+            btn.innerHTML = "Booking...";
+            btn.disabled = true;
+        });
+    }
+    setTimeout(() => {
+    const alert = document.querySelector(".alert");
+    if (alert) {
+        alert.style.display = "none";
+    }
+}, 4000);
+
+document.getElementById("appointmentDate").addEventListener("change", loadSlots);
+
+function loadSlots() {
+    const date = document.getElementById("appointmentDate").value;
+    const doctorId = document.getElementById("doctor").value; // make sure you have this select
+
+    if (!date || !doctorId) return;
+
+    fetch(`/get_available_slots?doctor_id=${doctorId}&date=${date}`)
+        .then(response => response.json())
+        .then(slots => {
+            const timeSelect = document.getElementById("timeSlot");
+
+            timeSelect.innerHTML = '<option value="">Select Time Slot</option>';
+
+            if (slots.length === 0) {
+                const option = document.createElement("option");
+                option.textContent = "No slots available";
+                option.disabled = true;
+                timeSelect.appendChild(option);
+                return;
+            }
+
+            slots.forEach(slot => {
+                const option = document.createElement("option");
+                option.value = slot;
+                option.textContent = slot;
+                timeSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error("Error loading slots:", error));
+}
+
 });
 
-    </script>
 
+</script>
+
+  
 </body>
 </html>
